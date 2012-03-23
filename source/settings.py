@@ -193,6 +193,8 @@ LOGGING = {
 
 # LOGIN_REDIRECT_URL = '/accounts/profile/'
 LOGIN_REDIRECT_URL = '/'
+# disable unit test for south
+SKIP_SOUTH_TESTS = True
 
 # cache 
 CACHES = {
