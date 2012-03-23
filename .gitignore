@@ -1,0 +1,13 @@
+*.o
+*.pyc
+*~
+*.sw[on]
+local_settings.py
+env/*
+www/*
+conf/*
+source/static/*
+*.rar
+*.zip
+*.tar.gz
+*.tgz
