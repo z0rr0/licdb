@@ -1,7 +1,7 @@
 *.o
 *.pyc
 *~
-*.sw[on]
+*.swp[on]
 local_settings.py
 env/*
 www/*
