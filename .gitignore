@@ -6,7 +6,7 @@ local_settings.py
 env/*
 www/*
 conf/*
-main/static/*
+main/main/static/*
 *.rar
 *.zip
 *.tar.gz
