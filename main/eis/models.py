@@ -6,7 +6,7 @@ class Student (models.Model):
     Студенты
     
     """
-    who = models.CharField(max_length = 512, verbose_name = u'имя', help_text = u'даные пользователя, получившего лицензию', null = True)
+    who = models.CharField(max_length = 512, verbose_name = u'имя', help_text = u'даные пользователя, получившего лицензию', null = True, editable = False)
 
     def __unicode__(self):
         return self.who
