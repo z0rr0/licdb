@@ -46,6 +46,7 @@ class Key (models.Model):
     key = models.CharField(max_length = 255, blank = True, unique = 'True', verbose_name = u'ключ')
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'keys')
     use = models.BooleanField(verbose_name = u'используется', default = False)
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 0, help_text = u'количество использований, 0 - если нет ограничений')
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии')
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
@@ -53,7 +54,7 @@ class Key (models.Model):
     created = models.DateTimeField(auto_now_add = True, editable = False, help_text = u'дата создания объекта')
 
     def __unicode__(self):
-        return u"%s %s" % (self.program.name, self.key)
+        return u"ключ для \"%s\" %s" % (self.program.name, self.key)
 
     class Meta:
         ordering = ['use', 'program__name', 'key']
@@ -76,5 +77,5 @@ class Client (models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name', 'key__program__name']
+        ordering = ['student', 'name', 'key__program__name']
     

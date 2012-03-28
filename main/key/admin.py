@@ -16,7 +16,7 @@ class KeyAdmin(admin.ModelAdmin):
 	list_filter = ('use', 'date_start', 'date_end')
 
 class ClientAdmin(admin.ModelAdmin):
-	list_display = ('id', 'name', 'student', 'comment', 'date_start')
+	list_display = ('id', 'name', 'student', 'key', 'comment', 'date_start')
 	search_fields = ('name', 'comment', )
 	list_filter = ('student', 'key__program', 'date_start')
 
