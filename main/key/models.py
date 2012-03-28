@@ -10,6 +10,9 @@ class License (models.Model):
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'license')
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
+    # даты изменения и создания, заполняются автоматически
+    modified = models.DateTimeField(auto_now = True, auto_now_add = True, editable = False, help_text = u'дата редактирования объекта')
+    created = models.DateTimeField(auto_now_add = True, editable = False, help_text = u'дата создания объекта')
 
     def __unicode__(self):
         return self.name
@@ -50,7 +53,8 @@ class Key (models.Model):
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии')
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
-    # дата создания
+    # даты изменения и создания, заполняются автоматически
+    modified = models.DateTimeField(auto_now = True, auto_now_add = True, editable = False, help_text = u'дата редактирования объекта')
     created = models.DateTimeField(auto_now_add = True, editable = False, help_text = u'дата создания объекта')
 
     def __unicode__(self):

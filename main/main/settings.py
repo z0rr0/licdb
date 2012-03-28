@@ -151,6 +151,7 @@ INSTALLED_APPS = (
 )
 
 INSTALLED_APPS += ('south',)
+SOUTH_LOGGING_FILE = os.path.join(PROJECT_PATH, 'south.log')
 
 if DEBUG:
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
