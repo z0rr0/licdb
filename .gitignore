@@ -6,8 +6,10 @@ local_settings.py
 env/*
 www/*
 conf/*
-main/main/static/*
 *.rar
 *.zip
 *.tar.gz
 *.tgz
+main/main/static/*
+main/main/media/keys/*
+main/main/media/license/*
