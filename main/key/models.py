@@ -22,7 +22,7 @@ class License (models.Model):
 
 class Program (models.Model):
     u"""
-    Программное обеспечение
+    Программное обеспечение: прикладные и иструментальные программы, операционные системы и т.д.
     
     """
     license = models.ForeignKey(License, verbose_name = u'лицензия')
@@ -42,7 +42,7 @@ class Program (models.Model):
     
 class Key (models.Model):
     u"""
-    Ключи и файлы лицензий
+    Ключи и файлы лицензий для программого обеспечения
     
     """
     program = models.ForeignKey(Program, verbose_name = u'программа')
@@ -65,7 +65,7 @@ class Key (models.Model):
     
 class Client (models.Model):
     u"""
-    Пользователи (люди или отделы), получившие лицензию
+    Пользователи (люди или отделы), получившие или использующие лицензию/ключ
     
     """
     name = models.CharField(max_length = 512, verbose_name = u'имя', help_text = u'даные пользователя, получившего лицензию')

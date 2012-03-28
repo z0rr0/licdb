@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.flatpages',
     'key',
+    'eis',
 )
 
 INSTALLED_APPS += ('south',)
