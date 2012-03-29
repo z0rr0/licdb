@@ -6,7 +6,7 @@ class License (models.Model):
     Типы лицензий на программное обеспечение
     
     """
-    name = models.CharField(max_length = 127, verbose_name = u'название')
+    name = models.CharField(max_length = 127, verbose_name = u'название', unique = True)
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'license')
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
@@ -25,8 +25,8 @@ class Program (models.Model):
     Программное обеспечение: прикладные и иструментальные программы, операционные системы и т.д.
     
     """
-    license = models.ForeignKey(License, verbose_name = u'лицензия')
-    name = models.CharField(max_length = 255, verbose_name = u'название')
+    license = models.ForeignKey(License, verbose_name = u'лицензия', blank=True, null=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length = 255, verbose_name = u'название', unique = True)
     use_student = models.BooleanField(verbose_name = u'выдача студентам', default = False, help_text=u'можно ли студентам использовать данное ПО')
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта программы')
     comment = models.TextField(verbose_name = u'примечание', blank = True, null = True)
@@ -46,7 +46,7 @@ class Key (models.Model):
     
     """
     program = models.ForeignKey(Program, verbose_name = u'программа')
-    key = models.CharField(max_length = 255, blank = True, unique = 'True', verbose_name = u'ключ')
+    key = models.CharField(max_length = 255, blank = True, unique = True, verbose_name = u'ключ')
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'keys')
     use = models.BooleanField(verbose_name = u'используется', default = False)
     manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 0, help_text = u'количество использований, 0 - если нет ограничений')

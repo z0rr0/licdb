@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'License'
         db.create_table('key_license', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=127)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=127)),
             ('attach', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
             ('url', self.gf('django.db.models.fields.URLField')(max_length=512, null=True, blank=True)),
             ('comment', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
@@ -23,8 +23,8 @@ class Migration(SchemaMigration):
         # Adding model 'Program'
         db.create_table('key_program', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('license', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['key.License'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('license', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['key.License'], null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
             ('use_student', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('url', self.gf('django.db.models.fields.URLField')(max_length=512, null=True, blank=True)),
             ('comment', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
@@ -37,7 +37,7 @@ class Migration(SchemaMigration):
         db.create_table('key_key', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('program', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['key.Program'])),
-            ('key', self.gf('django.db.models.fields.CharField')(unique='True', max_length=255, blank=True)),
+            ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, blank=True)),
             ('attach', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
             ('use', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('manyuse', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
@@ -98,7 +98,7 @@ class Migration(SchemaMigration):
             'date_end': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'date_start': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'key': ('django.db.models.fields.CharField', [], {'unique': "'True'", 'max_length': '255', 'blank': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'blank': 'True'}),
             'manyuse': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
             'program': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['key.Program']"}),
@@ -111,7 +111,7 @@ class Migration(SchemaMigration):
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '127'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '127'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'})
         },
         'key.program': {
@@ -119,9 +119,9 @@ class Migration(SchemaMigration):
             'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'license': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['key.License']"}),
+            'license': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['key.License']", 'null': 'True', 'blank': 'True'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
             'use_student': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         }
