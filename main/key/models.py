@@ -51,6 +51,7 @@ class Key (models.Model):
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'keys')
     use = models.BooleanField(verbose_name = u'используется', default = False)
     manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 0, help_text = u'количество использований, 0 - если нет ограничений')
+    net = models.BooleanField(verbose_name = u'сетевой', default = False, help_text = u'ключ предназначен для сетевого использования')
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии')
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
