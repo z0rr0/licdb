@@ -8,6 +8,7 @@ class License (models.Model):
     """
     name = models.CharField(max_length = 127, verbose_name = u'название', unique = True)
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'license')
+    free = models.BooleanField(verbose_name = u'бесплатная', default = False)
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
     # даты изменения и создания, заполняются автоматически
