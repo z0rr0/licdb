@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+<h1>Авторизация</h1>
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="well form-inline">
+    {% csrf_token %}
+    <input type="text" name="username" id="username" class="input-small" placeholder="Имя...">
+    <input type="password" name="password" id="password" class="input-small" placeholder="Пароль...">
+<!--     <label class="checkbox">
+        <input type="checkbox"> запомнить меня
+    </label> 
+-->
+    <button type="submit" class="btn">Войти</button>
+</form>
+
+{% if form.errors %}
+    <div class="alert alert-error">
+    неверное имя или пароль
+    </div>
+{% endif %}
+
+{% endblock %}

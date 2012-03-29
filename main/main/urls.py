@@ -8,9 +8,13 @@ from django.conf import settings
 from django.contrib.auth.views import login, logout
 
 urlpatterns = patterns('',
+    # accounts
+    (r'^accounts/login/$', login),
+    (r'^accounts/logout/$' , logout),
     # Examples:
     # url(r'^$', 'main.views.home', name='home'),
     # url(r'^main/', include('main.foo.urls')),
+    url(r'^$', 'key.views.index', {'vtemplate': 'index.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
