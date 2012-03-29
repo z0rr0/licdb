@@ -5,7 +5,7 @@ from django.template.response import TemplateResponse
 from django.contrib import auth
 
 def index(request, vtemplate):
-    program = Program.objects.all()
+    program = Program.objects.all().only('name')
     stat = []
     for po in program:
     	all = Key.objects.filter(program=po)

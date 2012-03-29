@@ -42,9 +42,9 @@
                     </form>
                 <p class="navbar-text pull-right">
                     {% if user.is_authenticated %}
-                        Вы вошли как <a href="/accounts/logout/">{{ user.first_name  }}</a>
+                        Вы вошли как <a href="/accounts/logout/"  title="Выйти">{{ user.first_name  }}</a>
                     {% else %}
-                        <a href="/accounts/login/">Вы не авторизованы</a>
+                        <a href="/accounts/login/" title="Выполнить вход">Вы не авторизованы</a>
                     {% endif %}
                 </p>
               </div><!--/.nav-collapse -->
