@@ -45,6 +45,10 @@ urlpatterns = patterns('',
     # no free license
     url(r'^license/com/$', list_detail.object_list, license_com),
 
+    # license delete
+    (r'^license/delete/(?P<id>\d+)/?$', 'key.views.license_delete', {
+        'redirecturl': '/license/'}),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
