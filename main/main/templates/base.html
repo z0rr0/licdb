@@ -33,11 +33,15 @@
               <a class="brand" href="/">LicenseDB</a>
               <div class="nav-collapse">
                 <ul class="nav">
-                  <li class="active"><a href="/">Главная</a></li>
-                  <li><a href="#about">О ресурсе</a></li>
-                  <li><a href="#contact">Контакты</a></li>
+                  <li class="active"><a href="/"><i class="icon-home icon-white"></i>
+                    Главная</a></li>
+                  <li><a href="#about"><i class="icon-book icon-white"></i>
+                    О ресурсе</a></li>
+                  <li><a href="#contact"><i class="icon-envelope icon-white"></i>
+                    Контакты</a></li>
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <i class="icon-tags icon-white"></i>
                       Другие ресурсы<b class="caret"></b></a>
                       <ul class="dropdown-menu">
                         <li><a href="http://www.apingtu.edu.ru/">Сайт АПИ НГТУ</a></li>
@@ -46,14 +50,19 @@
                       </ul>
                   </li>
                 </ul>
+
                     <form class="navbar-form pull-left">
+                        <i class="icon-search icon-white"></i>
                         <input type="text" class="span2"  placeholder="Поиск программ…">
                     </form>
                 <p class="navbar-text pull-right">
                     {% if user.is_authenticated %}
+                        <i class="icon-user icon-white"></i>
                         Вы вошли как <a href="/accounts/logout/"  title="Выйти">{{ user.first_name  }}</a>
                     {% else %}
-                        <a href="/accounts/login/" title="Выполнить вход">Вы не авторизованы</a>
+                        <a href="/accounts/login/" title="Выполнить вход">
+                          <!-- <i class="icon-user icon-white"></i> -->
+                          Вы не авторизованы</a>
                     {% endif %}
                 </p>
               </div><!--/.nav-collapse -->
