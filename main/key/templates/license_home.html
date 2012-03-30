@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load keytags %}
+{% block title %}Лицензии{% endblock %}
+
+{% block content %}
+    <h1>
+        Лицензии на программное обеспечение
+        {{ type }}
+    </h1>
+    <div class="row">
+        {% for license in object_list %}
+            <div class="span4">
+                <h2>{{ license.name }}</h2>
+                <span class="label label-info">{{ license.free|free }}</span>
+                {% if license.url %}
+                    <p>
+                    <strong>Сайт:</strong> {{ license.url|urlizetrunc:25 }}
+                    </p>
+                {% endif %}
+                {% if license.attach %}
+                    <p>
+                    <strong>Файл:</strong> <a href="{{ license.attach.url }}">загрузить</a>
+                    
+                    </p>
+                {% endif %}
+                <p>
+                    <a class="btn" href="#">Подробнее &raquo;</a>
+                    <a class="btn btn-primary" href="#" title="Правка">
+                        <i class="icon-pencil icon-white"></i>
+                    </a>
+                    <a class="btn btn-danger" href="#" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+                        <i class="icon-trash icon-white"></i>
+                    </a>
+                </p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
