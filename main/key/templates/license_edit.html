@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 {% load keytags %}
+{% block addjscss %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script> 
+    <script type="text/javascript">
+        window.onload = function()
+        {
+            CKEDITOR.replace( 'id_comment' );
+        };
+    </script>  
+{% endblock addjscss %}
 {% block title %}Редактирование лицензии{% endblock %}
 
 {% block content %}
@@ -50,6 +59,6 @@
         </div>
     <div class="form-actions">
         <button class="btn btn-primary" type="submit">Сохранить</button>
-        <button class="btn">Отменить</button>
+        <button class="btn" type="reset">Отменить</button>
     </div>
 {% endblock content %}
