@@ -31,6 +31,18 @@ def index(request, vtemplate):
     # logger.info(program)
     return TemplateResponse(request, vtemplate, {'statistics': stat})
 
+def licenses(request, vtemplate, typefree):
+    u""" 
+    Список лицензий
+    """
+    typetext = ''
+    if typefree is None:
+        object_list = License.objects.all()
+    else:
+        object_list = License.objects.filter(free=typefree)
+        typetext =  u'(беспланые)' if typefree else u'(коммерческие)'
+    return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
+
 # license delete
 @permission_required('key.delete_license')
 def obj_delete(request, id, redirecturl, model):
@@ -51,6 +63,20 @@ def obj_view(request, id, vtemplate, model):
     obj = get_object_or_404(model, pk=int(id))
     return TemplateResponse(request, vtemplate, {'result': obj})
 
+def get_license_form(request, license):
+    u"""
+    Добавление или обновление данных о лицензиях 
+    """
+    saved = False
+    if request.method == 'POST':
+        form = LicenseForm(request.POST or None, request.FILES, instance=license)
+        if form.is_valid():
+            with transaction.commit_on_success():
+                license = form.save()
+                saved = True
+    else:
+        form = LicenseForm(instance=license)
+    return form, license, saved
 
 # license edit
 @permission_required('key.change_license')
@@ -61,9 +87,21 @@ def license_edit(request, id, vtemplate):
     c = {}
     c.update(csrf(request))
     license = get_object_or_404(License, id=int(id))
-    if request.method == 'POST':
-        pass
-    else:
-        form = LicenseForm(instance=license)
+    form, license, saved = get_license_form(request, license)
+    if saved:
+        return redirect('/license/' + str(license.id))
+    return TemplateResponse(request, vtemplate, {'form': form})
+
+# license edit
+@permission_required('key.add_license')
+def license_add(request, vtemplate):
+    u""" 
+    Добавление данных о лицензии 
+    """
+    c = {}
+    c.update(csrf(request))
+    form, license, saved = get_license_form(request, None)
+    if saved:
+        return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form})
 

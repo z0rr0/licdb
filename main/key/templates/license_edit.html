@@ -11,13 +11,11 @@
     </script>  
 {% endblock addjscss %}
 {% block title %}Редактирование лицензии{% endblock %}
-
 {% block content %}
     <h1>Редактирование данных о лицензии</h1>
-    <form class="form-horizontal" method="POST" action="">
+    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}{{ form.management_form }}
-
-        <div class="control-group{{ form.name.error|errorcss }}">
+        <div class="control-group{{ form.name.errors|errorcss }}">
             <label class="control-label" for="id_name">{{ form.name.label }}</label>
             <div class="controls">
                 {{ form.name|add_class:"span3"}} 
@@ -25,7 +23,7 @@
             <p class="help-block">{{ form.name.help_text }}</p>
             </div>
         </div>
-        <div class="control-group{{ form.url.error|errorcss }}">
+        <div class="control-group{{ form.url.errors|errorcss }}">
             <label class="control-label" for="id_url">{{ form.url.label }}</label>
             <div class="controls">
                 {{ form.url|add_class:"span3"}} 
@@ -33,10 +31,10 @@
             <p class="help-block">{{ form.url.help_text }}</p>
             </div>
         </div>
-        <div class="control-group{{ form.attach.error|errorcss }}">
+        <div class="control-group{{ form.attach.errors|errorcss }}">
             <label class="control-label" for="id_attach">{{ form.attach.label }}</label>
             <div class="controls">
-                {{ form.attach}}
+                {{ form.attach }}
                 {{ form.attach.errors|lower }}
             <p class="help-block">{{ form.attach.help_text }}</p>
             </div>
@@ -54,7 +52,7 @@
         <div class="control-group">
             <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
             <div class="controls">
-                {{ form.comment|add_class:"input-xlarge" }}
+                {{ form.comment }}
             </div>
         </div>
     <div class="form-actions">

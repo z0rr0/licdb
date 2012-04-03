@@ -18,7 +18,7 @@ class LicenseForm(forms.ModelForm):
 
     class Meta:
         model = License
-        fields = ('name', 'attach', 'free', 'url', 'comment')
+        fields = ('name', 'url', 'attach', 'free', 'comment')
         widgets = {
             'attach': ShortNameClarableFileInput,
         }  
