@@ -13,6 +13,7 @@
     </label> 
 -->
     <button type="submit" class="btn">Войти</button>
+    <input type="hidden" name="next" value="{{ next|escape }}" />
 </form>
 
 {% if form.errors %}

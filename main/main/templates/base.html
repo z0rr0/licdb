@@ -61,11 +61,10 @@
                         Вы вошли как <a href="/accounts/logout/"  title="Выйти">{{ user.first_name  }}</a>
                     {% else %}
                         <a href="/accounts/login/" title="Выполнить вход">
-                          <!-- <i class="icon-user icon-white"></i> -->
                           Вы не авторизованы</a>
                     {% endif %}
                 </p>
-              </div><!--/.nav-collapse -->
+              </div>
             </div>
           </div>
         </div>    
@@ -76,9 +75,9 @@
                 <ul class="nav nav-list">
                   <li class="nav-header">Лицензии</li>
                   <!-- <li class="active"><a href="#">Link</a></li> -->
-                  <li><a href="/license/">Все</a></li>
-                  <li><a href="/license/com/">Коммерческие</a></li>
-                  <li><a href="/license/free/">Свободные</a></li>
+                  <li><a href="/licenses/">Все</a></li>
+                  <li><a href="/licenses/com/">Коммерческие</a></li>
+                  <li><a href="/licenses/free/">Свободные</a></li>
                   <li class="nav-header">Программное обеспечение</li>
                   <li><a href="#">Для ВУЗа</a></li>
                   <li><a href="#">Для студентов</a></li>
@@ -87,12 +86,12 @@
                   <li><a href="#">Link</a></li>
                   <li><a href="#">Link</a></li>
                 </ul>
-              </div><!--/.well -->
-            </div><!--/span-->
+              </div>
+            </div>
             <div class="span9">
                 {% block content %}{% endblock %}
-            </div><!--/span-->
-          </div><!--/row-->        
+            </div>
+          </div>     
         <hr>
         <footer>
             <p>&copy; АПИ НГТУ 2012</p>

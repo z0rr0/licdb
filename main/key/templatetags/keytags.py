@@ -7,4 +7,14 @@ register = template.Library()
 
 @register.filter(name='free')
 def free(value):
-    return 'беспланая' if value else 'коммерческая'
+    u""" 
+    Тип лицензии: коммерческая или беспланая 
+    """
+    return u"беспланая" if value else u"коммерческая"
+
+@register.filter(name='errorcss')
+def errorcss(value):
+    u""" 
+    Стиль для поля с ошибкой 
+    """
+    return u" error" if value else ""

@@ -151,7 +151,7 @@ INSTALLED_APPS = (
     'eis',
 )
 
-INSTALLED_APPS += ('south',)
+INSTALLED_APPS += ('south','widget_tweaks',)
 SOUTH_LOGGING_FILE = os.path.join(PROJECT_PATH, 'south.log')
 
 if DEBUG:

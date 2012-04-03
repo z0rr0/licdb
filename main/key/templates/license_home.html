@@ -7,25 +7,38 @@
         Лицензии на программное обеспечение
         {{ type }}
     </h1>
+    <div class="row-fluid">
+        <div class="span12">
+            <p>
+                <strong>Лицензия на программное обеспечение</strong> &mdash; это правовой инструмент, определяющий использование и распространение программного обеспечения, защищённого авторским правом [<a href="http://ru.wikipedia.org" title="Перейти на сайт Википедии" target="_blank">Википедия</a>].
+            </p>
+        </div>
+    </div>
     <div class="row">
         {% for license in object_list %}
-            <div class="span4">
+            
+            <div class="well span3">
                 <h2>{{ license.name }}</h2>
                 <span class="label label-info">{{ license.free|free }}</span>
-                {% if license.url %}
-                    <p>
-                    <strong>Сайт:</strong> {{ license.url|urlizetrunc:25 }}
-                    </p>
-                {% endif %}
-                {% if license.attach %}
-                    <p>
-                    <strong>Файл:</strong> <a href="{{ license.attach.url }}">загрузить</a>
-                    
-                    </p>
-                {% endif %}
                 <p>
-                    <a class="btn" href="#">Подробнее &raquo;</a>
-                    <a class="btn btn-primary" href="#" title="Правка">
+                    <strong>Сайт:</strong>
+                    {% if license.url %}
+                        {{ license.url|urlizetrunc:25 }}
+                    {% else %}
+                        <small>нет</small>
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Файл:</strong>
+                    {% if license.attach %}
+                        <a href="{{ license.attach.url }}">загрузить</a>
+                    {% else %}
+                        <small>нет</small>
+                    {% endif %}
+                </p>
+                <p>
+                    <a class="btn" href="/license/{{ license.id }}">Подробнее &raquo;</a>
+                    <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
                         <i class="icon-pencil icon-white"></i>
                     </a>
                     <a class="btn btn-danger" href="/license/delete/{{ license.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">

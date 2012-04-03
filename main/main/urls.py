@@ -39,15 +39,22 @@ urlpatterns = patterns('',
     url(r'^$', 'key.views.index', {'vtemplate': 'index.html'}),
     
     # all license
-    url(r'^license/$', list_detail.object_list, license_info),
+    url(r'^licenses/$', list_detail.object_list, license_info),
     # free license
-    url(r'^license/free/$', list_detail.object_list, license_free),
+    url(r'^licenses/free/$', list_detail.object_list, license_free),
     # no free license
-    url(r'^license/com/$', list_detail.object_list, license_com),
-
+    url(r'^licenses/com/$', list_detail.object_list, license_com),
+    # license view
+    url(r'^license/(?P<id>\d+)/?$', 'key.views.obj_view', {
+        'vtemplate': 'license_view.html',
+        'model': License}),
     # license delete
-    (r'^license/delete/(?P<id>\d+)/?$', 'key.views.license_delete', {
-        'redirecturl': '/license/'}),
+    (r'^license/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+        'redirecturl': '/licenses/',
+        'model': License}),
+    # license edit
+    (r'^license/edit/(?P<id>\d+)/?$', 'key.views.license_edit', {
+        'vtemplate': 'license_edit.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
