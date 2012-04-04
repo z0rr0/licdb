@@ -65,6 +65,23 @@ urlpatterns = patterns('',
     (r'^license/add/?$', 'key.views.license_add', {
         'vtemplate': 'license_edit.html'}),
 
+    # all program
+    url(r'^programs/$', 'key.views.programs', {
+        'vtemplate': 'program_home.html',
+        'stud': None}),
+    # student program
+    url(r'^programs/stud/$', 'key.views.programs', {
+        'vtemplate': 'program_home.html',
+        'stud': True}),
+    # no studnet program
+    url(r'^programs/nostud/$', 'key.views.programs', {
+        'vtemplate': 'program_home.html',
+        'stud': False}),
+    # license delete
+    (r'^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+        'redirecturl': '/programs/',
+        'model': Program}),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -52,9 +52,10 @@
                   </li>
                 </ul>
 
-                    <form class="navbar-form pull-left">
+                    <form class="navbar-form pull-left" method="POST" action="/programs/">
+                        {% csrf_token %}{{ form.management_form }}
                         <i class="icon-search icon-white"></i>
-                        <input type="text" class="span2"  placeholder="Поиск программ…">
+                        <input type="text" class="span2" name="progsearch" placeholder="Поиск программ…">
                     </form>
                 <p class="navbar-text pull-right">
                     {% if user.is_authenticated %}
@@ -80,8 +81,9 @@
                   <li><a href="/licenses/com/">Коммерческие</a></li>
                   <li><a href="/licenses/free/">Свободные</a></li>
                   <li class="nav-header">Программное обеспечение</li>
-                  <li><a href="#">Для ВУЗа</a></li>
-                  <li><a href="#">Для студентов</a></li>
+                  <li><a href="/programs/">Всё</a></li>
+                  <li><a href="/programs/nostud/">Для ВУЗа</a></li>
+                  <li><a href="/programs/stud/">Для студентов</a></li>
                   <li><a href="#">Link</a></li>
                   <li><a href="#">Link</a></li>
                   <li><a href="#">Link</a></li>

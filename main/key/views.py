@@ -40,8 +40,28 @@ def licenses(request, vtemplate, typefree):
         object_list = License.objects.all()
     else:
         object_list = License.objects.filter(free=typefree)
-        typetext =  u'(беспланые)' if typefree else u'(коммерческие)'
+        typetext =  u'беспланые' if typefree else u'коммерческие'
     return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
+
+def programs(request, vtemplate, stud):
+    u"""
+    Программы
+    """
+    c = {}
+    c.update(csrf(request))
+    typetext = ''
+    searchtext = ''
+    if stud is None:
+        object_list = Program.objects.all()
+    else:
+        object_list = Program.objects.filter(use_student=stud)
+        typetext =  u'для студентов' if stud else u'не для студентов'
+    if request.method == 'POST':
+        searchtext = request.POST['progsearch']
+        object_list = object_list.filter(name__icontains=searchtext)
+    return TemplateResponse(request, vtemplate, {'object_list': object_list,
+        'type': typetext,
+        'searchtext': searchtext})
 
 # license delete
 @permission_required('key.delete_license')
@@ -92,7 +112,7 @@ def license_edit(request, id, vtemplate):
         return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form})
 
-# license edit
+# license add
 @permission_required('key.add_license')
 def license_add(request, vtemplate):
     u""" 

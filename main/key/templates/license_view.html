@@ -42,8 +42,11 @@
         <div class="span5">
             <p align="right">
                 <small>
-                создано <em>{{ result.created|date:"d.m.Y H:i:s" }}</em>,
-                изменено <em>{{ result.modified|date:"d.m.Y H:i:s" }}</em>
+                создано <em>{{ result.created|date:"d.m.Y H:i:s" }}</em>
+                {% ifnotequal result.created|date:"YdmHis" result.modified|date:"YdmHis" %}
+                    &nbsp;&nbsp;&nbsp;
+                    изменено <em>{{ result.modified|date:"d.m.Y H:i:s" }}</em>
+                {% endifnotequal %}
                 </small>
             </p>
         </div>
@@ -56,5 +59,4 @@
             </p>
         </div>
     </div>
-    
 {% endblock content %}
