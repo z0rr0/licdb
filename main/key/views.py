@@ -145,7 +145,7 @@ def program_edit(request, id, vtemplate):
 @permission_required('key.add_program')
 def program_add(request, vtemplate):
     u""" 
-    Добавление данных о лицензии 
+    Добавление данных о программе 
     """
     c = {}
     c.update(csrf(request))
@@ -154,3 +154,13 @@ def program_add(request, vtemplate):
         return redirect('/program/' + str(program.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
+# get license list by program ID
+def get_keys(request, vtemplate, prog):
+    u"""
+    Получение списка ключей по номеру программы
+    """
+    if request.user.is_authenticated():
+        keys = Key.objects.filter(program=int(prog))
+    else:
+        keys = None
+    return TemplateResponse(request, vtemplate, {'keys': keys})

@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from main.settings import LEN_SALT
 from django import template
 import locale
 
@@ -18,3 +19,18 @@ def errorcss(value):
     Стиль для поля с ошибкой 
     """
     return " error" if value else ""
+
+@register.filter(name='forstud')
+def forstud(value):
+    u""" 
+    Для студентов программа или нет 
+    """
+    return u"для студентов" if value else u"не для студентов"
+
+@register.filter(name='keyname')
+def keyname(value, arg):
+    u""" 
+    Для
+    """
+    left_str = len(arg) + LEN_SALT + 1
+    return value[left_str:]

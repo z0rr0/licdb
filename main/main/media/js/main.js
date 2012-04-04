@@ -37,3 +37,25 @@ $(document).ajaxSend(function(event, xhr, settings) {
         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     }
 });
+
+// update left menu
+function get_keys(prog) {
+    vurl = "/get_keys/" + prog
+    $.ajax({
+        url: vurl,
+        type: 'GET',
+        dataType: 'html',
+        context: document.body,
+        // data: {
+        //     progid: prog
+        // }
+        success: function (data) {
+            $("#keylist").html(data);
+        },
+        error: function () {
+            // alert('sorry, error'); 
+            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+            $("#keylist").html('<span class="well span10">' + error_msg + '</span>');
+        },
+    });
+}

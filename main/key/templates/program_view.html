@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% load keytags %}
-{% block title %}Данные о лицензии ({{ result.name }}){% endblock %}
+{% block title %}Данные о программе ({{ result.name }}){% endblock %}
 
 {% block content %}
     <h1>{{ result.name }}
-        <span class="label label-info">{{ result.free|free }}</span>
+        <span class="label label-info">{{ result.use_student|forstud }}</span>
     </h1>
     <br>
     <div class="row-fluid">
         <div class="well span10">
+            <p>
+                <strong>Лицензия:</strong>
+                {{ result.license.name }}
+            </p>
             <p>
                 <strong>Сайт:</strong>
                 {% if result.url %}
@@ -17,28 +21,22 @@
                     <small>нет</small>
                 {% endif %}
             </p>
-            <p>
-                <strong>Файл:</strong>
-                {% if result.attach %}
-                    <a href="{{ result.attach.url }}">
-                        {{ result.attach.name|cut:"license/" }} 
-                        ({{ result.attach.size|filesizeformat }})
-                    </a>
-                {% else %}
-                    <small>нет</small>
-                {% endif %}
-            </p>
         </div>
     </div>
     <div class="row-fluid">
         <div class="span5">
-            <a class="btn btn-warning" href="/programs/{{ result.id }}" title="Список программ">
-                <i class="icon-folder-open icon-white"></i> Программы
+            <a class="btn btn-warning" href="javascript:get_keys({{ result.id }})" title="Список ключей">
+                <i class="
+                {% if user.is_authenticated %}
+                	icon-list-alt
+                {% else	%}
+                	icon-lock
+                {% endif %} icon-white"></i> Ключи
             </a>
-            <a class="btn btn-primary" href="/license/edit/{{ result.id }}" title="Правка">
+            <a class="btn btn-primary" href="/program/edit/{{ result.id }}" title="Правка">
                 <i class="icon-pencil icon-white"></i> Правка
             </a>
-            <a class="btn btn-danger" href="/license/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+            <a class="btn btn-danger" href="/program/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
                 <i class="icon-trash icon-white"></i> Удаление
             </a>
         </div>
@@ -62,4 +60,6 @@
             </p>
         </div>
     </div>
+    <hr />
+    <div class="row-fluid" id="keylist"></div>
 {% endblock content %}

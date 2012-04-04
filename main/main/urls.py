@@ -91,6 +91,14 @@ urlpatterns = patterns('',
     # license add
     (r'^program/add/?$', 'key.views.program_add', {
         'vtemplate': 'program_edit.html'}),
+    # license view
+    url(r'^program/(?P<id>\d+)/?$', 'key.views.obj_view', {
+        'vtemplate': 'program_view.html',
+        'model': Program}),
+
+    # get license list by program ID
+    url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.get_keys', {
+        'vtemplate': 'key_get_list.html'}),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

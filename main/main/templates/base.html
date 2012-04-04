@@ -5,15 +5,6 @@
         <meta http-equiv="Content-Language" content="ru"/> 
         {% block addmeta %}{% endblock %}
         <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap.min.css" type="text/css" />
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
-                .sidebar-nav {
-                padding: 9px 0;
-            }
-            </style>
         <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap-responsive.min.css" type="text/css" />
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" type="text/css" />
         <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
@@ -23,6 +14,7 @@
         <title>LicenseDB - {% block title %}{% endblock %}</title>
     </head>
     <body>
+        {% block pagejs %}{% endblock pagejs %}
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container-fluid">
@@ -84,10 +76,6 @@
                   <li><a href="/programs/">Всё</a></li>
                   <li><a href="/programs/nostud/">Для ВУЗа</a></li>
                   <li><a href="/programs/stud/">Для студентов</a></li>
-                  <li><a href="#">Link</a></li>
-                  <li><a href="#">Link</a></li>
-                  <li><a href="#">Link</a></li>
-                  <li><a href="#">Link</a></li>
                 </ul>
               </div>
             </div>

@@ -1,0 +1,36 @@
+{% load keytags %}
+<span class="span12">
+{% if keys %}
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <th>key</th>
+            <th>net</th>
+            <th>many</th>
+            <th>start</th>
+            <th>end</th>
+            <th>attach</th>
+        </tr>
+        {% for key in keys %}
+        <tr>
+            <td>{{ key.id }}</td>
+            <td>{{ key.key }}</td>
+            <td>{{ key.net }}</td>
+            <td>{{ key.manyuse }}</td>
+            <td>{{ key.date_start }}</td>
+            <td>{{ key.date_end }}</td>
+            <td>
+                {% if key.attach %}
+                    <a href="{{ key.attach.url }}">
+                        {{ key.attach.name|keyname:"keys/" }} 
+                        ({{ key.attach.size|filesizeformat }})
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.
+{% endif %}
+</span>

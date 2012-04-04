@@ -209,6 +209,8 @@ LOGGING = {
     }
 }
 
+LEN_SALT = 5
+
 # LOGIN_REDIRECT_URL = '/accounts/profile/'
 LOGIN_REDIRECT_URL = '/'
 

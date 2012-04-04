@@ -1,5 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.db import models
+import string, random
+from main.settings import LEN_SALT
 
 class License (models.Model):
     u"""
@@ -46,9 +48,16 @@ class Key (models.Model):
     Ключи и файлы лицензий для программого обеспечения
     
     """
+    def gen_filename(instance, filename):
+        def gen_salt(size=LEN_SALT, chars=string.ascii_lowercase + string.digits):
+            # str(random.randint(10000, 99999))
+            return ''.join(random.choice(chars) for x in range(size))
+        # new name
+        return 'keys/' + gen_salt() + "_" + filename
+
     program = models.ForeignKey(Program, verbose_name = u'программа')
-    key = models.CharField(max_length = 255, blank = True, unique = True, verbose_name = u'ключ')
-    attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'keys')
+    key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ')
+    attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = gen_filename)
     use = models.BooleanField(verbose_name = u'используется', default = False)
     manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 0, help_text = u'количество использований, 0 - если нет ограничений')
     net = models.BooleanField(verbose_name = u'сетевой', default = False, help_text = u'ключ предназначен для сетевого использования')
