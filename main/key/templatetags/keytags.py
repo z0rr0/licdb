@@ -17,4 +17,4 @@ def errorcss(value):
     u""" 
     Стиль для поля с ошибкой 
     """
-    return u" error" if value else ""
+    return " error" if value else ""

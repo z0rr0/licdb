@@ -61,7 +61,11 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="/license/{{ prog.license.id }}">{{ prog.license.name }}</a>
+                        {% if prog.license %}
+                            <a href="/license/{{ prog.license.id }}">{{ prog.license.name }}</a>
+                        {% else %}
+                            <small>нет</small>
+                        {% endif %}
                     </td>
                     <td>
                         <a class="btn btn-primary" href="/program/edit/{{ prog.id }}" title="Правка">

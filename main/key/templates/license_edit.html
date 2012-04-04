@@ -10,9 +10,10 @@
         };
     </script>  
 {% endblock addjscss %}
-{% block title %}Редактирование лицензии{% endblock %}
+{% block title %}{{ action }} лицензии{% endblock %}
 {% block content %}
-    <h1>Редактирование данных о лицензии</h1>
+    <h1>{{ action }} данных о лицензии</h1>
+    <br>
     <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}{{ form.management_form }}
         <div class="control-group{{ form.name.errors|errorcss }}">

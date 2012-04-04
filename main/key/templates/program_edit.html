@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load keytags %}
+{% block addjscss %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script> 
+    <script type="text/javascript">
+        window.onload = function()
+        {
+            CKEDITOR.replace( 'id_comment' );
+        };
+    </script>  
+{% endblock addjscss %}
+{% block title %}{{ action }} программы{% endblock %}
+{% block content %}
+    <h1>{{ action }} данных о программе</h1>
+    <br>
+    <form method="POST" action="">
+        {% csrf_token %}{{ form.management_form }}
+
+        <label for="id_name">{{ form.name.label }}</label>
+        {{ form.name|add_class:"span3"}}
+        <span class="help-inline">{{ form.name.help_text }}</span>
+        {{ form.name.errors|lower }}
+
+        <label for="id_license">{{ form.license.label }}</label>
+        {{ form.license|add_class:"span3"}}
+        <span class="help-inline">{{ form.license.help_text }}</span>
+        {{ form.license.errors|lower }}
+
+        <label for="id_url">{{ form.url.label }}</label>
+        {{ form.url|add_class:"span3"}}
+        <span class="help-inline">{{ form.url.help_text }}</span>
+        {{ form.url.errors|lower }}
+
+        <label class="checkbox">
+			{{ form.use_student }} {{ form.use_student.label }}
+			<span class="help-inline">({{ form.use_student.help_text }})</span>
+		</label>
+
+		<label for="id_comment">{{ form.comment.label }}</label>
+        {{ form.comment }}
+       
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <button class="btn" type="reset">Отменить</button>
+    </div>
+{% endblock content %}

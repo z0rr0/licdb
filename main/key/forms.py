@@ -21,4 +21,14 @@ class LicenseForm(forms.ModelForm):
         fields = ('name', 'url', 'attach', 'free', 'comment')
         widgets = {
             'attach': ShortNameClarableFileInput,
-        }  
+        }
+
+class ProgramForm(forms.ModelForm):
+    u"""
+    Форма для добавления/правки данных о программном обеспечении
+    """
+
+    class Meta:
+        model = Program
+        fields = ('name', 'license', 'url', 'use_student', 'comment')
+ 
