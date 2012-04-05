@@ -1,30 +1,48 @@
 {% load keytags %}
 <span class="span12">
 {% if keys %}
+    <p>
+        <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.  
+    </p>
     <table class="table table-striped">
         <tr>
-            <th>id</th>
-            <th>key</th>
-            <th>net</th>
-            <th>many</th>
-            <th>start</th>
-            <th>end</th>
-            <th>attach</th>
+            <th>№</th>
+            <th>Серийный номер</th>
+            <th>Сетевой</th>
+            <th>Количество использований</th>
+            <th>Используется</th>
+            <th>Начало</th>
+            <th>Окончание</th>
+            <th>Файл</th>
         </tr>
         {% for key in keys %}
         <tr>
-            <td>{{ key.id }}</td>
-            <td>{{ key.key }}</td>
-            <td>{{ key.net }}</td>
-            <td>{{ key.manyuse }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ key.key|default:"<small>нет</small>" }}</td>
+            <td>
+                {% if key.net %}
+                    <i class="icon-ok"></i>
+                {% else %}
+                    <i class="icon-minus"></i>
+                {% endif %}
+            </td>
+            <td>{{ key.manyuse|default:"нет ограничений" }}</td>
+            <td>
+                {% if key.use %}
+                    <i class="icon-ok"></i>
+                {% else %}
+                    <i class="icon-minus"></i>
+                {% endif %}
+            </td>
             <td>{{ key.date_start }}</td>
-            <td>{{ key.date_end }}</td>
+            <td>{{ key.date_end|default:'<i class="icon-minus"></i>' }}</td>
             <td>
                 {% if key.attach %}
-                    <a href="{{ key.attach.url }}">
+                    <a class="btn btn-inverse" href="{{ key.attach.url }}" title="Загрузка файла ключа">
+                        <i class="icon-download-alt icon-white"></i>
+                    </a>
                         {{ key.attach.name|keyname:"keys/" }} 
                         ({{ key.attach.size|filesizeformat }})
-                    </a>
                 {% endif %}
             </td>
         </tr>
