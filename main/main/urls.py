@@ -57,7 +57,8 @@ urlpatterns = patterns('',
     # license delete
     (r'^license/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/licenses/',
-        'model': License}),
+        'model': License, 
+        'perm': 'key.delete_license'}),
     # license edit
     (r'^license/edit/(?P<id>\d+)/?$', 'key.views.license_edit', {
         'vtemplate': 'license_edit.html'}),
@@ -84,7 +85,8 @@ urlpatterns = patterns('',
     # license delete
     (r'^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/programs/',
-        'model': Program}),
+        'model': Program,
+        'perm': 'key.delete_program'}),
     # license edit
     (r'^program/edit/(?P<id>\d+)/?$', 'key.views.program_edit', {
         'vtemplate': 'program_edit.html'}),
@@ -99,6 +101,11 @@ urlpatterns = patterns('',
     # get license list by program ID
     url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.get_keys', {
         'vtemplate': 'key_get_list.html'}),
+    # license delete
+    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+        'redirecturl': None,
+        'model': Key,
+        'perm': 'key.delete_key'}),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

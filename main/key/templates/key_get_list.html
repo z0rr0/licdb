@@ -13,7 +13,7 @@
             <th>Используется</th>
             <th>Начало</th>
             <th>Окончание</th>
-            <th>Файл</th>
+            <th>загрузка/управления</th>
         </tr>
         {% for key in keys %}
         <tr>
@@ -37,12 +37,20 @@
             <td>{{ key.date_start }}</td>
             <td>{{ key.date_end|default:'<i class="icon-minus"></i>' }}</td>
             <td>
+                <a class="btn btn-primary" href="/key/edit/{{ key.id }}" title="Правка">
+                    <i class="icon-pencil icon-white"></i>
+                </a>
+                <a class="btn btn-danger" 
+                    href="javascript:delkey({{ prog }}, 'keylist', {{ key.id }})" 
+                    title="Удаление">
+                    <i class="icon-trash icon-white"></i>
+                </a>
                 {% if key.attach %}
-                    <a class="btn btn-inverse" href="{{ key.attach.url }}" title="Загрузка файла ключа">
+                    <a class="btn btn-inverse" href="{{ key.attach.url }}" 
+                        title="Загрузка файла ключа {{ key.attach.name|keyname:"keys/" }} ({{ key.attach.size|filesizeformat }})">
                         <i class="icon-download-alt icon-white"></i>
                     </a>
-                        {{ key.attach.name|keyname:"keys/" }} 
-                        ({{ key.attach.size|filesizeformat }})
+                    {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}
                 {% endif %}
             </td>
         </tr>

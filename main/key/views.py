@@ -65,17 +65,23 @@ def programs(request, prog, vtemplate, stud):
         'type': typetext,
         'searchtext': searchtext})
 
-# license delete
-@permission_required('key.delete_license')
-def obj_delete(request, id, redirecturl, model):
+# @login_required
+def obj_delete(request, id, redirecturl, model, perm):
     u""" 
     Удалении данных об объекте 
     """
-    obj = get_object_or_404(model, pk=int(id))
-    if obj:
-        with transaction.commit_on_success():
-            obj.delete()
-    return HttpResponseRedirect(redirecturl)
+    status = 'Error'
+    if request.user.is_authenticated() and request.user.has_perm(perm):
+        obj = get_object_or_404(model, pk=int(id))
+        if obj:
+            with transaction.commit_on_success():
+                obj.delete()
+                status = 'OK'
+    else:
+        raise Http404('Отсутствуют необходимые разрешения.')
+    if redirecturl:
+        return HttpResponseRedirect(redirecturl)
+    return HttpResponse(status)
 
 # object view
 def obj_view(request, id, vtemplate, model):
@@ -163,4 +169,4 @@ def get_keys(request, vtemplate, prog):
         keys = Key.objects.filter(program=int(prog))
     else:
         keys = None
-    return TemplateResponse(request, vtemplate, {'keys': keys})
+    return TemplateResponse(request, vtemplate, {'keys': keys, 'prog': prog})

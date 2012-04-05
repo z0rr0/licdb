@@ -59,3 +59,13 @@ function get_keys(prog) {
         },
     });
 }
+
+function delkey(prog, keydiv, id) {
+    if (confirm("Уверены, что хотите удалить данные?")) 
+        $.get('/key/delete/' + id, function(data) {
+                get_keys(prog)
+            }).error(function() { 
+                error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+                $("#" + keydiv).html('<span class="well span10">' + error_msg + '</span>');
+            });
+}
