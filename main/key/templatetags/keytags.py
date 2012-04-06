@@ -32,5 +32,5 @@ def keyname(value, arg):
     u""" 
     Для
     """
-    left_str = len(arg) + LEN_SALT + 1
+    left_str = len(arg) + LEN_SALT
     return value[left_str:]

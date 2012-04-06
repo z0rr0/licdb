@@ -39,7 +39,7 @@ $(document).ajaxSend(function(event, xhr, settings) {
 });
 
 // update left menu
-function get_keys(prog) {
+function get_keys(prog, divid) {
     vurl = "/get_keys/" + prog
     $.ajax({
         url: vurl,
@@ -50,12 +50,12 @@ function get_keys(prog) {
         //     progid: prog
         // }
         success: function (data) {
-            $("#keylist").html(data);
+            $(divid).html(data);
         },
         error: function () {
             // alert('sorry, error'); 
             error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
-            $("#keylist").html('<span class="well span10">' + error_msg + '</span>');
+            $(divid).html('<span class="well span10">' + error_msg + '</span>');
         },
     });
 }
@@ -63,9 +63,9 @@ function get_keys(prog) {
 function delkey(prog, keydiv, id) {
     if (confirm("Уверены, что хотите удалить данные?")) 
         $.get('/key/delete/' + id, function(data) {
-                get_keys(prog)
+                get_keys(prog, keydiv)
             }).error(function() { 
                 error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
-                $("#" + keydiv).html('<span class="well span10">' + error_msg + '</span>');
+                $(keydiv).html('<span class="well span10">' + error_msg + '</span>');
             });
 }

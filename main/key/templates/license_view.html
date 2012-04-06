@@ -35,12 +35,16 @@
             <a class="btn btn-warning" href="/programs/{{ result.id }}" title="Список программ">
                 <i class="icon-folder-open icon-white"></i> Программы
             </a>
-            <a class="btn btn-primary" href="/license/edit/{{ result.id }}" title="Правка">
-                <i class="icon-pencil icon-white"></i> Правка
-            </a>
-            <a class="btn btn-danger" href="/license/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
-                <i class="icon-trash icon-white"></i> Удаление
-            </a>
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="/license/edit/{{ result.id }}" title="Правка">
+                    <i class="icon-pencil icon-white"></i>
+                    Правка
+                </a>
+                <a class="btn btn-danger" href="/license/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+                    <i class="icon-trash icon-white"></i>
+                    Удаление
+                </a>
+            {% endif %}
         </div>
         <div class="span5">
             <p align="right">
@@ -57,9 +61,7 @@
     <br>
     <div class="row-fluid">
         <div class="span10">
-            <p>
-                {{ result.comment|safe }}
-            </p>
+            {{ result.comment|safe }}
         </div>
     </div>
 {% endblock content %}

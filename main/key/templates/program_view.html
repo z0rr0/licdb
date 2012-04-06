@@ -25,20 +25,18 @@
     </div>
     <div class="row-fluid">
         <div class="span5">
-            <a class="btn btn-warning" href="javascript:get_keys({{ result.id }})" title="Список ключей">
-                <i class="
-                {% if user.is_authenticated %}
-                	icon-list-alt
-                {% else	%}
-                	icon-lock
-                {% endif %} icon-white"></i> Ключи
+            <a class="btn btn-warning" href="javascript:get_keys({{ result.id }}, '#keylist')" title="Список ключей">
+                <i class="icon-lock icon-white"></i>
+                Ключи
             </a>
+        {% if user.is_authenticated %}
             <a class="btn btn-primary" href="/program/edit/{{ result.id }}" title="Правка">
                 <i class="icon-pencil icon-white"></i> Правка
             </a>
             <a class="btn btn-danger" href="/program/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
                 <i class="icon-trash icon-white"></i> Удаление
             </a>
+        {% endif %}
         </div>
         <div class="span5">
             <p align="right">
@@ -55,9 +53,7 @@
     <br>
     <div class="row-fluid">
         <div class="span10">
-            <p>
-                {{ result.comment|safe }}
-            </p>
+            {{ result.comment|safe }}
         </div>
     </div>
     <hr />

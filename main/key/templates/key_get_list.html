@@ -41,13 +41,13 @@
                     <i class="icon-pencil icon-white"></i>
                 </a>
                 <a class="btn btn-danger" 
-                    href="javascript:delkey({{ prog }}, 'keylist', {{ key.id }})" 
+                    href="javascript:delkey({{ prog }}, '#keylist', {{ key.id }})" 
                     title="Удаление">
                     <i class="icon-trash icon-white"></i>
                 </a>
                 {% if key.attach %}
-                    <a class="btn btn-inverse" href="{{ key.attach.url }}" 
-                        title="Загрузка файла ключа {{ key.attach.name|keyname:"keys/" }} ({{ key.attach.size|filesizeformat }})">
+                    <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
+                        title="{{ key.attach.name|keyname:"keys/" }}, {{ key.attach.size|filesizeformat }}">
                         <i class="icon-download-alt icon-white"></i>
                     </a>
                     {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}

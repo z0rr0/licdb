@@ -88,6 +88,9 @@ urlpatterns = patterns('',
         'model': Key,
         'perm': 'key.delete_key'}),
 
+    # get license list by program ID
+    url(r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
+
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -151,7 +151,7 @@ INSTALLED_APPS = (
     'eis',
 )
 
-INSTALLED_APPS += ('south','widget_tweaks',)
+INSTALLED_APPS += ('south','widget_tweaks','filetransfers')
 SOUTH_LOGGING_FILE = os.path.join(PROJECT_PATH, 'south.log')
 
 if DEBUG:
@@ -209,7 +209,7 @@ LOGGING = {
     }
 }
 
-LEN_SALT = 5
+LEN_SALT = 13
 
 # LOGIN_REDIRECT_URL = '/accounts/profile/'
 LOGIN_REDIRECT_URL = '/'

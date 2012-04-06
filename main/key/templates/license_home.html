@@ -16,12 +16,16 @@
             </p>
         </div>
     </div>
-    <p>
-        <a class="btn btn-success" href="/license/add/" title="Добавление">
-            <i class="icon-plus icon-white"></i>
-            Добавить
-        </a>
-    </p>
+    <div class="row-fluid">
+        <div class="span12">
+            <p>
+                <a class="btn btn-success" href="/license/add/" title="Добавление">
+                    <i class="icon-plus icon-white"></i>
+                    Добавить
+                </a>
+            </p>
+        </div>
+    </div>
     {% for license in object_list %}
         {% cycle '<div class="row">' '' %}
         <div class="well span3">
@@ -45,12 +49,14 @@
             </p>
             <p>
                 <a class="btn" href="/license/{{ license.id }}">Подробнее &raquo;</a>
-                <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
-                    <i class="icon-pencil icon-white"></i>
-                </a>
-                <a class="btn btn-danger" href="/license/delete/{{ license.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
-                    <i class="icon-trash icon-white"></i>
-                </a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
+                        <i class="icon-pencil icon-white"></i>
+                    </a>
+                    <a class="btn btn-danger" href="/license/delete/{{ license.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+                        <i class="icon-trash icon-white"></i>
+                    </a>
+                {% endif %}
             </p>
         </div>
         {% cycle '' '</div>' %}

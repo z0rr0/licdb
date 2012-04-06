@@ -8,6 +8,9 @@ from django.db.models import Q, F, Sum
 from django.db import transaction
 from django.contrib import auth
 
+from filetransfers.api import serve_file
+
+from main.settings import LEN_SALT
 from key.models import *
 from key.forms import *
 
@@ -16,6 +19,7 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+# home page
 def index(request, vtemplate):
     u""" 
     Главная страница 
@@ -31,6 +35,7 @@ def index(request, vtemplate):
     # logger.info(program)
     return TemplateResponse(request, vtemplate, {'statistics': stat})
 
+# license list
 def licenses(request, vtemplate, typefree):
     u""" 
     Список лицензий
@@ -43,6 +48,7 @@ def licenses(request, vtemplate, typefree):
         typetext =  u'беспланые' if typefree else u'коммерческие'
     return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
 
+# program list
 def programs(request, prog, vtemplate, stud):
     u"""
     Программы
@@ -65,6 +71,7 @@ def programs(request, prog, vtemplate, stud):
         'type': typetext,
         'searchtext': searchtext})
  
+# delete object on page
 @login_required
 def obj_delete(request, id, redirecturl, model, perm):
     u""" 
@@ -79,6 +86,7 @@ def obj_delete(request, id, redirecturl, model, perm):
         to_url = '/accounts/login/?next=%s' % request.path
     return HttpResponseRedirect(to_url)
 
+# delete object in ajax
 @transaction.autocommit
 def obj_delete_ajax(request, id, model, perm):
     u""" 
@@ -89,8 +97,8 @@ def obj_delete_ajax(request, id, model, perm):
         obj = get_object_or_404(model, pk=int(id))
         obj.delete()
         status = 'OK'
-    else:
-        raise Http404('Отсутствуют необходимые разрешения.')
+    # else:
+    #     raise Http404('Отсутствуют необходимые разрешения.')
     return HttpResponse(status)
 
 # object view
@@ -180,3 +188,16 @@ def get_keys(request, vtemplate, prog):
     else:
         keys = None
     return TemplateResponse(request, vtemplate, {'keys': keys, 'prog': prog})
+
+# download key
+@login_required
+def download_handler(request, id):
+    u"""
+    download key file
+    """
+    upload = get_object_or_404(Key, pk=id)
+    # get real name
+    filename = upload.attach.name.rsplit('/')[-1]
+    # get upload name
+    filename = filename[LEN_SALT:]
+    return serve_file(request, upload.attach, None, filename)
