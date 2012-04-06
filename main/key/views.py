@@ -64,23 +64,33 @@ def programs(request, prog, vtemplate, stud):
     return TemplateResponse(request, vtemplate, {'object_list': object_list,
         'type': typetext,
         'searchtext': searchtext})
-
-# @login_required
+ 
+@login_required
 def obj_delete(request, id, redirecturl, model, perm):
     u""" 
     Удалении данных об объекте 
     """
+    if request.user.has_perm(perm):
+        obj = get_object_or_404(model, pk=int(id))
+        with transaction.commit_on_success():
+            obj.delete()
+            to_url = redirecturl
+    else:
+        to_url = '/accounts/login/?next=%s' % request.path
+    return HttpResponseRedirect(to_url)
+
+@transaction.autocommit
+def obj_delete_ajax(request, id, model, perm):
+    u""" 
+    Удалении данных об объекте в Ajax запросе
+    """
     status = 'Error'
     if request.user.is_authenticated() and request.user.has_perm(perm):
         obj = get_object_or_404(model, pk=int(id))
-        if obj:
-            with transaction.commit_on_success():
-                obj.delete()
-                status = 'OK'
+        obj.delete()
+        status = 'OK'
     else:
         raise Http404('Отсутствуют необходимые разрешения.')
-    if redirecturl:
-        return HttpResponseRedirect(redirecturl)
     return HttpResponse(status)
 
 # object view

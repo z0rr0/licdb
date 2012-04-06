@@ -7,25 +7,7 @@ admin.autodiscover()
 
 from django.conf import settings
 from django.contrib.auth.views import login, logout
-# from django.views.generic import list_detail
 from key.models import *
-
-# license_info = {
-#     'queryset': License.objects.all(),
-#     'template_name': 'license_home.html',
-#     }
-
-# license_free = {
-#     'queryset': License.objects.filter(free=True),
-#     'template_name': 'license_home.html',
-#     'extra_context': {'type': '(беспланые)'}
-#     }
-
-# license_com = {
-#     'queryset': License.objects.filter(free=False),
-#     'template_name': 'license_home.html',
-#     'extra_context': {'type': '(коммерческие)'}
-#     }
 
 urlpatterns = patterns('',
     # accounts
@@ -102,8 +84,7 @@ urlpatterns = patterns('',
     url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.get_keys', {
         'vtemplate': 'key_get_list.html'}),
     # license delete
-    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
-        'redirecturl': None,
+    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
         'model': Key,
         'perm': 'key.delete_key'}),
 
