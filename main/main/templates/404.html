@@ -1,12 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"> 
-<html lang="ru"> 
-    <head> 
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
-        <meta http-equiv="Content-Language" content="ru"/> 
-        <title>Not Found</title>
-    </head> 
-<body>
-    <h1 align="center">404 "Not Found"</h1>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Ошибка. Страница не найдена.{% endblock %}
+
+{% block content %}
+	<div class="hero-unit">
+    	<h2>Страница не найдена.</h2>
+    	<p>Ошибка 404.</p>
+    </div>
+    <!-- <center><img src="/media/404.png"></center> -->
+{% endblock content %}
+
 

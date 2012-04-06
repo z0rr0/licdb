@@ -30,7 +30,7 @@ def forstud(value):
 @register.filter(name='keyname')
 def keyname(value, arg):
     u""" 
-    Для
+    Фомирование имени для файла ключа
     """
     left_str = len(arg) + LEN_SALT
     return value[left_str:]

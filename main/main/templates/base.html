@@ -76,6 +76,12 @@
                   <li><a href="/programs/">Всё</a></li>
                   <li><a href="/programs/nostud/">Для ВУЗа</a></li>
                   <li><a href="/programs/stud/">Для студентов</a></li>
+                  {% if user.is_authenticated %}
+                    <li class="nav-header">Ключи</li>
+                    <li><a href="/keys/">Все</a></li>
+                    <li><a href="/keys/addmany/">Добавить</a></li>
+                    <li><a href="/keys/stud/">Выдать студентам</a></li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
