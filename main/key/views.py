@@ -94,7 +94,7 @@ def obj_delete_ajax(request, id, model, perm):
     u""" 
     Удалении данных об объекте в Ajax запросе
     """
-    status = 'Error'
+    status = 'ERROR'
     if request.user.is_authenticated() and request.user.has_perm(perm):
         obj = get_object_or_404(model, pk=int(id))
         obj.delete()
@@ -111,9 +111,10 @@ def obj_view(request, id, vtemplate, model):
     obj = get_object_or_404(model, pk=int(id))
     return TemplateResponse(request, vtemplate, {'result': obj})
 
+# summary object form
 def get_obj_form(request, setobrj, SetForm):
     u"""
-    Добавление или обновление данных об объектах 
+    Добавление или обновление данных об объектах, инициализации или сохранение данных формы
     """
     saved = False
     if request.method == 'POST':
@@ -183,19 +184,36 @@ def program_add(request, vtemplate):
 # get license list by program ID
 def get_keys(request, vtemplate, prog):
     u"""
-    Получение списка ключей по номеру программы
+    Получение списка ключей по номеру программы:
+
+    Авторизованные пользователи получают полный список ключей 
+    и данные по статистике хранения и использования ключей; 
+
+    Не авторизованные - только статистику.
+
+    all - всего лицензий;
+    net - количество сетевых лицензий;
+    namyuse - максимальное количество рабочих станций;
+    clients_all - общее количество пользователей;
+    clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
     """
-    if request.user.is_authenticated():
-        keys = Key.objects.filter(program=int(prog))
-    else:
-        keys = None
-    return TemplateResponse(request, vtemplate, {'keys': keys, 'prog': prog})
+    keys = Key.objects.filter(program=int(prog))
+    clients = Client.objects.filter(key=keys)
+    result = {'all': keys.count(), 
+        'net': keys.filter(net=True).count(),
+        'manyuse': keys.aggregate(Sum('manyuse'))['manyuse__sum'],
+        'use': keys.filter(use=True).count(),
+        'clients_all': clients.count(),
+        'clients_manyuse': clients.aggregate(Sum('manyuse'))['manyuse__sum']
+        }
+    result['free'] = result['manyuse'] - result['clients_manyuse']
+    return TemplateResponse(request, vtemplate, {'keys': keys, 'result': result, 'prog': prog})
 
 # download key
 @login_required
 def download_handler(request, id):
     u"""
-    download key file
+    Загрузка ключевого файла на носитель авторизованного пользователя
     """
     upload = get_object_or_404(Key, pk=id)
     # get real name

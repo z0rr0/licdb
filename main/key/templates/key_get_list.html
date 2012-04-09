@@ -1,62 +1,117 @@
 {% load keytags %}
-<span class="span12">
-{% if keys %}
-    <p>
-        <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.  
-    </p>
-    <table class="table table-striped">
-        <tr>
-            <th>№</th>
-            <th>Серийный номер</th>
-            <th>Сетевой</th>
-            <th>Количество</th>
-            <th>Используется</th>
-            <th>Начало</th>
-            <th>Окончание</th>
-            <th>загрузка/управления</th>
-        </tr>
-        {% for key in keys %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ key.key|default:"<small>нет</small>" }}</td>
-            <td>
-                {% if key.net %}
-                    <i class="icon-ok"></i>
-                {% else %}
-                    <i class="icon-minus"></i>
-                {% endif %}
-            </td>
-            <td>{{ key.manyuse|default:"нет ограничений" }}</td>
-            <td>
-                {% if key.use %}
-                    <i class="icon-ok"></i>
-                {% else %}
-                    <i class="icon-minus"></i>
-                {% endif %}
-            </td>
-            <td>{{ key.date_start }}</td>
-            <td>{{ key.date_end|default:'<i class="icon-minus"></i>' }}</td>
-            <td>
-                <a class="btn btn-primary" href="/key/edit/{{ key.id }}" title="Правка">
-                    <i class="icon-pencil icon-white"></i>
-                </a>
-                <a class="btn btn-danger" 
-                    href="javascript:delkey({{ prog }}, '#keylist', {{ key.id }})" 
-                    title="Удаление">
-                    <i class="icon-trash icon-white"></i>
-                </a>
-                {% if key.attach %}
-                    <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
-                        title="{{ key.attach.name|keyname:"keys/" }}, {{ key.attach.size|filesizeformat }}">
-                        <i class="icon-download-alt icon-white"></i>
+{% comment %}
+    Статистика
+{% endcomment %}
+    <h3>Статистика использования ключей</h3>
+    <div class="row-fluid">
+        <div class="span4">
+            <strong>Всего ключей</strong>
+        </div>
+        <div class="span8">{{ result.all }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Сетевых</strong>
+        </div>
+        <div class="span8">{{ result.net }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Используется</strong>
+        </div>
+        <div class="span8">{{ result.use }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Максимальное число рабочих мест</strong>
+        </div>
+        <div class="span8">{{ result.manyuse }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            <strong>Всего пользователей</strong>
+        </div>
+        <div class="span8">{{ result.clients_all }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Количество рабочих мест</strong>
+        </div>
+        <div class="span8">{{ result.clients_manyuse }}</div>
+    </div>
+    <div class="row-fluid">
+        <div class="span4">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Доступно для рабочих мест</strong>
+        </div>
+        <div class="span8">{{ result.free }}</div>
+    </div>
+{% comment %}
+    Данные о ключах
+{% endcomment %}
+{% if user.is_authenticated and keys %}
+    <br>
+    <div class="row-fluid">
+        <div class="span12">
+        <!-- <p>
+            <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.  
+        </p> -->
+        <table class="table table-striped">
+            <tr>
+                <th>№</th>
+                <th>Серийный номер</th>
+                <th>Сетевой</th>
+                <th>Количество</th>
+                <th>Используется</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>загрузка/управления</th>
+            </tr>
+            {% for key in keys %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ key.key|default:"<small>нет</small>" }}</td>
+                <td>
+                    {% if key.net %}
+                        <i class="icon-ok"></i>
+                    {% else %}
+                        <i class="icon-minus"></i>
+                    {% endif %}
+                </td>
+                <td>{{ key.manyuse|default:"нет ограничений" }}</td>
+                <td>
+                    {% if key.use %}
+                        <i class="icon-ok"></i>
+                    {% else %}
+                        <i class="icon-minus"></i>
+                    {% endif %}
+                </td>
+                <td>{{ key.date_start }}</td>
+                <td>{{ key.date_end|default:'<i class="icon-minus"></i>' }}</td>
+                <td>
+                    <a class="btn btn-primary" href="/key/edit/{{ key.id }}" title="Правка">
+                        <i class="icon-pencil icon-white"></i>
                     </a>
-                    {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    Данные о ключах отсутствуют.
+                    <a class="btn btn-danger" 
+                        href="javascript:delkey({{ prog }}, '#keylist', {{ key.id }})" 
+                        title="Удаление">
+                        <i class="icon-trash icon-white"></i>
+                    </a>
+                    {% if key.attach %}
+                        <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
+                            title="{{ key.attach.name|keyname:"keys/" }}, {{ key.attach.size|filesizeformat }}">
+                            <i class="icon-download-alt icon-white"></i>
+                        </a>
+                        {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
 {% endif %}
-</span>

@@ -60,7 +60,7 @@ class Key (models.Model):
     key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ')
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = gen_filename)
     use = models.BooleanField(verbose_name = u'используется', default = False)
-    manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 0, help_text = u'количество использований, 0 - если нет ограничений')
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 1, help_text = u'количество использований, 0 - если нет ограничений')
     net = models.BooleanField(verbose_name = u'сетевой', default = False, help_text = u'ключ предназначен для сетевого использования')
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии')
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии')
@@ -80,10 +80,11 @@ class Client (models.Model):
     Пользователи (люди или отделы), получившие или использующие лицензию/ключ
     
     """
+    key = models.ForeignKey(Key, verbose_name = u'ключ')
     name = models.CharField(max_length = 512, verbose_name = u'имя', help_text = u'даные пользователя, получившего лицензию')
     student = models.BooleanField(verbose_name = u'студент', default = False, help_text = u'используется студентом')
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество мест', default = 1, help_text = u'количество рабочих мест')
     date_start = models.DateField(verbose_name = u'дата выдачи',)
-    key = models.ForeignKey(Key, verbose_name = u'ключ')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
     # даты изменения и создания, заполняются автоматически
     modified = models.DateTimeField(auto_now = True, auto_now_add = True, editable = False, help_text = u'дата редактирования объекта')

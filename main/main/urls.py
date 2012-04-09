@@ -87,7 +87,6 @@ urlpatterns = patterns('',
     (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
         'model': Key,
         'perm': 'key.delete_key'}),
-
     # get license list by program ID
     url(r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
 
