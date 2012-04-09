@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseNotFound
 from django.template.response import TemplateResponse
 from django.core.context_processors import csrf
 from django.db.models import Q, F, Sum
@@ -99,8 +99,8 @@ def obj_delete_ajax(request, id, model, perm):
         obj = get_object_or_404(model, pk=int(id))
         obj.delete()
         status = 'OK'
-    # else:
-    #     raise Http404('Отсутствуют необходимые разрешения.')
+    else:
+        return HttpResponseNotFound('Error delete Key')
     return HttpResponse(status)
 
 # object view
@@ -181,6 +181,10 @@ def program_add(request, vtemplate):
         return redirect('/program/' + str(program.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
+# none to 0
+def NoneTo0(value):
+    return value if value else 0
+
 # get license list by program ID
 def get_keys(request, vtemplate, prog):
     u"""
@@ -196,17 +200,21 @@ def get_keys(request, vtemplate, prog):
     namyuse - максимальное количество рабочих станций;
     clients_all - общее количество пользователей;
     clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
+    free - количество рабочих мест, на которых еще можно использовать данное ПО
     """
-    keys = Key.objects.filter(program=int(prog))
-    clients = Client.objects.filter(key=keys)
-    result = {'all': keys.count(), 
-        'net': keys.filter(net=True).count(),
-        'manyuse': keys.aggregate(Sum('manyuse'))['manyuse__sum'],
-        'use': keys.filter(use=True).count(),
-        'clients_all': clients.count(),
-        'clients_manyuse': clients.aggregate(Sum('manyuse'))['manyuse__sum']
-        }
-    result['free'] = result['manyuse'] - result['clients_manyuse']
+    try:
+        keys = Key.objects.filter(program=int(prog))
+        clients = Client.objects.filter(key=keys)
+        result = {'all': keys.count(), 
+            'net': keys.filter(net=True).count(),
+            'manyuse': NoneTo0(keys.aggregate(Sum('manyuse'))['manyuse__sum']),
+            'use': keys.filter(use=True).count(),
+            'clients_all': clients.count(),
+            'clients_manyuse': NoneTo0(clients.aggregate(Sum('manyuse'))['manyuse__sum'])
+            }
+        result['free'] = result['manyuse'] - result['clients_manyuse']
+    except:
+        raise Http404
     return TemplateResponse(request, vtemplate, {'keys': keys, 'result': result, 'prog': prog})
 
 # download key

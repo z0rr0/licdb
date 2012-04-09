@@ -210,6 +210,8 @@ LOGGING = {
 }
 
 LEN_SALT = 13
+KEYS_DIRS = 'keys'
+LICENSE_DIRS = 'license'
 
 # LOGIN_REDIRECT_URL = '/accounts/profile/'
 LOGIN_REDIRECT_URL = '/'

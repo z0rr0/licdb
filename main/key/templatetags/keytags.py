@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from main.settings import LEN_SALT
+from main.settings import LEN_SALT, KEYS_DIRS
 from django import template
 import locale
 
@@ -28,9 +28,9 @@ def forstud(value):
     return u"для студентов" if value else u"не для студентов"
 
 @register.filter(name='keyname')
-def keyname(value, arg):
+def keyname(value):
     u""" 
     Фомирование имени для файла ключа
     """
-    left_str = len(arg) + LEN_SALT
+    left_str = len(KEYS_DIRS + '/') + LEN_SALT
     return value[left_str:]

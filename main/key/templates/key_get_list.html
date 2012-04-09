@@ -103,7 +103,7 @@
                     </a>
                     {% if key.attach %}
                         <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
-                            title="{{ key.attach.name|keyname:"keys/" }}, {{ key.attach.size|filesizeformat }}">
+                            title="{{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}">
                             <i class="icon-download-alt icon-white"></i>
                         </a>
                         {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}

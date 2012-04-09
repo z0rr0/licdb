@@ -37,8 +37,7 @@ $(document).ajaxSend(function(event, xhr, settings) {
         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     }
 });
-
-// update left menu
+// get list and statistics key's data
 function get_keys(prog, divid) {
     vurl = "/get_keys/" + prog
     $.ajax({
@@ -59,7 +58,7 @@ function get_keys(prog, divid) {
         },
     });
 }
-
+// delete key record
 function delkey(prog, keydiv, id) {
     if (confirm("Уверены, что хотите удалить данные?")) 
         $.get('/key/delete/' + id, function(data) {
