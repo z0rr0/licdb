@@ -16,16 +16,18 @@
             </p>
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <p>
-                <a class="btn btn-success" href="/license/add/" title="Добавление">
-                    <i class="icon-plus icon-white"></i>
-                    Добавить
-                </a>
-            </p>
+    {% if user.is_authenticated %}
+        <div class="row-fluid">
+            <div class="span12">
+                <p>
+                    <a class="btn btn-success" href="/license/add/" title="Добавление">
+                        <i class="icon-plus icon-white"></i>
+                        Добавить
+                    </a>
+                </p>
+            </div>
         </div>
-    </div>
+    {% endif %}
     {% for license in object_list %}
         {% cycle '<div class="row">' '' %}
         <div class="well span3">
@@ -49,6 +51,9 @@
             </p>
             <p>
                 <a class="btn" href="/license/{{ license.id }}">Подробнее &raquo;</a>
+                {% comment %}
+                    правка данных
+                {% endcomment %}
                 {% if user.is_authenticated %}
                     <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
                         <i class="icon-pencil icon-white"></i>

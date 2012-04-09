@@ -16,25 +16,27 @@
             </p>
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <p>
-                <a class="btn btn-success" href="/program/add/" title="Добавление">
-                    <i class="icon-plus icon-white"></i>
-                    Добавить
-                </a>
-            </p>
+    {% if user.is_authenticated %}
+        <div class="row-fluid">
+            <div class="span12">
+                <p>
+                    <a class="btn btn-success" href="/program/add/" title="Добавление">
+                        <i class="icon-plus icon-white"></i>
+                        Добавить
+                    </a>
+                </p>
+            </div>
         </div>
-    </div>
+    {% endif %}
     <div class="row-fluid">
         <div class="span12">
+            <form class="well form-search" method="POST" action="">
+                {% csrf_token %}{{ form.management_form }}
+                <input type="text" class="input-medium search-query"
+                    name="progsearch" placeholder="программа..." value="{{ searchtext }}">
+                <button type="submit" class="btn">Поиск</button>
+            </form>
             {% if object_list %}
-                <form class="well form-search" method="POST" action="">
-                    {% csrf_token %}{{ form.management_form }}
-                    <input type="text" class="input-medium search-query"
-                        name="progsearch" placeholder="программа..." value="{{ searchtext }}">
-                    <button type="submit" class="btn">Поиск</button>
-                </form>
                 <table class="table table-striped">
                     <tr>
                         <th>№</th>
@@ -85,7 +87,13 @@
                     {% endfor %}
                 </table>
             {% else %}
-                <p>Программ по данной лицензии нет.</p>
+                <div class="well span5">
+                    {% if lic %}
+                        <p>Программы для лицензии <strong>&laquo;{{ lic.name }}&raquo;</strong> не найдены.</p>
+                    {% else %}
+                        <p>Программы по данным критериям поиска не найдены.</p>
+                    {% endif %}
+                </div>
             {% endif %}
         </div>
     </div>

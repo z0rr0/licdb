@@ -49,7 +49,7 @@ def licenses(request, vtemplate, typefree):
     return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
 
 # program list
-def programs(request, prog, vtemplate, stud):
+def programs(request, lic, vtemplate, stud):
     u"""
     Программы
     """
@@ -62,13 +62,15 @@ def programs(request, prog, vtemplate, stud):
     else:
         object_list = Program.objects.filter(use_student=stud)
         typetext =  u'для студентов' if stud else u'не для студентов'
-    if prog:
-        object_list = object_list.filter(license=int(prog))
+    if lic:
+        lic = get_object_or_404(Program, pk=int(lic))
+        object_list = object_list.filter(license=lic)
     if request.method == 'POST':
         searchtext = request.POST['progsearch']
         object_list = object_list.filter(name__icontains=searchtext)
     return TemplateResponse(request, vtemplate, {'object_list': object_list,
         'type': typetext,
+        'lic': lic,
         'searchtext': searchtext})
  
 # delete object on page

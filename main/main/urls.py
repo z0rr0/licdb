@@ -51,19 +51,19 @@ urlpatterns = patterns('',
     # all program
     url(r'^programs/$', 'key.views.programs', {
         'vtemplate': 'program_home.html',
-        'stud': None, 'prog': None}),
+        'stud': None, 'lic': None}),
     # program by license
-    url(r'^programs/(?P<prog>\d+)/$', 'key.views.programs', {
+    url(r'^programs/(?P<lic>\d+)/$', 'key.views.programs', {
         'vtemplate': 'program_home.html',
         'stud': None}),
     # student program
     url(r'^programs/stud/$', 'key.views.programs', {
         'vtemplate': 'program_home.html',
-        'stud': True, 'prog': None}),
+        'stud': True, 'lic': None}),
     # no studnet program
     url(r'^programs/nostud/$', 'key.views.programs', {
         'vtemplate': 'program_home.html',
-        'stud': False, 'prog': None}),
+        'stud': False, 'lic': None}),
     # license delete
     (r'^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/programs/',
