@@ -48,6 +48,22 @@ def licenses(request, vtemplate, typefree):
         typetext =  u'беспланые' if typefree else u'коммерческие'
     return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
 
+# keys list by program
+@login_required
+def keys(request, vtemplate):
+    u"""
+    Список всех ключей - главная страница
+    """
+    prog = ""
+    try:
+        prog = int(request.GET['prog'])
+    except KeyError, ValueError:
+        pass
+    object_list = Key.objects.all()
+
+    return TemplateResponse(request, vtemplate, {'object_list': object_list, 'defprog': prog})
+
+
 # program list
 def programs(request, lic, vtemplate, stud):
     u"""

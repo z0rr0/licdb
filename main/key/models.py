@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.db import models
 import string, random
-from main.settings import LEN_SALT
+from main.settings import LEN_SALT, KEYS_DIRS, LICENSE_DIRS
 
 class License (models.Model):
     u"""
@@ -9,7 +9,7 @@ class License (models.Model):
     
     """
     name = models.CharField(max_length = 127, verbose_name = u'название', unique = True, help_text = u'название лицензии')
-    attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = 'license')
+    attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = LICENSE_DIRS)
     free = models.BooleanField(verbose_name = u'бесплатная', default = False, help_text = u'указывается для бесплатного ПО')
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта')
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
@@ -54,7 +54,7 @@ class Key (models.Model):
             chars = string.ascii_letters + string.digits * 5
             return ''.join(random.choice(chars) for x in range(size))
         # new name
-        return 'keys/' + gen_salt() + "_" + filename
+        return KEYS_DIRS + '/' + gen_salt() + "_" + filename
 
     program = models.ForeignKey(Program, verbose_name = u'программа')
     key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ')

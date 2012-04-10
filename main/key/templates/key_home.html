@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load keytags %}
+{% block title %}Ключи{% endblock %}
+
+{% block content %}
+    <h1>
+        Ключи для программного обеспечения
+        {% if type %}
+            <span class="label">{{ type }}</span>
+        {% endif %}
+    </h1>
+    <div class="row-fluid">
+        <div class="span12">
+            <p>
+                <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.
+            </p>
+        </div>
+    </div>
+    {% comment %}
+        список программ (с возможностью выбора всех)
+        ключи к программам
+    {% endcomment %}
+    <div class="row-fluid">
+        <div class="span12">
+            {{ object_list }}
+        </div>
+    </div>
+{% endblock content %}

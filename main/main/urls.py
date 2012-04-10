@@ -81,6 +81,9 @@ urlpatterns = patterns('',
         'model': Program}),
 
     # get license list by program ID
+    url(r'^keys/?$', 'key.views.keys', {
+        'vtemplate': 'key_home.html'}),
+    # get license list by program ID
     url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.get_keys', {
         'vtemplate': 'key_get_list.html'}),
     # license delete
