@@ -39,7 +39,7 @@ class ProgSelForm(forms.Form):
     program = Program.objects.all()
     CHOICES=[(0, '--- все программы ---'),
         (u"Для студенов", [(p.id, p.name) for p in program.filter(use_student=True).only('id', 'name')]),
-        (u"Не для студенов", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')]),
+        (u"Только для ВУЗа", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')]),
     ]
     # forms.Select(attrs={'onchange': 'alert("ok")'})
     programma = forms.ChoiceField(label='', widget=forms.Select(), choices=CHOICES)

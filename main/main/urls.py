@@ -84,7 +84,7 @@ urlpatterns = patterns('',
     url(r'^keys/?$', 'key.views.keys', {
         'vtemplate': 'key_home.html'}),
     # get license list by program ID
-    url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.get_keys', {
+    url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.keys_get', {
         'vtemplate': 'key_get_list.html'}),
     # license delete
     (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
@@ -92,6 +92,9 @@ urlpatterns = patterns('',
         'perm': 'key.delete_key'}),
     # get license list by program ID
     url(r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
+    # get keys list by program ID
+    url(r'^keys/program/?$', 'key.views.keys_by_program', {
+        'vtemplate': 'keys_by_program.html'}),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

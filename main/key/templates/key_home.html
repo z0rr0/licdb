@@ -6,9 +6,10 @@
 {% block addjscss %}
 <script type="text/javascript">
 $(document).ready(function() {
+    update_view_keys('#keycontent', $('#id_programma').val());
     $('#id_programma').change(function() {
         // alert('val=' + $('#id_programma').val());
-        update_view_keys('#keycontent', $('#id_programma').val())
+        update_view_keys('#keycontent', $('#id_programma').val());
     });
 })
 </script>
@@ -45,9 +46,9 @@ $(document).ready(function() {
             </form>
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <div id='keycontent'></div>
+    <div class="row">
+        <div class="span12" id='keycontent'>
+            <!-- <div id='keycontent'></div> -->
         </div>
     </div>
 {% endblock content %}

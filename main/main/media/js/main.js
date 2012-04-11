@@ -70,7 +70,7 @@ function delkey(prog, keydiv, id) {
 // search keys by program
 function update_view_keys(divid, program) {
     $.ajax({
-        url: '/keys/byprogram/',
+        url: '/keys/program/',
         type: 'GET',
         dataType: 'html',
         context: document.body,

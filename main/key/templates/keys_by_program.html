@@ -1,0 +1,85 @@
+{% load keytags %}
+<div class="row-fluid">
+    <div class="span12">
+        <p>
+            <span class="badge badge-success">&nbsp;</span>&nbsp; - доступно лицензий,
+            <span class="badge badge-warning">&nbsp;</span>&nbsp; - доступно для рабочих станция.
+        </p>
+    </div>
+</div>
+{% for obj in object_list %}
+    <div class="row-fluid">
+        <div class="row">
+            <div class="span4">
+                <h3>{{ obj.name }}  </h3>
+            </div>
+            <div class="span4">
+                <p align="right">
+                    <span class="badge badge-success">{{ obj.stat.allfree }}</span>
+                    <span class="badge badge-warning">{{ obj.stat.free }}</span>
+                    <a href="/program/{{ obj.id }}"  
+                        class="btn btn-mini" title="информация о программе">
+                        о программе
+                    </a>
+                    <a href="{{ obj.url|default:'#' }}" 
+                        class="btn btn-mini" title="{{ obj.url|default:'сайт не указан' }}">
+                        сайт
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="well span8">
+                {% for key in obj.key_set.all %}
+                    <div class="keyview">
+                        <div class="row">
+                            <div class="span3">
+                                {% if key.use %}
+                                    <span class="label label-important">используется</span>
+                                {% else %}
+                                    <span class="label label-inverse">доступен</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span3">
+                                <strong>Ключ:</strong> {{ key.key }}
+                            </div>
+                            <div class="span3">
+                                <strong>Файл:</strong>
+                                {% if key.attach %}
+                                    <a href="/key/download/{{ key.id }}" title="{{ key.attach.name|keyname }}">
+                                        {{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}
+                                    </a>
+                                {% else %}
+                                    нет
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span3">
+                                <strong>Количество раб. станций:</strong> {{ key.manyuse|keyuse }}
+                            </div>
+                            <div class="span3">
+                                <strong>Сетевой:</strong> {{ key.net|yesno }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span3">
+                                <strong>Дата начала:</strong> {{ key.date_start }}
+                            </div>
+                            <div class="span3">
+                                <strong>Дата окончания:</strong> {{ key.date_end }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span8">
+                                <p>{{ key.comment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endfor %}

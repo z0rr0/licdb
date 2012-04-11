@@ -70,13 +70,16 @@ def keys_by_program(request, vtemplate):
     поиск списка ключей по программе, Ajax
     """
     if request.user.is_authenticated():
-        object_list = Key.objects.all()
+        object_list = Program.objects.all()
         try:
             if 'prog' in request.GET:
-                object_list = object_list.filter(program=int(request.GET['prog']))
+                prog = int(request.GET['prog'])
+                if prog:
+                    object_list = object_list.filter(id=prog)
         except (KeyError, ValueError) as err:
             pass
-        object_list = object_list.order_by('program__name', 'use', 'key')
+        for obj in object_list:
+            obj.stat = key_get_stat(obj.id)
     else:
         return HttpResponseNotFound('Auth error')
     return TemplateResponse(request, vtemplate, {'object_list': object_list})
@@ -218,23 +221,8 @@ def program_add(request, vtemplate):
 def NoneTo0(value):
     return value if value else 0
 
-# get license list by program ID
-def get_keys(request, vtemplate, prog):
-    u"""
-    Получение списка ключей по номеру программы:
-
-    Авторизованные пользователи получают полный список ключей 
-    и данные по статистике хранения и использования ключей; 
-
-    Не авторизованные - только статистику.
-
-    all - всего лицензий;
-    net - количество сетевых лицензий;
-    namyuse - максимальное количество рабочих станций;
-    clients_all - общее количество пользователей;
-    clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
-    free - количество рабочих мест, на которых еще можно использовать данное ПО
-    """
+# get keys stats by program
+def key_get_stat(prog):
     try:
         keys = Key.objects.filter(program=int(prog))
         clients = Client.objects.filter(key=keys)
@@ -245,9 +233,32 @@ def get_keys(request, vtemplate, prog):
             'clients_all': clients.count(),
             'clients_manyuse': NoneTo0(clients.aggregate(Sum('manyuse'))['manyuse__sum'])
             }
+        result['allfree'] = result['all'] - result['use']
         result['free'] = result['manyuse'] - result['clients_manyuse']
     except:
-        raise Http404
+        return False
+    return result
+
+# get license list by program ID
+def keys_get(request, vtemplate, prog):
+    u"""
+    Получение списка ключей по номеру программы:
+
+    Авторизованные пользователи получают полный список ключей 
+    и данные по статистике хранения и использования ключей; 
+
+    Не авторизованные - только статистику. Аторизация фильтруется в шаблоне (**html**)
+
+    - all - всего лицензий;
+    - net - количество сетевых лицензий;
+    - namyuse - максимальное количество рабочих станций;
+    - clients_all - общее количество пользователей;
+    - clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
+    - free - количество рабочих мест, на которых еще можно использовать данное ПО
+    """
+    result = key_get_stat(prog)
+    if not result:
+        return HttpResponseNotFound('Get keys error')
     return TemplateResponse(request, vtemplate, {'keys': keys, 'result': result, 'prog': prog})
 
 # download key

@@ -34,3 +34,10 @@ def keyname(value):
     """
     left_str = len(KEYS_DIRS + '/') + LEN_SALT
     return value[left_str:]
+
+@register.filter(name='keyuse')
+def keyuse(value):
+    u""" 
+    Количество рабочих станций для ключа
+    """
+    return value if value else "не ограничено"
