@@ -87,9 +87,12 @@
                     {% endfor %}
                 </table>
             {% else %}
-                <div class="well span5">
+                <div class="well span8">
                     {% if lic %}
-                        <p>Программы для лицензии <strong>&laquo;{{ lic.name }}&raquo;</strong> не найдены.</p>
+                        <p>
+                            Программы для лицензии <strong>&laquo;{{ lic.name }}&raquo;</strong> не найдены.
+                            <a href="/programs/" title="Все программы">Все программы &raquo;</a>
+                        </p>
                     {% else %}
                         <p>Программы по данным критериям поиска не найдены.</p>
                     {% endif %}

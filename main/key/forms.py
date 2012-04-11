@@ -31,4 +31,15 @@ class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
         fields = ('name', 'license', 'url', 'use_student', 'comment')
- 
+
+class ProgSelForm(forms.Form):
+    u"""
+    список для выбора программы
+    """
+    program = Program.objects.all()
+    CHOICES=[(0, '--- все программы ---'),
+        (u"Для студенов", [(p.id, p.name) for p in program.filter(use_student=True).only('id', 'name')]),
+        (u"Не для студенов", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')]),
+    ]
+    # forms.Select(attrs={'onchange': 'alert("ok")'})
+    programma = forms.ChoiceField(label='', widget=forms.Select(), choices=CHOICES)

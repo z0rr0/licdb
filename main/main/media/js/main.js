@@ -52,7 +52,6 @@ function get_keys(prog, divid) {
             $(divid).html(data);
         },
         error: function () {
-            // alert('sorry, error'); 
             error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
             $(divid).html('<span class="well span10">' + error_msg + '</span>');
         },
@@ -67,4 +66,23 @@ function delkey(prog, keydiv, id) {
                 error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
                 $(keydiv).html('<span class="well span10">' + error_msg + '</span>');
             });
+}
+// search keys by program
+function update_view_keys(divid, program) {
+    $.ajax({
+        url: '/keys/byprogram/',
+        type: 'GET',
+        dataType: 'html',
+        context: document.body,
+        data: {
+            prog: program
+        },
+        success: function (data) {
+            $(divid).html(data);
+        },
+        error: function () {
+            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+            $(divid).html('<span class="well span8">' + error_msg + '</span>');
+        },
+    });
 }

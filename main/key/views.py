@@ -54,15 +54,32 @@ def keys(request, vtemplate):
     u"""
     Список всех ключей - главная страница
     """
-    prog = ""
     try:
-        prog = int(request.GET['prog'])
-    except KeyError, ValueError:
-        pass
-    object_list = Key.objects.all()
+        if 'prog' in request.GET:
+            prog = int(request.GET['prog'])
+        else:
+            prog = 0
+    except (KeyError, ValueError) as err:
+        prog = 0
+    form = ProgSelForm(initial={'programma': prog})
+    return TemplateResponse(request, vtemplate, {'form': form})
 
-    return TemplateResponse(request, vtemplate, {'object_list': object_list, 'defprog': prog})
-
+# search keys by program in ajax
+def keys_by_program(request, vtemplate):
+    u"""
+    поиск списка ключей по программе, Ajax
+    """
+    if request.user.is_authenticated():
+        object_list = Key.objects.all()
+        try:
+            if 'prog' in request.GET:
+                object_list = object_list.filter(program=int(request.GET['prog']))
+        except (KeyError, ValueError) as err:
+            pass
+        object_list = object_list.order_by('program__name', 'use', 'key')
+    else:
+        return HttpResponseNotFound('Auth error')
+    return TemplateResponse(request, vtemplate, {'object_list': object_list})
 
 # program list
 def programs(request, lic, vtemplate, stud):

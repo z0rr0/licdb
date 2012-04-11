@@ -1,6 +1,18 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 {% load keytags %}
 {% block title %}Ключи{% endblock %}
+
+{% block addjscss %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#id_programma').change(function() {
+        // alert('val=' + $('#id_programma').val());
+        update_view_keys('#keycontent', $('#id_programma').val())
+    });
+})
+</script>
+{% endblock addjscss %}
 
 {% block content %}
     <h1>
@@ -22,7 +34,20 @@
     {% endcomment %}
     <div class="row-fluid">
         <div class="span12">
-            {{ object_list }}
+            <form class="form-horizontal">
+            {% csrf_token %}{{ form.management_form }}
+                <div class="control-group">
+                <label class="control-label" for="id_programma">Программа</label>
+                    <div class="controls">
+                        {{ form.programma|add_class:"span3" }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div id='keycontent'></div>
         </div>
     </div>
 {% endblock content %}
