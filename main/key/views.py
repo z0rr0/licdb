@@ -99,7 +99,7 @@ def programs(request, lic, vtemplate, stud):
         object_list = Program.objects.filter(use_student=stud)
         typetext =  u'для студентов' if stud else u'не для студентов'
     if lic:
-        lic = get_object_or_404(Program, pk=int(lic))
+        lic = get_object_or_404(License, pk=int(lic))
         object_list = object_list.filter(license=lic)
     if request.method == 'POST':
         searchtext = request.POST['progsearch']

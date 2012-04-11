@@ -13,19 +13,43 @@
             <div class="span4">
                 <h3>{{ obj.name }}  </h3>
             </div>
-            <div class="span4">
+            <div class="span3">
                 <p align="right">
                     <span class="badge badge-success">{{ obj.stat.allfree }}</span>
                     <span class="badge badge-warning">{{ obj.stat.free }}</span>
-                    <a href="/program/{{ obj.id }}"  
-                        class="btn btn-mini" title="информация о программе">
-                        о программе
-                    </a>
-                    <a href="{{ obj.url|default:'#' }}" 
-                        class="btn btn-mini" title="{{ obj.url|default:'сайт не указан' }}">
-                        сайт
-                    </a>
                 </p>
+            </div>
+            <div class="span2">
+                <div class="btn-group dropup">
+                    <button class="btn btn-mini">О программе</button>
+                    <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/program/{{ obj.id }}" title="информация о программе">
+                                подробнее
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ obj.url|default:'#' }}" 
+                                title="{{ obj.url|default:'сайт не указан' }}">
+                                домашняя страница
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/license/{{ obj.license.id }}" title="лицензия ПО">
+                                лицензия
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/program/edit/{{ obj.id }}" title="изменить данные о программе">
+                                правка
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="row">
