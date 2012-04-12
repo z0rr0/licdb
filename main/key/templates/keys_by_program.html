@@ -1,8 +1,9 @@
 {% load keytags %}
 <div class="row-fluid">
-    <div class="span12">
+    <div class="span8">
         <p>
-            <span class="badge badge-success">&nbsp;</span>&nbsp; - доступно лицензий,
+            <span class="badge badge-success">&nbsp;</span>&nbsp; - доступно лицензий
+            &nbsp;&nbsp;&nbsp;
             <span class="badge badge-warning">&nbsp;</span>&nbsp; - доступно для рабочих станция.
         </p>
     </div>
@@ -57,17 +58,28 @@
                 {% for key in obj.key_set.all %}
                     <div class="keyview">
                         <div class="row">
-                            <div class="span3">
+                            <div class="span1">
                                 {% if key.use %}
                                     <span class="label label-important">используется</span>
                                 {% else %}
                                     <span class="label label-inverse">доступен</span>
                                 {% endif %}
                             </div>
+                            <div class="span3">
+                                <a class="btn btn-mini btn-primary" href="#">
+                                    <i class="icon-pencil icon-white"></i>
+                                    правка
+                                </a>
+                                <a class="btn btn-mini btn-primary" 
+                                    href="javascript:delkey_home({{ key.id }})">
+                                    <i class="icon-trash icon-white"></i>
+                                    удалить
+                                </a>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="span3">
-                                <strong>Ключ:</strong> {{ key.key }}
+                                <strong>Ключ:</strong> {{ key.key|default:"нет" }}
                             </div>
                             <div class="span3">
                                 <strong>Файл:</strong>

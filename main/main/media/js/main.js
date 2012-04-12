@@ -67,8 +67,20 @@ function delkey(prog, keydiv, id) {
                 $(keydiv).html('<span class="well span10">' + error_msg + '</span>');
             });
 }
+// delete key record
+function delkey_home(id) {
+    $.get('/key/delete/' + id, function(data) {
+            update_view_keys();
+        }).error(function() { 
+            error_msg = "Ошибка, возможно у Вас не хватает прав или нет соединения с сервером.";
+            alert(error_msg);
+            update_view_keys();
+        });
+}
 // search keys by program
 function update_view_keys(divid, program) {
+    divid = '#keycontent';
+    program = $('#id_programma').val();
     $.ajax({
         url: '/keys/program/',
         type: 'GET',

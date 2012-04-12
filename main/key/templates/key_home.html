@@ -6,10 +6,9 @@
 {% block addjscss %}
 <script type="text/javascript">
 $(document).ready(function() {
-    update_view_keys('#keycontent', $('#id_programma').val());
+    update_view_keys();
     $('#id_programma').change(function() {
-        // alert('val=' + $('#id_programma').val());
-        update_view_keys('#keycontent', $('#id_programma').val());
+        update_view_keys();
     });
 })
 </script>
@@ -23,7 +22,7 @@ $(document).ready(function() {
         {% endif %}
     </h1>
     <div class="row-fluid">
-        <div class="span12">
+        <div class="span10">
             <p>
                 <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.
             </p>
@@ -47,7 +46,7 @@ $(document).ready(function() {
         </div>
     </div>
     <div class="row">
-        <div class="span12" id='keycontent'>
+        <div class="span10" id='keycontent'>
             <!-- <div id='keycontent'></div> -->
         </div>
     </div>
