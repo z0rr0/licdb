@@ -64,6 +64,14 @@ def keys(request, vtemplate):
     form = ProgSelForm(initial={'programma': prog})
     return TemplateResponse(request, vtemplate, {'form': form})
 
+# cool number list
+def key_count_range(a, c=10):
+    k = a // c
+    b = [(i+1, '%s-%s' % (i*10+1, (i+1)*10)) for i in range(k)]
+    if a % c:
+        b.append((k+1, '%s-%s' % (k*10+1, a+1)))
+    return b
+
 # search keys by program in ajax
 def keys_by_program(request, vtemplate):
     u"""

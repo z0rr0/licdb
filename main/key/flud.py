@@ -7,11 +7,12 @@ import string, random
 from key.models import *
 from eis.models import *
 
+# generation random key value
 def gen_salt(size=15):
     chars = string.ascii_letters + string.digits * 5
     return ''.join(random.choice(chars) for x in range(size))
 
-
+# create many keys for custom program
 def key_generations(program=None, keys_count=50, useval=False):
 	if not program:
 		print "No program data"
@@ -37,18 +38,21 @@ def key_generations(program=None, keys_count=50, useval=False):
 	print 'End function'
 	return True
 
+# search freedom keys
 def key_clear(keys):
 	obj_list = []
 	for key in keys:
 		clients = Client.objects.filter(key=key).count()
 		freekey = key.manyuse - clients
 		if freekey>0 or key.manyuse==0:
+			# добавить столько раз, сколько ключей еще осталось
 			for i in range(freekey):
 				obj_list.append(key)
 	# перемешать
 	random.shuffle(obj_list)
 	return obj_list
 
+# create many clients for custom program
 def client_generations(program=None, client_count=50, studbool=True):
 	if not program:
 		print "No program data"
