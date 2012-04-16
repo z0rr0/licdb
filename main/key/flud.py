@@ -4,8 +4,16 @@ from django.db import transaction
 from datetime import datetime
 import string, random
 
+from main.settings import DEBUG
 from key.models import *
 from eis.models import *
+
+def nodebug(fn):
+	def wrapper(*args, **kwargs):
+		if not DEBUG:
+			print 'It is work with DEBUG only'
+			return False
+	return wrapper
 
 # generation random key value
 def gen_salt(size=15):
@@ -13,6 +21,7 @@ def gen_salt(size=15):
     return ''.join(random.choice(chars) for x in range(size))
 
 # create many keys for custom program
+@nodebug
 def key_generations(program=None, keys_count=50, useval=False):
 	if not program:
 		print "No program data"
@@ -53,6 +62,7 @@ def key_clear(keys):
 	return obj_list
 
 # create many clients for custom program
+@nodebug
 def client_generations(program=None, client_count=50, studbool=True):
 	if not program:
 		print "No program data"
