@@ -95,7 +95,12 @@ urlpatterns = patterns('',
     # get keys list by program ID
     url(r'^keys/program/?$', 'key.views.keys_by_program', {
         'vtemplate': 'keys_by_program.html'}),
-
+    # get keys by program ID, in range
+    url(r'^keys/program_one/(?P<prog>\d+)/?$', 'key.views.keys_by_program_one', {
+        'vtemplate': 'keys_by_program_one.html'}),
+    # key edit
+    (r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
+        'vtemplate': 'key_edit.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

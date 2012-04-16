@@ -6,10 +6,9 @@
 {% block addjscss %}
 <script type="text/javascript">
 $(document).ready(function() {
-    update_view_keys();
-    $('#id_programma').change(function() {
-        update_view_keys();
-    });
+    key_update_view();
+    $('#id_programma').change(key_update_view);
+    $('#id_onlyfree').change(key_update_view);
 })
 </script>
 {% endblock addjscss %}
@@ -34,15 +33,26 @@ $(document).ready(function() {
     {% endcomment %}
     <div class="row-fluid">
         <div class="span12">
-            <form class="form-horizontal">
+            <form class="form-inline">
             {% csrf_token %}{{ form.management_form }}
-                <div class="control-group">
-                <label class="control-label" for="id_programma">Программа</label>
-                    <div class="controls">
-                        {{ form.programma|add_class:"span3" }}
-                    </div>
-                </div>
+                <label for="id_programma">{{ form.programma.label }}</label>
+                {{ form.programma|add_class:"span3" }}
+                <label class="checkbox">
+                    {{ form.onlyfree }}
+                    {{ form.onlyfree.label }}
+                </label>
             </form>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span8">
+            <p>
+                <span class="badge">&nbsp;</span>&nbsp;&mdash; всего ключей / раб.станций
+                &nbsp;&nbsp;&nbsp;
+                <span class="badge badge-success">&nbsp;</span>&nbsp;&mdash; доступно лицензий
+                &nbsp;&nbsp;&nbsp;
+                <span class="badge badge-warning">&nbsp;</span>&nbsp;&mdash; доступно для рабочих станция.
+            </p>
         </div>
     </div>
     <div class="row">

@@ -19,6 +19,19 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+PROG_LIMIT = 10
+
+# --------- ADD FUNTIONS -------------
+# decorator for ajax login
+def login_required_ajax404(fn):
+    def wrapper(*args, **kwargs):
+        if args[0].user.is_authenticated():
+            return fn(*args, **kwargs)
+        else:
+            return HttpResponseNotFound('Auth error')
+    return wrapper
+
+# --------- MAIN FUNTIONS -------------
 # home page
 def index(request, vtemplate):
     u""" 
@@ -65,32 +78,64 @@ def keys(request, vtemplate):
     return TemplateResponse(request, vtemplate, {'form': form})
 
 # cool number list
-def key_count_range(a, c=10):
+def key_count_range(a, c=PROG_LIMIT):
     k = a // c
     b = [(i+1, '%s-%s' % (i*10+1, (i+1)*10)) for i in range(k)]
     if a % c:
-        b.append((k+1, '%s-%s' % (k*10+1, a+1)))
+        b.append((k+1, '%s-%s' % (k*10+1, a)))
     return b
 
 # search keys by program in ajax
+@login_required_ajax404
 def keys_by_program(request, vtemplate):
     u"""
     поиск списка ключей по программе, Ajax
     """
-    if request.user.is_authenticated():
-        object_list = Program.objects.all()
-        try:
-            if 'prog' in request.GET:
-                prog = int(request.GET['prog'])
-                if prog:
-                    object_list = object_list.filter(id=prog)
-        except (KeyError, ValueError) as err:
-            pass
-        for obj in object_list:
-            obj.stat = key_get_stat(obj.id)
-    else:
-        return HttpResponseNotFound('Auth error')
+    object_list = Program.objects.all()
+    try:
+        if 'prog' in request.GET:
+            prog = int(request.GET['prog'])
+            if prog:
+                object_list = object_list.filter(id=prog)
+        if 'free' in request.GET:
+            free = True if int(request.GET['free']) else False
+    except (KeyError, ValueError) as err:
+        pass
+    for obj in object_list:
+        obj.stat = key_get_stat(obj.id)
+        obj.filterkey = obj.key_set.all()
+        if free:
+            obj.filterkey = obj.filterkey.filter(use=False)
+        # form
+        form = ProgrmaCount()
+        form.fields['plist'].widget = forms.Select(attrs={'id': 'id_prog' + str(obj.id)})
+        form.fields['plist'].choices = key_count_range(obj.filterkey.count())
+        obj.form = form
+        obj.filterkey = obj.filterkey[:10]
     return TemplateResponse(request, vtemplate, {'object_list': object_list})
+
+# search keys by program in ajax
+@login_required_ajax404
+def keys_by_program_one(request, vtemplate, prog):
+    u"""
+    Поиск ключей по программе.
+
+    Выбиратеся только интервал, по PROG_LIMIT (по-умолчанию 10) штук
+    """
+    keys = Key.objects.filter(program=int(prog))
+    try:
+        if 'free' in request.GET:
+            if int(request.GET['free']):
+                keys = keys.filter(use=False)
+        if 'limit' in request.GET:
+            limit = int(request.GET['limit']) if int(request.GET['limit']) else 1
+        else:
+            limit = 1
+    except (KeyError, ValueError) as err:
+        HttpResponseNotFound('Not foud program in GET')
+    limit = (limit - 1) * 10, limit * 10
+    keys = keys[limit[0]:limit[1]]
+    return TemplateResponse(request, vtemplate, {'filterkey': keys})
 
 # program list
 def programs(request, lic, vtemplate, stud):
@@ -133,13 +178,14 @@ def obj_delete(request, id, redirecturl, model, perm):
     return HttpResponseRedirect(to_url)
 
 # delete object in ajax
+@login_required_ajax404
 @transaction.autocommit
 def obj_delete_ajax(request, id, model, perm):
     u""" 
     Удалении данных об объекте в Ajax запросе
     """
     status = 'ERROR'
-    if request.user.is_authenticated() and request.user.has_perm(perm):
+    if request.user.has_perm(perm):
         obj = get_object_or_404(model, pk=int(id))
         obj.delete()
         status = 'OK'
@@ -185,6 +231,7 @@ def license_edit(request, id, vtemplate):
         return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
+
 # license add
 @permission_required('key.add_license')
 def license_add(request, vtemplate):
@@ -197,6 +244,20 @@ def license_add(request, vtemplate):
     if saved:
         return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
+
+# key edit
+@permission_required('key.change_key')
+def key_edit(request, id, vtemplate):
+    u""" 
+    Редактирование данных о ключе 
+    """
+    c = {}
+    c.update(csrf(request))
+    key = get_object_or_404(Key, id=int(id))
+    form, key, saved = get_obj_form(request, key, KeyForm)
+    if saved:
+        return redirect('/keys/?prog=' + str(key.program_id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
 # program edit
 @permission_required('key.change_program')
@@ -233,7 +294,7 @@ def NoneTo0(value):
 def key_get_stat(prog):
     try:
         keys = Key.objects.filter(program=int(prog))
-        clients = Client.objects.filter(key=keys)
+        clients = Client.objects.filter(key__in=keys)
         result = {'all': keys.count(), 
             'net': keys.filter(net=True).count(),
             'manyuse': NoneTo0(keys.aggregate(Sum('manyuse'))['manyuse__sum']),
@@ -267,6 +328,8 @@ def keys_get(request, vtemplate, prog):
     result = key_get_stat(prog)
     if not result:
         return HttpResponseNotFound('Get keys error')
+    program = get_object_or_404(Program, pk=prog)
+    keys = program.key_set.all()
     return TemplateResponse(request, vtemplate, {'keys': keys, 'result': result, 'prog': prog})
 
 # download key

@@ -57,10 +57,10 @@ class Key (models.Model):
         return KEYS_DIRS + '/' + gen_salt() + "_" + filename
 
     program = models.ForeignKey(Program, verbose_name = u'программа')
-    key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ')
+    key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ', help_text = u'ключ / серийной номер продукта')
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = gen_filename)
-    use = models.BooleanField(verbose_name = u'используется', default = False)
-    manyuse = models.PositiveSmallIntegerField(verbose_name = u'множественное использование', default = 1, help_text = u'количество использований, 0 - если нет ограничений')
+    use = models.BooleanField(verbose_name = u'используется', default = False, help_text = u'ключ уже используется')
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество', default = 1, help_text = u'количество использований (раб.станций), 0 - если нет ограничений')
     net = models.BooleanField(verbose_name = u'сетевой', default = False, help_text = u'ключ предназначен для сетевого использования')
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии')
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии')
@@ -73,7 +73,7 @@ class Key (models.Model):
         return u"ключ для \"%s\" %s" % (self.program.name, self.key)
 
     class Meta:
-        ordering = ['use', 'program__name', 'key']
+        ordering = ['use', 'program__name', 'id']
     
 class Client (models.Model):
     u"""

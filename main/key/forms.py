@@ -32,6 +32,18 @@ class ProgramForm(forms.ModelForm):
         model = Program
         fields = ('name', 'license', 'url', 'use_student', 'comment')
 
+class KeyForm(forms.ModelForm):
+    u"""
+    Форма для добавления/правки данных о ключе
+    """
+
+    class Meta:
+        model = Key
+        fields = ('program', 'key', 'attach', 'use', 'manyuse', 'net', 'date_start', 'date_end', 'comment')
+        widgets = {
+            'attach': ShortNameClarableFileInput,
+        }
+
 class ProgSelForm(forms.Form):
     u"""
     список для выбора программы
@@ -42,4 +54,12 @@ class ProgSelForm(forms.Form):
         (u"Только для ВУЗа", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')]),
     ]
     # forms.Select(attrs={'onchange': 'alert("ok")'})
-    programma = forms.ChoiceField(label='', widget=forms.Select(), choices=CHOICES)
+    programma = forms.ChoiceField(label=u'Программа', widget=forms.Select(), choices=CHOICES)
+    onlyfree = forms.BooleanField(label=u'только доступные ключи', widget=forms.CheckboxInput())
+
+class ProgrmaCount(forms.Form):
+    u"""
+    Список количества ключей
+    """
+    plist = forms.ChoiceField(label='', widget=forms.Select())
+        

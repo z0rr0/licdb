@@ -1,21 +1,17 @@
 {% load keytags %}
-<div class="row-fluid">
-    <div class="span8">
-        <p>
-            <span class="badge badge-success">&nbsp;</span>&nbsp; - доступно лицензий
-            &nbsp;&nbsp;&nbsp;
-            <span class="badge badge-warning">&nbsp;</span>&nbsp; - доступно для рабочих станция.
-        </p>
-    </div>
-</div>
+{% load widget_tweaks %}
 {% for obj in object_list %}
     <div class="row-fluid">
         <div class="row">
             <div class="span4">
-                <h3>{{ obj.name }}  </h3>
+                <h3>{{ obj.name }}</h3>
             </div>
-            <div class="span3">
-                <p align="right">
+            <div class="span1">
+                {{ obj.form.plist|add_class:"span1"|attr:"onchange:key_update_range(this, 1)" }}
+            </div>
+            <div class="span2">
+                <p>
+                    <span class="badge">{{ obj.stat.all }}&nbsp;/&nbsp;{{ obj.stat.manyuse }}</span>
                     <span class="badge badge-success">{{ obj.stat.allfree }}</span>
                     <span class="badge badge-warning">{{ obj.stat.free }}</span>
                 </p>
@@ -53,9 +49,9 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="pr{{ obj.id }}">
             <div class="well span8">
-                {% for key in obj.key_set.all %}
+                {% for key in obj.filterkey %}
                     <div class="keyview">
                         <div class="row">
                             <div class="span1">
@@ -66,12 +62,12 @@
                                 {% endif %}
                             </div>
                             <div class="span3">
-                                <a class="btn btn-mini btn-primary" href="#">
+                                <a class="btn btn-mini btn-primary" href="/key/edit/{{ key.id }}">
                                     <i class="icon-pencil icon-white"></i>
                                     правка
                                 </a>
                                 <a class="btn btn-mini btn-primary" 
-                                    href="javascript:delkey_home({{ key.id }})">
+                                    href="javascript:delkey_home({{ key.program_id }}, {{ key.id }})">
                                     <i class="icon-trash icon-white"></i>
                                     удалить
                                 </a>
@@ -105,7 +101,7 @@
                                 <strong>Дата начала:</strong> {{ key.date_start }}
                             </div>
                             <div class="span3">
-                                <strong>Дата окончания:</strong> {{ key.date_end }}
+                                <strong>Дата окончания:</strong> {{ key.date_end|default:"нет" }}
                             </div>
                         </div>
                         <div class="row">

@@ -13,6 +13,8 @@ def nodebug(fn):
 		if not DEBUG:
 			print 'It is work with DEBUG only'
 			return False
+		else:
+			fn(*args, **kwargs)
 	return wrapper
 
 # generation random key value
@@ -51,8 +53,8 @@ def key_generations(program=None, keys_count=50, useval=False):
 def key_clear(keys):
 	obj_list = []
 	for key in keys:
-		clients = Client.objects.filter(key=key).count()
-		freekey = key.manyuse - clients
+		# clients = Client.objects.filter(key=key).count()
+		freekey = key.manyuse - key.client_set.count()
 		if freekey>0 or key.manyuse==0:
 			# добавить столько раз, сколько ключей еще осталось
 			for i in range(freekey):
@@ -69,7 +71,7 @@ def client_generations(program=None, client_count=50, studbool=True):
 		return False
 	else:
 		try:
-			keys = key_clear(Key.objects.filter(program=program, use=False))
+			keys = key_clear(Key.objects.filter(program=program))
 			studs = [s for s in Student.objects.all()]
 			klen = len(keys)
 			slen = len(studs)
@@ -85,6 +87,9 @@ def client_generations(program=None, client_count=50, studbool=True):
 					date_start=datetime.now().date(),
 					comment='Test genarations field'
 				)
+				# Если ключ еще не испльзовался то сделаем его таковым
+				key.use = True
+				key.save()
 				client.save()
 				print client
 		except Client.DoesNotExist as err:
