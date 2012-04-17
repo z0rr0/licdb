@@ -259,6 +259,27 @@ def key_edit(request, id, vtemplate):
         return redirect('/keys/?prog=' + str(key.program_id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
+# key edit
+@permission_required('key.add_key')
+def key_add(request, vtemplate):
+    u""" 
+    Добавление данных о ключе 
+    """
+    c = {}
+    c.update(csrf(request))
+    if 'prog' in request.GET:
+        try:
+            program = Program.objects.get(pk=int(request.GET['prog']))
+            key = Key(program=program)
+        except Program.DoesNotExist:
+            key = None
+    else:
+        key = None
+    form, key, saved = get_obj_form(request, key, KeyForm)
+    if saved:
+        return redirect('/keys/?prog=' + str(key.program_id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
+
 # program edit
 @permission_required('key.change_program')
 def program_edit(request, id, vtemplate):

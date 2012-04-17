@@ -101,6 +101,9 @@ urlpatterns = patterns('',
     # key edit
     (r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
         'vtemplate': 'key_edit.html'}),
+    # license add
+    (r'^key/add/?$', 'key.views.key_add', {
+        'vtemplate': 'key_edit.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
