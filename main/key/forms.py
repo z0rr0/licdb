@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from key.models import *
 from django import forms
 # from django.forms.extras.widgets import SelectDateWidget
@@ -29,6 +30,12 @@ class LicenseForm(forms.ModelForm):
         widgets = {
             'attach': ShortNameClarableFileInput,
         }
+
+class UserForm(forms.ModelForm):
+    # pass
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'password')
 
 class ProgramForm(forms.ModelForm):
     u"""

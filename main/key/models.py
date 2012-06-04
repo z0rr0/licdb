@@ -95,4 +95,3 @@ class Client (models.Model):
 
     class Meta:
         ordering = ['student', 'name', 'key__program__name']
-    

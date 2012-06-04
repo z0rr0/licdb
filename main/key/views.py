@@ -1,7 +1,8 @@
 #-*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseNotFound
+from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.core.context_processors import csrf
 from django.db.models import Q, F, Sum
@@ -20,6 +21,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 PROG_LIMIT = 10
+PAGE_COUNT = 10
 
 # --------- ADD FUNTIONS -------------
 # decorator for ajax login
@@ -31,24 +33,45 @@ def login_required_ajax404(fn):
             return HttpResponseNotFound('Auth error')
     return wrapper
 
+# --------- GENERAL FUNCTIONS -------------
+def objects_list(model, page_count=None, name=None):
+    u"""
+    Получение объектов с возможным разбиение на страницы и/или фильтром по имени
+    """
+    obj_list = model.objects.all()
+    if name:
+        obj_list = obj_list.filter(name__icontains=name)
+    if page_count:
+        # постраничный просмотр 
+        paginator = Paginator(obj_list, PAGE_COUNT)
+        try:
+            obj = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            obj = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            obj = paginator.page(paginator.num_pages)
+    else:
+        pagintor = None
+    return obj, paginator
+
 # --------- MAIN FUNTIONS -------------
-# home page
 def index(request, vtemplate):
     u""" 
-    Главная страница 
+    Главная страница, со статистикой по платному ПО
     """
     program = Program.objects.filter(license__free=False).only('name')
     stat = []
     for po in program:
-    	all = Key.objects.filter(program=po)
-    	use = all.filter(use=True)
+    	all_keys = Key.objects.filter(program=po)
+    	use_keys = all_keys.filter(use=True)
     	stat.append({'program': po.name, 
-    		'all': all.count(), 
-    		'use': use.count()})
+    		'all': all_keys.count(), 
+    		'use': use_keys.count()})
     # logger.info(program)
     return TemplateResponse(request, vtemplate, {'statistics': stat})
 
-# license list
 def licenses(request, vtemplate, typefree):
     u""" 
     Список лицензий

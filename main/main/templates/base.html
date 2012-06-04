@@ -32,6 +32,7 @@
                     О ресурсе</a></li>
                   <li><a href="#contact"><i class="icon-envelope icon-white"></i>
                     Контакты</a></li>
+                  <li class="divider-vertical"></li>
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                       <i class="icon-tags icon-white"></i>
@@ -45,11 +46,12 @@
                 </ul>
                 <form class="navbar-search pull-left" method="POST" action="/programs/">
                     {% csrf_token %}{{ form.management_form }}
-                    <i class="icon-search icon-white"></i>
+                    <!-- <i class="icon-search icon-white"></i> -->
                     <input type="text" class="search-query" name="progsearch" placeholder="Поиск программ…">
                 </form>
                 {% if user.is_authenticated %}
                   <ul class="nav pull-right">
+                    <li class="divider-vertical"></li>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle"  data-toggle="dropdown">
                         <i class="icon-user icon-white"></i>
@@ -57,9 +59,10 @@
                         <b class="caret"></b>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><li><a href="#"  title="изменить личные данные">профиль</a></li></li>
-                        <li><li><a href="#"  title="ключи">мои ключи</a></li></li>
-                        <li><li><a href="/accounts/logout/"  title="Выйти">выйти</a></li></li>
+                        <li><a href="#"  title="изменить личные данные">профиль</a></li>
+                        <li><a href="#"  title="ключи">ключи</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/accounts/logout/" title="Выйти">выйти</a></li>
                       </ul>
                     </li>
                   </ul>

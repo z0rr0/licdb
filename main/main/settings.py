@@ -178,7 +178,7 @@ if DEBUG:
         # 'HIDE_DJANGO_SQL': False,
         # 'TAG': 'div',
     }
-    INTERNAL_IPS = ('127.0.0.2',)
+    INTERNAL_IPS = ('127.0.0.1',)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
