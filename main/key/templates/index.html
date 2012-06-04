@@ -10,36 +10,39 @@
         <div class="span4">
           <h2>Лицензии</h2>
           <p>Информация об используемых лицензий, тексты пользовательских соглашений.</p>
-          <p><a class="btn" href="/licenses/">Подробнее &raquo;</a></p>
+          <p><a class="btn btn-primary" href="/licenses/">Подробнее &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Программы</h2>
           <p>Данные об используемом программном обеспечении, информация о производителе.</p>
-          <p><a class="btn" href="/programs/">Подробнее &raquo;</a></p>
+          <p><a class="btn btn-primary" href="/programs/">Подробнее &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Ключи</h2>
           <p>Ключевые файлы, серийные номера для активации программ.</p>
-          <p><a class="btn" href="#">Подробнее &raquo;</a></p>
+          <p><a class="btn btn-primary" href="#">Подробнее &raquo;</a></p>
         </div>
-        <div class="span10">
-            <table class="table table-striped">
-                <caption><em>Статистика использования коммерческого программного обеспечения</em></caption>
-                <tr>
-                    <th>№</th>
-                    <th>Программное обеспечение</th>
-                    <th>Общее количество лицензий</th>
-                    <th>Использовано</th>
-                </tr>
-                {% for stat in statistics %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ stat.program }}</td>
-                        <td>{{ stat.all }}</td>
-                        <td>{{ stat.use }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <br /><br /><br />
+        <table class="table table-striped">
+          <caption><em>Статистика использования коммерческого программного обеспечения</em></caption>
+          <tr>
+            <th>№</th>
+            <th>Программное обеспечение</th>
+            <th>Общее количество лицензий</th>
+            <th>Использовано</th>
+          </tr>
+          {% for stat in statistics %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ stat.program }}</td>
+              <td>{{ stat.all }}</td>
+              <td>{{ stat.use }}</td>
+            </tr>
+          {% endfor %}
+      </table>
+      </div>
     </div>
 {% endblock %}

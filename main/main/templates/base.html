@@ -4,13 +4,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
         <meta http-equiv="Content-Language" content="ru"/> 
         {% block addmeta %}{% endblock %}
-        <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap.min.css" type="text/css" />
-        <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap-responsive.min.css" type="text/css" />
-        <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" type="text/css" />
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" />
+        <script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
+        <script src="{{ MEDIA_URL }}bootstrap/js/bootstrap.min.js"></script>
         {% block addjscss %}{% endblock addjscss %}
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/main.js"></script> 
+        <script src="{{ MEDIA_URL }}js/main.js"></script> 
         <title>LicenseDB - {% block title %}{% endblock %}</title>
     </head>
     <body>
@@ -37,27 +37,37 @@
                       <i class="icon-tags icon-white"></i>
                       Другие ресурсы<b class="caret"></b></a>
                       <ul class="dropdown-menu">
-                        <li><a href="http://www.apingtu.edu.ru/">Сайт АПИ НГТУ</a></li>
-                        <li><a href="http://www.apingtu.edu.ru/index.php?option=com_content&task=view&id=272&Itemid=32">Расписание студентов</a></li>
-                        <li><a href="http://rasp.apingtu.edu.ru/">Расписание преподавателей</a></li>
+                        <li><a href="http://www.apingtu.edu.ru/" target="_blank">Сайт АПИ НГТУ</a></li>
+                        <li><a href="http://www.apingtu.edu.ru/index.php?option=com_content&task=view&id=272&Itemid=32" target="_blank">Расписание студентов</a></li>
+                        <li><a href="http://rasp.apingtu.edu.ru/" target="_blank">Расписание преподавателей</a></li>
                       </ul>
                   </li>
                 </ul>
-
-                    <form class="navbar-form pull-left" method="POST" action="/programs/">
-                        {% csrf_token %}{{ form.management_form }}
-                        <i class="icon-search icon-white"></i>
-                        <input type="text" class="span2" name="progsearch" placeholder="Поиск программ…">
-                    </form>
-                <p class="navbar-text pull-right">
-                    {% if user.is_authenticated %}
+                <form class="navbar-search pull-left" method="POST" action="/programs/">
+                    {% csrf_token %}{{ form.management_form }}
+                    <i class="icon-search icon-white"></i>
+                    <input type="text" class="search-query" name="progsearch" placeholder="Поиск программ…">
+                </form>
+                {% if user.is_authenticated %}
+                  <ul class="nav pull-right">
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle"  data-toggle="dropdown">
                         <i class="icon-user icon-white"></i>
-                        Вы вошли как <a href="/accounts/logout/"  title="Выйти">{{ user.first_name  }}</a>
-                    {% else %}
-                        <a href="/accounts/login/" title="Выполнить вход">
-                          Вы не авторизованы</a>
-                    {% endif %}
-                </p>
+                        {{ user.first_name  }}
+                        <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li><li><a href="#"  title="изменить личные данные">профиль</a></li></li>
+                        <li><li><a href="#"  title="ключи">мои ключи</a></li></li>
+                        <li><li><a href="/accounts/logout/"  title="Выйти">выйти</a></li></li>
+                      </ul>
+                    </li>
+                  </ul>
+                {% else %}
+                  <p class="navbar-text pull-right">
+                    <a href="/accounts/login/" title="Выполнить вход">Вы не авторизованы</a>
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -86,7 +96,9 @@
               </div>
             </div>
             <div class="span9">
+              <div class="container-fluid">
                 {% block content %}{% endblock %}
+              </div>
             </div>
           </div>     
         <hr>

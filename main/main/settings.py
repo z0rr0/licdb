@@ -5,7 +5,7 @@ if socket.gethostname() == 'bsd.apingtu.edu.ru':
     DEBUG = False
 else:
     DEBUG = True
-#DEBUG = True
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -178,7 +178,7 @@ if DEBUG:
         # 'HIDE_DJANGO_SQL': False,
         # 'TAG': 'div',
     }
-    INTERNAL_IPS = ('127.0.0.1',)
+    INTERNAL_IPS = ('127.0.0.2',)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
