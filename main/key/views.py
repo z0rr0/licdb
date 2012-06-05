@@ -26,8 +26,8 @@ PROG_LIMIT = 10
 PAGE_COUNT = 10
 EMAIL_MESSAGE = u"""Здравствуйте.
 Ваши личные дынные для license.apingtu.edu.ru были изменены:
-    имя: %s
-    фамилия: %s
+  имя: %s
+  фамилия: %s
 """
 
 # --------- ADD FUNTIONS -------------
@@ -114,21 +114,14 @@ def get_obj_form(request, setobrj, SetForm):
         form = SetForm(instance=setobrj)
     return form, setobrj, saved
 
-# --------- MAIN FUNTIONS -------------
-def index(request, vtemplate):
-    u""" 
-    Главная страница, со статистикой по платному ПО
+def divisibleby_obj(objects_list, num):
+    u"""
+    Разбиение списка объектов на группы
     """
-    program = Program.objects.filter(license__free=False).only('name')
-    stat = []
-    for po in program:
-    	all_keys = Key.objects.filter(program=po)
-    	use_keys = all_keys.filter(use=True)
-    	stat.append({'program': po.name, 
-    		'all': all_keys.count(), 
-    		'use': use_keys.count()})
-    # logger.info(program)
-    return TemplateResponse(request, vtemplate, {'statistics': stat})
+    new_list = []
+    for i in range(0, objects_list.count(), num):
+        new_list.append(objects_list[i:i+num])
+    return new_list
 
 # --------- USER FUNTIONS -------------
 @login_required
@@ -154,7 +147,7 @@ def user_edit(request, vtemplate):
                 if user_data['password1'] == user_data['password2']:
                     if user.check_password(user_data['password']):
                         user.set_password(user_data['password1'])
-                        message += u"    пароль: " + user_data['password1']
+                        message += u"  новый пароль: " + user_data['password1']
                     else:
                         form.errors['password'] = u'Указан неверный пароль'
                 else:
@@ -165,7 +158,6 @@ def user_edit(request, vtemplate):
                 subject = u'Изменение личных данных'
                 send_mail(subject, message, 'admin@apingtu.edu.ru', [user.email])
                 return redirect('/')
-
     else:
         form = UserForm(initial={
             'last_name': request.user.last_name,
@@ -173,18 +165,66 @@ def user_edit(request, vtemplate):
             'email': request.user.email})
     return TemplateResponse(request, vtemplate, {'form': form })
 
+# --------- MAIN FUNTIONS -------------
+def index(request, vtemplate):
+    u""" 
+    Главная страница, со статистикой по платному ПО
+    """
+    program = Program.objects.filter(license__free=False).only('name')
+    stat = []
+    for po in program:
+        all_keys = Key.objects.filter(program=po)
+        use_keys = all_keys.filter(use=True)
+        stat.append({'program': po.name, 
+            'all': all_keys.count(), 
+            'use': use_keys.count()})
+    # logger.info(program)
+    return TemplateResponse(request, vtemplate, {'statistics': stat})
+
 # --------- LICENSE FUNTIONS -------------
-def licenses(request, vtemplate, typefree):
+def licenses(request, vtemplate):
     u""" 
     Список лицензий
     """
     typetext = ''
-    if typefree is None:
-        object_list = License.objects.all()
-    else:
-        object_list = License.objects.filter(free=typefree)
-        typetext =  u'беспланые' if typefree else u'коммерческие'
-    return TemplateResponse(request, vtemplate, {'object_list': object_list, 'type': typetext})
+    object_list = License.objects.all()
+    if 'free' in request.GET:
+        try:
+            typefree = int(request.GET['free'])
+            object_list = object_list.filter(free=typefree)
+            typetext =  u'беспланые' if typefree else u'коммерческие'
+        except ValueError:
+            pass
+    return TemplateResponse(request, vtemplate, {
+        'object_list': divisibleby_obj(object_list, 3), 
+        'type': typetext
+        })
+
+@permission_required('key.change_license')
+def license_edit(request, id, vtemplate):
+    u""" 
+    Редактирование данных о лицензии 
+    """
+    c = {}
+    c.update(csrf(request))
+    license = get_object_or_404(License, id=int(id))
+    form, license, saved = get_obj_form(request, license, LicenseForm)
+    if saved:
+        return redirect('/license/' + str(license.id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
+
+@permission_required('key.add_license')
+def license_add(request, vtemplate):
+    u""" 
+    Добавление данных о лицензии 
+    """
+    c = {}
+    c.update(csrf(request))
+    form, license, saved = get_obj_form(request, None, LicenseForm)
+    if saved:
+        return redirect('/license/' + str(license.id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
+
 
 # keys list by program
 @login_required
@@ -287,32 +327,7 @@ def programs(request, lic, vtemplate, stud):
         'lic': lic,
         'searchtext': searchtext})
  
-# license edit
-@permission_required('key.change_license')
-def license_edit(request, id, vtemplate):
-    u""" 
-    Редактирование данных о лицензии 
-    """
-    c = {}
-    c.update(csrf(request))
-    license = get_object_or_404(License, id=int(id))
-    form, license, saved = get_obj_form(request, license, LicenseForm)
-    if saved:
-        return redirect('/license/' + str(license.id))
-    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
-# license add
-@permission_required('key.add_license')
-def license_add(request, vtemplate):
-    u""" 
-    Добавление данных о лицензии 
-    """
-    c = {}
-    c.update(csrf(request))
-    form, license, saved = get_obj_form(request, None, LicenseForm)
-    if saved:
-        return redirect('/license/' + str(license.id))
-    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
 # key edit
 @permission_required('key.change_key')

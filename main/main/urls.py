@@ -23,16 +23,7 @@ urlpatterns = patterns('',
     
     # all license
     url(r'^licenses/$', 'key.views.licenses', {
-        'vtemplate': 'license_home.html',
-        'typefree': None}),
-    # free license
-    url(r'^licenses/free/$', 'key.views.licenses', {
-        'vtemplate': 'license_home.html',
-        'typefree': True}),
-    # no free license
-    url(r'^licenses/com/$', 'key.views.licenses', {
-        'vtemplate': 'license_home.html',
-        'typefree': False}),
+        'vtemplate': 'license_home.html' }),
     # license view
     url(r'^license/(?P<id>\d+)/?$', 'key.views.obj_view', {
         'vtemplate': 'license_view.html',

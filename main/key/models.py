@@ -22,6 +22,8 @@ class License (models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = u"Лицензия"
+        verbose_name_plural = u"Лицензии"
 
 class Program (models.Model):
     u"""
@@ -42,6 +44,8 @@ class Program (models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = u"Программа"
+        verbose_name_plural = u"Программы"
     
 class Key (models.Model):
     u"""
@@ -74,6 +78,8 @@ class Key (models.Model):
 
     class Meta:
         ordering = ['use', 'program__name', 'id']
+        verbose_name = u"Ключ"
+        verbose_name_plural = u"Ключи"
     
 class Client (models.Model):
     u"""
@@ -95,3 +101,5 @@ class Client (models.Model):
 
     class Meta:
         ordering = ['student', 'name', 'key__program__name']
+        verbose_name = u"Пользователь"
+        verbose_name_plural = u"Пользователи"

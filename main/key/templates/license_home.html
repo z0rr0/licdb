@@ -28,42 +28,44 @@
       </div>
     </div>
   {% endif %}
-  {% for license in object_list %}
-    {% cycle '<div class="row">' '' %}
-    <div class="well span3">
-      <h2>{{ license.name }}</h2>
-      <span class="label label-info">{{ license.free|free }}</span>
-      <p>
-        <strong>Сайт:</strong>
-        {% if license.url %}
-          {{ license.url|urlizetrunc:35 }}
-        {% else %}
-          <small>нет</small>
-        {% endif %}
-      </p>
-      <p>
-        <strong>Файл:</strong>
-        {% if license.attach %}
-          <a href="{{ license.attach.url }}">загрузить</a>
-        {% else %}
-          <small>нет</small>
-        {% endif %}
-      </p>
-      <p>
-        <a class="btn" href="/license/{{ license.id }}">Подробнее &raquo;</a>
-        {% comment %}
-          правка данных
-        {% endcomment %}
-        {% if user.is_authenticated %}
-          <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
-            <i class="icon-pencil icon-white"></i>
-          </a>
-          <a class="btn btn-danger" href="/license/delete/{{ license.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
-            <i class="icon-trash icon-white"></i>
-          </a>
-        {% endif %}
-      </p>
+  {% for obj in object_list %}
+    <div class="row-fluid">
+    {% for license in obj %}
+      <div class="well span4">
+        <h2>{{ license.name }}</h2>
+        <span class="label label-info">{{ license.free|free }}</span>
+        <p>
+          <strong>Сайт:</strong>
+          {% if license.url %}
+            {{ license.url|urlizetrunc:35 }}
+          {% else %}
+            <small>нет</small>
+          {% endif %}
+        </p>
+        <p>
+          <strong>Файл:</strong>
+          {% if license.attach %}
+            <a href="{{ license.attach.url }}">загрузить</a>
+          {% else %}
+            <small>нет</small>
+          {% endif %}
+        </p>
+        <p>
+          <a class="btn" href="/license/{{ license.id }}">Подробнее &raquo;</a>
+          {% comment %}
+            правка данных
+          {% endcomment %}
+          {% if user.is_authenticated %}
+            <a class="btn btn-primary" href="/license/edit/{{ license.id }}" title="Правка">
+              <i class="icon-pencil icon-white"></i>
+            </a>
+            <a class="btn btn-danger" href="/license/delete/{{ license.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+              <i class="icon-trash icon-white"></i>
+            </a>
+          {% endif %}
+        </p>
+      </div>
+    {% endfor %}
     </div>
-    {% cycle '' '</div>' %}
   {% endfor %}
 {% endblock content %}
