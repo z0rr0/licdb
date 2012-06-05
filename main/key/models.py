@@ -33,7 +33,7 @@ class Program (models.Model):
     """
     license = models.ForeignKey(License, verbose_name = u'лицензия', blank=True, null=True, on_delete=models.SET_NULL, help_text=u'лицензия программы')
     name = models.CharField(max_length = 255, verbose_name = u'название', unique = True, help_text=u'название программы')
-    use_student = models.BooleanField(verbose_name = u'выдача студентам', default = False, help_text=u'можно ли студентам использовать данное ПО')
+    use_student = models.BooleanField(verbose_name = u'выдача студентам', default = False, help_text=u'можно ли студентам использовать данное ПО', db_index=True)
     url = models.URLField(max_length = 512, verbose_name = u'сайт', blank = True, null = True, help_text = u'адрес сайта программы')
     comment = models.TextField(verbose_name = u'примечание', blank = True, null = True)
     # даты изменения и создания, заполняются автоматически
