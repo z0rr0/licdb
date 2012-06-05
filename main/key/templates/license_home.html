@@ -32,7 +32,10 @@
     <div class="row-fluid">
     {% for license in obj %}
       <div class="well span4">
-        <h2>{{ license.name }}</h2>
+        <h2>
+          {{ license.name }}
+        </h2>
+        <span class="badge badge-info">{{ license.program_set.all.count }}</span>
         <span class="label label-info">{{ license.free|free }}</span>
         <p>
           <strong>Сайт:</strong>

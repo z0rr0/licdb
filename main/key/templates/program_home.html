@@ -3,104 +3,104 @@
 {% block title %}Программы{% endblock %}
 
 {% block content %}
-    <h1>
-        Программное обеспечение
-        {% if type %}
-            <span class="label">{{ type }}</span>
-        {% endif %}
-    </h1>
-    <div class="row-fluid">
-        <div class="span12">
-            <p>
-               <strong>Программное обеспечение (ПО)</strong> &mdash; совокупность программ системы обработки информации и программных документов, необходимых для эксплуатации этих программ (ГОСТ 19781-90). [<a href="http://ru.wikipedia.org" title="Перейти на сайт Википедии" target="_blank">Википедия</a>].
-            </p>
-        </div>
-    </div>
-    {% if user.is_authenticated %}
-        <div class="row-fluid">
-            <div class="span12">
-                <p>
-                    <a class="btn btn-success" href="/program/add/" title="Добавление">
-                        <i class="icon-plus icon-white"></i>
-                        Добавить
-                    </a>
-                </p>
-            </div>
-        </div>
+  <h1>
+    Программное обеспечение
+    {% if type %}
+      <span class="label">{{ type }}</span>
     {% endif %}
-    <div class="row-fluid">
-        <div class="span12">
-            <form class="well form-search" method="POST" action="">
-                {% csrf_token %}{{ form.management_form }}
-                <input type="text" class="input-medium search-query"
-                    name="progsearch" placeholder="программа..." value="{{ searchtext }}">
-                <button type="submit" class="btn">Поиск</button>
-            </form>
-            {% if object_list %}
-                <table class="table table-striped">
-                    <tr>
-                        <th>№</th>
-                        <th>Наименование</th>
-                        <th>Разрешено студентам</th>
-                        <th>Сайт</th>
-                        <th>Лицензия</th>
-                        <th></th>
-                    </tr>
-                    {% for prog in object_list %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>
-                                <a href="/program/{{ prog.id }}">{{ prog.name }}</a>
-                            </td>
-                            <td>
-                                {% if prog.use_student %}
-                                    <i class="icon-ok"></i>
-                                {% else %}
-                                    <i class="icon-minus"></i>
-                                {% endif %}
-                            </td>
-                            <td>
-                                 {% if prog.url %}
-                                    {{ prog.url|urlizetrunc:25 }}
-                                {% else %}
-                                    <small>нет</small>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if prog.license %}
-                                    <a href="/license/{{ prog.license.id }}">{{ prog.license.name }}</a>
-                                {% else %}
-                                    <small>нет</small>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if user.is_authenticated %}
-                                    <a class="btn btn-warning" href="/keys/?prog={{ prog.id }}" title="Список ключей">
-                                        <i class="icon-lock icon-white"></i>
-                                    </a>
-                                    <a class="btn btn-primary" href="/program/edit/{{ prog.id }}" title="Правка">
-                                        <i class="icon-pencil icon-white"></i>
-                                    </a>
-                                    <a class="btn btn-danger" href="/program/delete/{{ prog.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить программу?');">
-                                        <i class="icon-trash icon-white"></i>
-                                    </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <div class="well span8">
-                    {% if lic %}
-                        <p>
-                            Программы для лицензии <strong>&laquo;{{ lic.name }}&raquo;</strong> не найдены.
-                            <a href="/programs/" title="Все программы">Все программы &raquo;</a>
-                        </p>
-                    {% else %}
-                        <p>Программы по данным критериям поиска не найдены.</p>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
+  </h1>
+  <div class="row-fluid">
+    <div class="span12">
+      <p>
+         <strong>Программное обеспечение (ПО)</strong> &mdash; совокупность программ системы обработки информации и программных документов, необходимых для эксплуатации этих программ (ГОСТ 19781-90). [<a href="http://ru.wikipedia.org" title="Перейти на сайт Википедии" target="_blank">Википедия</a>].
+      </p>
     </div>
+  </div>
+  {% if user.is_authenticated %}
+    <div class="row-fluid">
+      <div class="span12">
+        <p>
+          <a class="btn btn-success" href="/program/add/" title="Добавление">
+            <i class="icon-plus icon-white"></i>
+            Добавить
+          </a>
+        </p>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row-fluid">
+    <div class="span12">
+      <form class="well form-search" method="POST" action="">
+        {% csrf_token %}{{ form.management_form }}
+        <input type="text" class="input-medium search-query"
+          name="progsearch" placeholder="программа..." value="{{ searchtext }}">
+        <button type="submit" class="btn">Поиск</button>
+      </form>
+      {% if object_list %}
+        <table class="table table-striped">
+          <tr>
+            <th>№</th>
+            <th>Наименование</th>
+            <th>Разрешено студентам</th>
+            <th>Сайт</th>
+            <th>Лицензия</th>
+            <th></th>
+          </tr>
+          {% for prog in object_list %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>
+                <a href="/program/{{ prog.id }}" title="Подробнее">{{ prog.name }}</a>
+              </td>
+              <td>
+                {% if prog.use_student %}
+                  <i class="icon-ok"></i>
+                {% else %}
+                  <i class="icon-minus"></i>
+                {% endif %}
+              </td>
+              <td>
+                 {% if prog.url %}
+                  {{ prog.url|urlizetrunc:25 }}
+                {% else %}
+                  <small>нет</small>
+                {% endif %}
+              </td>
+              <td>
+                {% if prog.license %}
+                  <a href="/license/{{ prog.license.id }}" title="О лицензии">{{ prog.license.name }}</a>
+                {% else %}
+                  <small>нет</small>
+                {% endif %}
+              </td>
+              <td>
+                {% if user.is_authenticated %}
+                  <a class="btn btn-warning" href="/keys/?prog={{ prog.id }}" title="Список ключей">
+                    <i class="icon-lock icon-white"></i>
+                  </a>
+                  <a class="btn btn-primary" href="/program/edit/{{ prog.id }}" title="Правка">
+                    <i class="icon-pencil icon-white"></i>
+                  </a>
+                  <a class="btn btn-danger" href="/program/delete/{{ prog.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить программу?');">
+                    <i class="icon-trash icon-white"></i>
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <div class="well span8">
+          {% if lic %}
+            <p>
+              Программы для лицензии <strong>&laquo;{{ lic.name }}&raquo;</strong> не найдены.
+              <a href="/programs/" title="Все программы">Все программы &raquo;</a>
+            </p>
+          {% else %}
+            <p>Программы по данным критериям поиска не найдены.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endblock content %}

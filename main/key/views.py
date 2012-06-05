@@ -225,6 +225,64 @@ def license_add(request, vtemplate):
         return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
+# --------- PROGRAM FUNTIONS -------------
+def programs(request, vtemplate):
+    u"""
+    Прогрограммы, с возможым фильтром по лицензии, использованию студентами и/или названию ПО
+    """
+    c = {}
+    c.update(csrf(request))
+    typetext = ''
+    searchtext = ''
+    lic = None
+    object_list = Program.objects.all()
+    try:
+        if 'stud' in request.GET:
+            stud = int(request.GET['stud'])
+            object_list = object_list.filter(use_student=stud)
+            typetext =  u'для студентов' if stud else u'не для студентов'
+        if 'lic' in request.GET:
+            lic = License.objects.get(pk=int(request.GET['lic']))
+            object_list = object_list.filter(license=lic)
+        if request.method == 'POST':
+            searchtext = request.POST['progsearch']
+            object_list = object_list.filter(name__icontains=searchtext)
+    except (ValueError, License.DoesNotExist):
+        pass
+    return TemplateResponse(request, vtemplate, {
+        'object_list': object_list,
+        'type': typetext,
+        'lic': lic,
+        'searchtext': searchtext
+        })
+
+@permission_required('key.change_program')
+def program_edit(request, id, vtemplate):
+    u""" 
+    Редактирование данных о программе 
+    """
+    c = {}
+    c.update(csrf(request))
+    program = get_object_or_404(Program, id=int(id))
+    form, program, saved = get_obj_form(request, program, ProgramForm)
+    if saved:
+        return redirect('/program/' + str(program.id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
+
+@permission_required('key.add_program')
+def program_add(request, vtemplate):
+    u""" 
+    Добавление данных о программе 
+    """
+    c = {}
+    c.update(csrf(request))
+    form, program, saved = get_obj_form(request, None, ProgramForm)
+    if saved:
+        return redirect('/program/' + str(program.id))
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
+
+
+
 
 # keys list by program
 @login_required
@@ -302,30 +360,7 @@ def keys_by_program_one(request, vtemplate, prog):
     keys = keys[limit[0]:limit[1]]
     return TemplateResponse(request, vtemplate, {'filterkey': keys})
 
-# program list
-def programs(request, lic, vtemplate, stud):
-    u"""
-    Программы
-    """
-    c = {}
-    c.update(csrf(request))
-    typetext = ''
-    searchtext = ''
-    if stud is None:
-        object_list = Program.objects.all()
-    else:
-        object_list = Program.objects.filter(use_student=stud)
-        typetext =  u'для студентов' if stud else u'не для студентов'
-    if lic:
-        lic = get_object_or_404(License, pk=int(lic))
-        object_list = object_list.filter(license=lic)
-    if request.method == 'POST':
-        searchtext = request.POST['progsearch']
-        object_list = object_list.filter(name__icontains=searchtext)
-    return TemplateResponse(request, vtemplate, {'object_list': object_list,
-        'type': typetext,
-        'lic': lic,
-        'searchtext': searchtext})
+
  
 
 
@@ -364,32 +399,7 @@ def key_add(request, vtemplate):
         return redirect('/keys/?prog=' + str(key.program_id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
-# program edit
-@permission_required('key.change_program')
-def program_edit(request, id, vtemplate):
-    u""" 
-    Редактирование данных о программе 
-    """
-    c = {}
-    c.update(csrf(request))
-    program = get_object_or_404(Program, id=int(id))
-    form, program, saved = get_obj_form(request, program, ProgramForm)
-    if saved:
-        return redirect('/program/' + str(program.id))
-    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
-# license add
-@permission_required('key.add_program')
-def program_add(request, vtemplate):
-    u""" 
-    Добавление данных о программе 
-    """
-    c = {}
-    c.update(csrf(request))
-    form, program, saved = get_obj_form(request, None, ProgramForm)
-    if saved:
-        return redirect('/program/' + str(program.id))
-    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
 # none to 0
 def NoneTo0(value):

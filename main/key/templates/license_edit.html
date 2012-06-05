@@ -2,63 +2,59 @@
 {% load widget_tweaks %}
 {% load keytags %}
 {% block addjscss %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script> 
-    <script type="text/javascript">
-        window.onload = function()
-        {
-            CKEDITOR.replace( 'id_comment' );
-        };
-    </script>  
+  <script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script> 
+  <script type="text/javascript">
+    window.onload = function()
+    {
+      CKEDITOR.replace( 'id_comment' );
+    };
+  </script>  
 {% endblock addjscss %}
 {% block title %}{{ action }} лицензии{% endblock %}
 {% block content %}
-    <h1>{{ action }} данных о лицензии</h1>
-    <br>
-    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
-        {% csrf_token %}{{ form.management_form }}
-        <div class="control-group{{ form.name.errors|errorcss }}">
-            <label class="control-label" for="id_name">{{ form.name.label }}</label>
-            <div class="controls">
-                {{ form.name}}<span class="help-inline">{{ form.name.errors|lower }}</span>
-            <p class="help-block">{{ form.name.help_text }}</p>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.url.errors|errorcss }}">
-            <label class="control-label" for="id_url">{{ form.url.label }}</label>
-            <div class="controls">
-                {{ form.url}}<span class="help-inline">{{ form.url.errors|lower }}</span>
-            <p class="help-block">{{ form.url.help_text }}</p>
-            </div>
-        </div>
-        <div class="control-group{{ form.attach.errors|errorcss }}">
-            <label class="control-label" for="id_attach">{{ form.attach.label }}</label>
-            <div class="controls">
-                {{ form.attach }}<span class="help-inline">{{ form.attach.errors|lower }}</span>
-            <p class="help-block">{{ form.attach.help_text }}</p>
-            </div>
-        </div>   
-
-        <div class="control-group">
-            <label class="control-label" for="id_free">{{ form.free.label }}</label>
-            <div class="controls">
-                <label class="checkbox">
-                    {{ form.free}}
-                    {{ form.free.help_text }}
-                </label>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
-            <div class="controls">
-                {{ form.comment }}
-            </div>
-        </div>
-
-    <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Сохранить</button>
-        <button class="btn" type="reset">Отменить</button>
+  <h1>{{ action }} данных о лицензии</h1>
+  <br>
+  <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}{{ form.management_form }}
+    <div class="control-group{{ form.name.errors|errorcss }}">
+      <label class="control-label" for="id_name">{{ form.name.label }}</label>
+      <div class="controls">
+        {{ form.name}}<span class="help-inline">{{ form.name.errors|lower }}</span>
+      <p class="help-block">{{ form.name.help_text }}</p>
+      </div>
     </div>
-    </form>
+    <div class="control-group{{ form.url.errors|errorcss }}">
+      <label class="control-label" for="id_url">{{ form.url.label }}</label>
+      <div class="controls">
+        {{ form.url}}<span class="help-inline">{{ form.url.errors|lower }}</span>
+      <p class="help-block">{{ form.url.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.attach.errors|errorcss }}">
+      <label class="control-label" for="id_attach">{{ form.attach.label }}</label>
+      <div class="controls">
+        {{ form.attach }}<span class="help-inline">{{ form.attach.errors|lower }}</span>
+      <p class="help-block">{{ form.attach.help_text }}</p>
+      </div>
+    </div>   
+    <div class="control-group">
+      <label class="control-label" for="id_free">{{ form.free.label }}</label>
+      <div class="controls">
+        <label class="checkbox">
+          {{ form.free}}
+          {{ form.free.help_text }}
+        </label>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
+      <div class="controls">
+        {{ form.comment }}
+      </div>
+    </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Сохранить</button>
+  <button class="btn" type="reset">Отменить</button>
+  </div>
+  </form>
 {% endblock content %}

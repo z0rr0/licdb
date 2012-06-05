@@ -1,7 +1,8 @@
 #-*- coding: utf-8 -*-
-from django.db import models
-import string, random
 from main.settings import LEN_SALT, KEYS_DIRS, LICENSE_DIRS
+from django.db import models
+from datetime import datetime
+import string, random
 
 class License (models.Model):
     u"""

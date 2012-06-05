@@ -3,59 +3,59 @@
 {% block title %}Данные о программе ({{ result.name }}){% endblock %}
 
 {% block content %}
-    <h1>{{ result.name }}
-        <span class="label label-info">{{ result.use_student|forstud }}</span>
-    </h1>
-    <br>
-    <div class="row-fluid">
-        <div class="well span10">
-            <p>
-                <strong>Лицензия:</strong>
-                {{ result.license.name }}
-            </p>
-            <p>
-                <strong>Сайт:</strong>
-                {% if result.url %}
-                    {{ result.url|urlizetrunc:50 }}
-                {% else %}
-                    <small>нет</small>
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span5">
-            <a class="btn btn-warning" href="javascript:get_keys({{ result.id }}, '#keylist')" title="Список ключей">
-                <i class="icon-lock icon-white"></i>
-                Ключи
-            </a>
-        {% if user.is_authenticated %}
-            <a class="btn btn-primary" href="/program/edit/{{ result.id }}" title="Правка">
-                <i class="icon-pencil icon-white"></i> Правка
-            </a>
-            <a class="btn btn-danger" href="/program/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
-                <i class="icon-trash icon-white"></i> Удаление
-            </a>
+  <h1>{{ result.name }}
+    <span class="label label-info">{{ result.use_student|forstud }}</span>
+  </h1>
+  <br>
+  <div class="row-fluid">
+    <div class="well span10">
+      <p>
+        <strong>Лицензия:</strong>
+        {{ result.license.name }}
+      </p>
+      <p>
+        <strong>Сайт:</strong>
+        {% if result.url %}
+          {{ result.url|urlizetrunc:50 }}
+        {% else %}
+          <small>нет</small>
         {% endif %}
-        </div>
-        <div class="span5">
-            <p align="right">
-                <small>
-                создано <em>{{ result.created|date:"d.m.Y H:i:s" }}</em>
-                {% ifnotequal result.created|date:"YdmHis" result.modified|date:"YdmHis" %}
-                    &nbsp;&nbsp;&nbsp;
-                    изменено <em>{{ result.modified|date:"d.m.Y H:i:s" }}</em>
-                {% endifnotequal %}
-                </small>
-            </p>
-        </div>
+      </p>
     </div>
-    <br>
-    <div class="row-fluid">
-        <div class="span10">
-            {{ result.comment|safe }}
-        </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span5">
+      <a class="btn btn-warning" href="javascript:get_keys({{ result.id }}, '#keylist')" title="Список ключей">
+        <i class="icon-lock icon-white"></i>
+        Ключи ({{ result.key_set.all.count }})
+      </a>
+    {% if user.is_authenticated %}
+      <a class="btn btn-primary" href="/program/edit/{{ result.id }}" title="Правка">
+        <i class="icon-pencil icon-white"></i> Правка
+      </a>
+      <a class="btn btn-danger" href="/program/delete/{{ result.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить лицензию?');">
+        <i class="icon-trash icon-white"></i> Удаление
+      </a>
+    {% endif %}
     </div>
-    <hr />
-    <div class="row-fluid" id="keylist"></div>
+    <div class="span5">
+      <p align="right">
+        <small>
+        создано <em>{{ result.created|date:"d.m.Y H:i:s" }}</em>
+        {% ifnotequal result.created|date:"YdmHis" result.modified|date:"YdmHis" %}
+          &nbsp;&nbsp;&nbsp;
+          изменено <em>{{ result.modified|date:"d.m.Y H:i:s" }}</em>
+        {% endifnotequal %}
+        </small>
+      </p>
+    </div>
+  </div>
+  <br>
+  <div class="row-fluid">
+    <div class="span10">
+      {{ result.comment|safe }}
+    </div>
+  </div>
+  <hr />
+  <div class="row-fluid" id="keylist"></div>
 {% endblock content %}

@@ -1,104 +1,91 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 {% load keytags %}
-
 {% block addjscss %}
-    <link rel="stylesheet" href="{{ MEDIA_URL }}ui/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css" />
-    <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery-ui-1.8.18.custom.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery.ui.datepicker-ru.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('#id_date_start').datepicker();
-        $('#id_date_end').datepicker();
-    });
-    </script>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}ui/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css" />
+  <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery-ui-1.8.18.custom.min.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#id_date_start').datepicker();
+    $('#id_date_end').datepicker();
+  });
+  </script>
 {% endblock addjscss %}
-
 {% block title %}{{ action }} ключа{% endblock %}
-
 {% block content %}
-    <h1>{{ action }} данных о ключе</h1>
-    <br>
-    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
-        {% csrf_token %}{{ form.management_form }}
-        <div class="control-group{{ form.program.errors|errorcss }}">
-            <label class="control-label" for="id_program">{{ form.program.label }}</label>
-            <div class="controls">
-                {{ form.program|add_class:"span3"}}<span class="help-inline">{{ form.program.errors|lower }}</span>
-            <p class="help-block">{{ form.program.help_text }}</p>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.key.errors|errorcss }}">
-            <label class="control-label" for="id_key">{{ form.key.label }}</label>
-            <div class="controls">
-                {{ form.key|add_class:"span3"}}<span class="help-inline">{{ form.key.errors|lower }}</span>
-            <p class="help-block">{{ form.key.help_text }}</p>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.attach.errors|errorcss }}">
-            <label class="control-label" for="id_attach">{{ form.attach.label }}</label>
-            <div class="controls">
-                {{ form.attach }}<span class="help-inline">{{ form.attach.errors|lower }}</span>
-            <p class="help-block">{{ form.attach.help_text }}</p>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.manyuse.errors|errorcss }}">
-            <label class="control-label" for="id_manyuse">{{ form.manyuse.label }}</label>
-            <div class="controls">
-                {{ form.manyuse|add_class:"span1"}}<span class="help-inline">{{ form.manyuse.errors|lower }}</span>
-            <p class="help-block">{{ form.manyuse.help_text }}</p>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="id_net">{{ form.net.label }}</label>
-            <div class="controls">
-                <label class="checkbox">
-                    {{ form.net}}
-                    {{ form.net.help_text }}
-                </label>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="id_use">{{ form.use.label }}</label>
-            <div class="controls">
-                <label class="checkbox">
-                    {{ form.use}}
-                    {{ form.use.help_text }}
-                </label>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.date_start.errors|errorcss }}">
-            <label class="control-label" for="id_date_start">{{ form.date_start.label }}</label>
-            <div class="controls">
-                {{ form.date_start|add_class:"span2"}}<span class="help-inline">{{ form.date_start.errors|lower }}</span>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.date_end.errors|errorcss }}">
-            <label class="control-label" for="id_date_end">{{ form.date_end.label }}</label>
-            <div class="controls">
-                {{ form.date_end|add_class:"span2"}}<span class="help-inline">{{ form.date_end.errors|lower }}</span>
-            </div>
-        </div>
-
-        <div class="control-group{{ form.comment.errors|errorcss }}">
-            <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
-            <div class="controls">
-                {{ form.comment|attr:"rows:2"}}<span class="help-inline">{{ form.comment.errors|lower }}</span>
-            <p class="help-block">{{ form.comment.help_text }}</p>
-            </div>
-        </div>
-
-         <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Сохранить</button>
-            <button class="btn" type="reset">Отменить</button>
-        </div>
-
-    </form>
+  <h1>{{ action }} данных о ключе</h1>
+  <br>
+  <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}{{ form.management_form }}
+    <div class="control-group{{ form.program.errors|errorcss }}">
+      <label class="control-label" for="id_program">{{ form.program.label }}</label>
+      <div class="controls">
+        {{ form.program }}<span class="help-inline">{{ form.program.errors|lower }}</span>
+      <p class="help-block">{{ form.program.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.key.errors|errorcss }}">
+      <label class="control-label" for="id_key">{{ form.key.label }}</label>
+      <div class="controls">
+        {{ form.key }}<span class="help-inline">{{ form.key.errors|lower }}</span>
+      <p class="help-block">{{ form.key.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.attach.errors|errorcss }}">
+      <label class="control-label" for="id_attach">{{ form.attach.label }}</label>
+      <div class="controls">
+        {{ form.attach }}<span class="help-inline">{{ form.attach.errors|lower }}</span>
+      <p class="help-block">{{ form.attach.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.manyuse.errors|errorcss }}">
+      <label class="control-label" for="id_manyuse">{{ form.manyuse.label }}</label>
+      <div class="controls">
+        {{ form.manyuse|add_class:"input-small"}}<span class="help-inline">{{ form.manyuse.errors|lower }}</span>
+      <p class="help-block">{{ form.manyuse.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="id_net">{{ form.net.label }}</label>
+      <div class="controls">
+        <label class="checkbox">
+          {{ form.net}}
+          {{ form.net.help_text }}
+        </label>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="id_use">{{ form.use.label }}</label>
+      <div class="controls">
+        <label class="checkbox">
+          {{ form.use}}
+          {{ form.use.help_text }}
+        </label>
+      </div>
+    </div>
+    <div class="control-group{{ form.date_start.errors|errorcss }}">
+      <label class="control-label" for="id_date_start">{{ form.date_start.label }}</label>
+      <div class="controls">
+        {{ form.date_start|add_class:"input-small"}}<span class="help-inline">{{ form.date_start.errors|lower }}</span>
+      </div>
+    </div>
+    <div class="control-group{{ form.date_end.errors|errorcss }}">
+      <label class="control-label" for="id_date_end">{{ form.date_end.label }}</label>
+      <div class="controls">
+        {{ form.date_end|add_class:"input-small"}}<span class="help-inline">{{ form.date_end.errors|lower }}</span>
+      </div>
+    </div>
+    <div class="control-group{{ form.comment.errors|errorcss }}">
+      <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
+      <div class="controls">
+        {{ form.comment|attr:"rows:2"}}<span class="help-inline">{{ form.comment.errors|lower }}</span>
+      <p class="help-block">{{ form.comment.help_text }}</p>
+      </div>
+    </div>
+     <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Сохранить</button>
+      <button class="btn" type="reset">Отменить</button>
+    </div>
+  </form>
 {% endblock content %}

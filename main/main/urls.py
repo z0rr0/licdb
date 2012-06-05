@@ -36,26 +36,13 @@ urlpatterns = patterns('',
     # license edit
     (r'^license/edit/(?P<id>\d+)/?$', 'key.views.license_edit', {
         'vtemplate': 'license_edit.html'}),
-    # license edit
+    # license add
     (r'^license/add/?$', 'key.views.license_add', {
         'vtemplate': 'license_edit.html'}),
 
     # all program
     url(r'^programs/$', 'key.views.programs', {
-        'vtemplate': 'program_home.html',
-        'stud': None, 'lic': None}),
-    # program by license
-    url(r'^programs/(?P<lic>\d+)/$', 'key.views.programs', {
-        'vtemplate': 'program_home.html',
-        'stud': None}),
-    # student program
-    url(r'^programs/stud/$', 'key.views.programs', {
-        'vtemplate': 'program_home.html',
-        'stud': True, 'lic': None}),
-    # no studnet program
-    url(r'^programs/nostud/$', 'key.views.programs', {
-        'vtemplate': 'program_home.html',
-        'stud': False, 'lic': None}),
+        'vtemplate': 'program_home.html'}),
     # license delete
     (r'^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/programs/',
