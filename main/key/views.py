@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.core.context_processors import csrf
+from django.core.mail import send_mail
 from django.db.models import Q, F, Sum
 from django.db import transaction
 from django.contrib import auth
@@ -23,6 +24,11 @@ logger = logging.getLogger(__name__)
 
 PROG_LIMIT = 10
 PAGE_COUNT = 10
+EMAIL_MESSAGE = u"""Здравствуйте.
+Ваши личные дынные для license.apingtu.edu.ru были изменены:
+    имя: %s
+    фамилия: %s
+"""
 
 # --------- ADD FUNTIONS -------------
 # decorator for ajax login
@@ -135,11 +141,37 @@ def user_edit(request, vtemplate):
     """
     c = {}
     c.update(csrf(request))
-    form = UserForm(initial={
-        'last_name': request.user.last_name,
-        'first_name': request.user.first_name,
-        'email': request.user.email})
-    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
+    if request.method == 'POST':
+        form = UserForm(request.POST or None)
+        if form.is_valid():
+            user_data = form.cleaned_data
+            user = request.user
+            user.first_name = user_data['first_name']
+            user.last_name = user_data['last_name']
+            user.email = user_data['email']
+            message = EMAIL_MESSAGE % (user.first_name, user.last_name)
+            if user_data['password1']:
+                if user_data['password1'] == user_data['password2']:
+                    if user.check_password(user_data['password']):
+                        user.set_password(user_data['password1'])
+                        message += u"    пароль: " + user_data['password1']
+                    else:
+                        form.errors['password'] = u'Указан неверный пароль'
+                else:
+                    form.errors['password1'] = u'Пароли не совпали'
+            if not form.errors:
+                user.save()
+                # email
+                subject = u'Изменение личных данных'
+                send_mail(subject, message, 'admin@apingtu.edu.ru', [user.email])
+                return redirect('/')
+
+    else:
+        form = UserForm(initial={
+            'last_name': request.user.last_name,
+            'first_name': request.user.first_name,
+            'email': request.user.email})
+    return TemplateResponse(request, vtemplate, {'form': form })
 
 # --------- LICENSE FUNTIONS -------------
 def licenses(request, vtemplate, typefree):

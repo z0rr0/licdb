@@ -32,12 +32,12 @@ class LicenseForm(forms.ModelForm):
         }
 
 class UserForm(forms.Form):
-    first_name = forms.CharField(label='Имя', max_length=30)
-    last_name = forms.CharField(label='Фамилия', max_length=30)
-    email = forms.EmailField(label='E-mail')
-    password = forms.CharField(label='Старый пароль', max_length=127, widget=forms.PasswordInput)
-    password1 = forms.CharField(label='Новый пароль', max_length=127, min_length=6, widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Повтор нового пароля', max_length=127, min_length=6, widget=forms.PasswordInput)
+    first_name = forms.CharField(label=u'Имя', max_length=30)
+    last_name = forms.CharField(label=u'Фамилия', max_length=30)
+    email = forms.EmailField(label=u'E-mail', help_text=u'Адрес электронной почты')
+    password = forms.CharField(label=u'Старый пароль', max_length=127, widget=forms.PasswordInput, help_text=u'Текущий пароль', required=False)
+    password1 = forms.CharField(label=u'Новый пароль', max_length=127, min_length=6, widget=forms.PasswordInput, help_text=u'Новый пароль', required=False)
+    password2 = forms.CharField(label=u'Подтверждение', max_length=127, min_length=6, widget=forms.PasswordInput, help_text=u'Повтор нового пароля', required=False)
 
 class ProgramForm(forms.ModelForm):
     u"""
