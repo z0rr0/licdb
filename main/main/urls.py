@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     # accounts
     (r'^accounts/login/$', login),
     (r'^accounts/logout/$' , logout),
+    (r'^accounts/settings/$' , 'key.views.user_edit', {'vtemplate': 'user_edit.html'}),
     # Examples:
     # url(r'^$', 'main.views.home', name='home'),
     # url(r'^main/', include('main.foo.urls')),

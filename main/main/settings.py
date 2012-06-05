@@ -1,11 +1,11 @@
 # Django settings for main project.
 import socket, os
 
-if socket.gethostname() == 'bsd.apingtu.edu.ru':
+if socket.gethostname() in ('bsd.apingtu.edu.ru', 'bsd'):
     DEBUG = False
 else:
     DEBUG = True
-DEBUG = True
+# DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

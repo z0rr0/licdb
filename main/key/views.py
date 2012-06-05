@@ -11,6 +11,7 @@ from django.contrib import auth
 
 from filetransfers.api import serve_file
 
+from django.contrib.auth.models import User
 from main.settings import LEN_SALT
 from key.models import *
 from key.forms import *
@@ -56,6 +57,57 @@ def objects_list(model, page_count=None, name=None):
         pagintor = None
     return obj, paginator
 
+@login_required
+def obj_delete(request, id, redirecturl, model, perm):
+    u""" 
+    Удалении данных об объекте 
+    """
+    if request.user.has_perm(perm):
+        obj = get_object_or_404(model, pk=int(id))
+        with transaction.commit_on_success():
+            obj.delete()
+            to_url = redirecturl
+    else:
+        to_url = '/accounts/login/?next=%s' % request.path
+    return HttpResponseRedirect(to_url)
+
+@login_required_ajax404
+@transaction.autocommit
+def obj_delete_ajax(request, id, model, perm):
+    u""" 
+    Удалении данных об объекте в Ajax запросе
+    """
+    status = 'ERROR'
+    if request.user.has_perm(perm):
+        obj = get_object_or_404(model, pk=int(id))
+        obj.delete()
+        status = 'OK'
+    else:
+        return HttpResponseNotFound('Error delete Key')
+    return HttpResponse(status)
+
+def obj_view(request, id, vtemplate, model):
+    u""" 
+    Просмотр данных об объекте 
+    """
+    obj = get_object_or_404(model, pk=int(id))
+    return TemplateResponse(request, vtemplate, {'result': obj})
+
+def get_obj_form(request, setobrj, SetForm):
+    u"""
+    Добавление или обновление данных об объектах, инициализации или сохранение данных формы
+    """
+    saved = False
+    if request.method == 'POST':
+        form = SetForm(request.POST or None, request.FILES, instance=setobrj)
+        if form.is_valid():
+            with transaction.commit_on_success():
+                setobrj = form.save()
+                saved = True
+    else:
+        form = SetForm(instance=setobrj)
+    return form, setobrj, saved
+
 # --------- MAIN FUNTIONS -------------
 def index(request, vtemplate):
     u""" 
@@ -72,6 +124,24 @@ def index(request, vtemplate):
     # logger.info(program)
     return TemplateResponse(request, vtemplate, {'statistics': stat})
 
+# --------- USER FUNTIONS -------------
+@login_required
+@transaction.autocommit
+def user_edit(request, vtemplate):
+    u""" 
+    Редактирование данных о пользователе.
+
+    Каждый зарегистированный пользотель может изменить свои данные 
+    """
+    c = {}
+    c.update(csrf(request))
+    form = UserForm(initial={
+        'last_name': request.user.last_name,
+        'first_name': request.user.first_name,
+        'email': request.user.email})
+    return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
+
+# --------- LICENSE FUNTIONS -------------
 def licenses(request, vtemplate, typefree):
     u""" 
     Список лицензий
@@ -185,61 +255,6 @@ def programs(request, lic, vtemplate, stud):
         'lic': lic,
         'searchtext': searchtext})
  
-# delete object on page
-@login_required
-def obj_delete(request, id, redirecturl, model, perm):
-    u""" 
-    Удалении данных об объекте 
-    """
-    if request.user.has_perm(perm):
-        obj = get_object_or_404(model, pk=int(id))
-        with transaction.commit_on_success():
-            obj.delete()
-            to_url = redirecturl
-    else:
-        to_url = '/accounts/login/?next=%s' % request.path
-    return HttpResponseRedirect(to_url)
-
-# delete object in ajax
-@login_required_ajax404
-@transaction.autocommit
-def obj_delete_ajax(request, id, model, perm):
-    u""" 
-    Удалении данных об объекте в Ajax запросе
-    """
-    status = 'ERROR'
-    if request.user.has_perm(perm):
-        obj = get_object_or_404(model, pk=int(id))
-        obj.delete()
-        status = 'OK'
-    else:
-        return HttpResponseNotFound('Error delete Key')
-    return HttpResponse(status)
-
-# object view
-def obj_view(request, id, vtemplate, model):
-    u""" 
-    Просмотр данных об объекте 
-    """
-    obj = get_object_or_404(model, pk=int(id))
-    return TemplateResponse(request, vtemplate, {'result': obj})
-
-# summary object form
-def get_obj_form(request, setobrj, SetForm):
-    u"""
-    Добавление или обновление данных об объектах, инициализации или сохранение данных формы
-    """
-    saved = False
-    if request.method == 'POST':
-        form = SetForm(request.POST or None, request.FILES, instance=setobrj)
-        if form.is_valid():
-            with transaction.commit_on_success():
-                setobrj = form.save()
-                saved = True
-    else:
-        form = SetForm(instance=setobrj)
-    return form, setobrj, saved
-
 # license edit
 @permission_required('key.change_license')
 def license_edit(request, id, vtemplate):
@@ -253,7 +268,6 @@ def license_edit(request, id, vtemplate):
     if saved:
         return redirect('/license/' + str(license.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
-
 
 # license add
 @permission_required('key.add_license')

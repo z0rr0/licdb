@@ -31,11 +31,13 @@ class LicenseForm(forms.ModelForm):
             'attach': ShortNameClarableFileInput,
         }
 
-class UserForm(forms.ModelForm):
-    # pass
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email', 'password')
+class UserForm(forms.Form):
+    first_name = forms.CharField(label='Имя', max_length=30)
+    last_name = forms.CharField(label='Фамилия', max_length=30)
+    email = forms.EmailField(label='E-mail')
+    password = forms.CharField(label='Старый пароль', max_length=127, widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Новый пароль', max_length=127, min_length=6, widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Повтор нового пароля', max_length=127, min_length=6, widget=forms.PasswordInput)
 
 class ProgramForm(forms.ModelForm):
     u"""
