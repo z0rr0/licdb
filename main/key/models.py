@@ -62,10 +62,10 @@ class Key (models.Model):
         return KEYS_DIRS + '/' + gen_salt() + "_" + filename
 
     program = models.ForeignKey(Program, verbose_name = u'программа')
-    key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ', help_text = u'ключ / серийной номер продукта')
+    key = models.CharField(max_length = 255, blank = True, null= True, verbose_name = u'ключ', help_text = u'ключ / серийной номер продукта', db_index=True)
     attach = models.FileField(verbose_name = u'файл', blank = True, null = True, upload_to = gen_filename)
     use = models.BooleanField(verbose_name = u'используется', default = False, help_text = u'ключ уже используется', db_index=True)
-    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество', default = 1, help_text = u'количество использований (раб.станций), 0 - если нет ограничений')
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество', default = 1, help_text = u'количество использований (раб.станций), 0 - если нет ограничений', db_index=True)
     net = models.BooleanField(verbose_name = u'сетевой', default = False, help_text = u'ключ предназначен для сетевого использования', db_index=True)
     date_start = models.DateField(verbose_name = u'начало', help_text = u'дата получения лицензии', default=datetime.now(), db_index=True)
     date_end = models.DateField(verbose_name = u'окончание', blank = True, null = True, help_text = u'дата окончания лицензии', db_index=True)
