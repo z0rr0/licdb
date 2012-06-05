@@ -281,10 +281,7 @@ def program_add(request, vtemplate):
         return redirect('/program/' + str(program.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
-
-
-
-# keys list by program
+# --------- KEY FUNTIONS -------------
 @login_required
 def keys(request, vtemplate):
     u"""
@@ -360,10 +357,6 @@ def keys_by_program_one(request, vtemplate, prog):
     keys = keys[limit[0]:limit[1]]
     return TemplateResponse(request, vtemplate, {'filterkey': keys})
 
-
- 
-
-
 # key edit
 @permission_required('key.change_key')
 def key_edit(request, id, vtemplate):
@@ -398,8 +391,6 @@ def key_add(request, vtemplate):
     if saved:
         return redirect('/keys/?prog=' + str(key.program_id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
-
-
 
 # none to 0
 def NoneTo0(value):
