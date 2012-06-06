@@ -325,6 +325,20 @@ def paginator_list_page(pages, page, prange):
         newpages.append(0)
     return newpages
 
+def paginator_list_page2(d, x, median):
+    p = median * 2
+    if len(d) <= p:
+        return d
+    if x - median < 1:
+        # левая граница
+        return d[:p+1]
+    elif d[-1] - x <= median:
+        # правая граница
+        al = len(d)
+        return d[al-p-1:]
+    else:
+        return d[x-median-1:x+median]
+
 @login_required_ajax404
 def keys_get(request, vtemplate, prog):
     u"""
@@ -352,7 +366,7 @@ def keys_get(request, vtemplate, prog):
         'result': result, 
         'num_pages': paginator.num_pages,
         'srart': (obj.number - 1) *  PAGE_COUNT,
-        'page_range': paginator_list_page(paginator.page_range, obj.number, PAGE_COUNT//2),
+        'page_range': paginator_list_page(paginator.page_range, obj.number, 5),
         'prog': program
         })
 
