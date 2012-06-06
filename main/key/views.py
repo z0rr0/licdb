@@ -367,7 +367,8 @@ def keys(request, vtemplate):
         prog = 0
     form = ProgSelForm(initial={'programma': prog})
     program = Program.objects.all()
-    CHOICES=[ #(0, '--- все программы ---'),
+    CHOICES=[ 
+        #(0, '--- все программы ---'),
         (u"Для студенов", [(p.id, p.name) for p in program.filter(use_student=True).only('id', 'name')]),
         (u"Только для ВУЗа", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')])]
     form.fields['programma'].choices = CHOICES
