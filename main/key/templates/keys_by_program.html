@@ -1,117 +1,126 @@
 {% load keytags %}
 {% load widget_tweaks %}
+<div class="row-fluid">
+  <div class="span12">
+    <h3>{{ program.name }}</h3>
+  </div>
+</div>
+
+
+{{ form.plist|add_class:"span2" }}
+
 {% for obj in object_list %}
-    <div class="row-fluid">
-        <div class="row">
-            <div class="span4">
-                <h3>{{ obj.name }}</h3>
-            </div>
-            <div class="span1">
-                {{ obj.form.plist|add_class:"span1"|attr:"onchange:key_update_range(this, 1)" }}
-            </div>
-            <div class="span2">
-                <p>
-                    <span class="badge">{{ obj.stat.all }}&nbsp;/&nbsp;{{ obj.stat.manyuse }}</span>
-                    <span class="badge badge-success">{{ obj.stat.allfree }}</span>
-                    <span class="badge badge-warning">{{ obj.stat.free }}</span>
-                </p>
-            </div>
-            <div class="span2">
-                <div class="btn-group dropup">
-                    <button class="btn btn-mini">О программе</button>
-                    <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="/program/{{ obj.id }}" title="информация о программе">
-                                подробнее
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ obj.url|default:'#' }}" 
-                                title="{{ obj.url|default:'сайт не указан' }}">
-                                домашняя страница
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="/license/{{ obj.license.id }}" title="лицензия ПО">
-                                лицензия
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/program/edit/{{ obj.id }}" title="изменить данные о программе">
-                                правка
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+  <div class="row-fluid">
+    <div class="row">
+      <div class="span4">
+        <h3>{{ obj.name }}</h3>
+      </div>
+      <div class="span1">
+        {{ obj.form.plist|add_class:"span1"|attr:"onchange:key_update_range(this, 1)" }}
+      </div>
+      <div class="span2">
+        <p>
+          <span class="badge">{{ obj.stat.all }}&nbsp;/&nbsp;{{ obj.stat.manyuse }}</span>
+          <span class="badge badge-success">{{ obj.stat.allfree }}</span>
+          <span class="badge badge-warning">{{ obj.stat.free }}</span>
+        </p>
+      </div>
+      <div class="span2">
+        <div class="btn-group dropup">
+          <button class="btn btn-mini">О программе</button>
+          <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/program/{{ obj.id }}" title="информация о программе">
+                подробнее
+              </a>
+            </li>
+            <li>
+              <a href="{{ obj.url|default:'#' }}" 
+                title="{{ obj.url|default:'сайт не указан' }}">
+                домашняя страница
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="/license/{{ obj.license.id }}" title="лицензия ПО">
+                лицензия
+              </a>
+            </li>
+            <li>
+              <a href="/program/edit/{{ obj.id }}" title="изменить данные о программе">
+                правка
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="row" id="pr{{ obj.id }}">
-            <div class="well span8">
-                {% for key in obj.filterkey %}
-                    <div class="keyview">
-                        <div class="row">
-                            <div class="span1">
-                                {% if key.use %}
-                                    <span class="label label-important">используется</span>
-                                {% else %}
-                                    <span class="label label-inverse">доступен</span>
-                                {% endif %}
-                            </div>
-                            <div class="span3">
-                                <a class="btn btn-mini btn-primary" href="/key/edit/{{ key.id }}">
-                                    <i class="icon-pencil icon-white"></i>
-                                    правка
-                                </a>
-                                <a class="btn btn-mini btn-primary" 
-                                    href="javascript:delkey_home({{ key.program_id }}, {{ key.id }})">
-                                    <i class="icon-trash icon-white"></i>
-                                    удалить
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span3">
-                                <strong>Ключ:</strong> {{ key.key|default:"нет" }}
-                            </div>
-                            <div class="span3">
-                                <strong>Файл:</strong>
-                                {% if key.attach %}
-                                    <a href="/key/download/{{ key.id }}" title="{{ key.attach.name|keyname }}">
-                                        {{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}
-                                    </a>
-                                {% else %}
-                                    нет
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span3">
-                                <strong>Количество раб. станций:</strong> {{ key.manyuse|keyuse }}
-                            </div>
-                            <div class="span3">
-                                <strong>Сетевой:</strong> {{ key.net|yesno }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span3">
-                                <strong>Дата начала:</strong> {{ key.date_start }}
-                            </div>
-                            <div class="span3">
-                                <strong>Дата окончания:</strong> {{ key.date_end|default:"нет" }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="span8">
-                                <p>{{ key.comment }}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="row" id="pr{{ obj.id }}">
+      <div class="well span8">
+        {% for key in obj.filterkey %}
+          <div class="keyview">
+            <div class="row">
+              <div class="span1">
+                {% if key.use %}
+                  <span class="label label-important">используется</span>
+                {% else %}
+                  <span class="label label-inverse">доступен</span>
+                {% endif %}
+              </div>
+              <div class="span3">
+                <a class="btn btn-mini btn-primary" href="/key/edit/{{ key.id }}">
+                  <i class="icon-pencil icon-white"></i>
+                  правка
+                </a>
+                <a class="btn btn-mini btn-primary" 
+                  href="javascript:delkey_home({{ key.program_id }}, {{ key.id }})">
+                  <i class="icon-trash icon-white"></i>
+                  удалить
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="span3">
+                <strong>Ключ:</strong> {{ key.key|default:"нет" }}
+              </div>
+              <div class="span3">
+                <strong>Файл:</strong>
+                {% if key.attach %}
+                  <a href="/key/download/{{ key.id }}" title="{{ key.attach.name|keyname }}">
+                    {{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}
+                  </a>
+                {% else %}
+                  нет
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="span3">
+                <strong>Количество раб. станций:</strong> {{ key.manyuse|keyuse }}
+              </div>
+              <div class="span3">
+                <strong>Сетевой:</strong> {{ key.net|yesno }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="span3">
+                <strong>Дата начала:</strong> {{ key.date_start }}
+              </div>
+              <div class="span3">
+                <strong>Дата окончания:</strong> {{ key.date_end|default:"нет" }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="span8">
+                <p>{{ key.comment }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {% endfor %}

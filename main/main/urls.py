@@ -11,9 +11,9 @@ from key.models import *
 
 urlpatterns = patterns('',
     # accounts
-    (r'^accounts/login/$', login),
-    (r'^accounts/logout/$' , logout),
-    (r'^accounts/settings/$' , 'key.views.user_edit', {'vtemplate': 'user_edit.html'}),
+    url('^accounts/login/$', login),
+    url('^accounts/logout/$' , logout),
+    url('^accounts/settings/$' , 'key.views.user_edit', {'vtemplate': 'user_edit.html'}),
     # Examples:
     # url(r'^$', 'main.views.home', name='home'),
     # url(r'^main/', include('main.foo.urls')),
@@ -29,30 +29,30 @@ urlpatterns = patterns('',
         'vtemplate': 'license_view.html',
         'model': License}),
     # license delete
-    (r'^license/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+    url('^license/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/licenses/',
         'model': License, 
         'perm': 'key.delete_license'}),
     # license edit
-    (r'^license/edit/(?P<id>\d+)/?$', 'key.views.license_edit', {
+    url('^license/edit/(?P<id>\d+)/?$', 'key.views.license_edit', {
         'vtemplate': 'license_edit.html'}),
     # license add
-    (r'^license/add/?$', 'key.views.license_add', {
+    url('^license/add/?$', 'key.views.license_add', {
         'vtemplate': 'license_edit.html'}),
 
     # all program
     url(r'^programs/$', 'key.views.programs', {
         'vtemplate': 'program_home.html'}),
     # license delete
-    (r'^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+    url('^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/programs/',
         'model': Program,
         'perm': 'key.delete_program'}),
     # license edit
-    (r'^program/edit/(?P<id>\d+)/?$', 'key.views.program_edit', {
+    url('^program/edit/(?P<id>\d+)/?$', 'key.views.program_edit', {
         'vtemplate': 'program_edit.html'}),
     # license add
-    (r'^program/add/?$', 'key.views.program_add', {
+    url('^program/add/?$', 'key.views.program_add', {
         'vtemplate': 'program_edit.html'}),
     # license view
     url(r'^program/(?P<id>\d+)/?$', 'key.views.obj_view', {
@@ -66,22 +66,24 @@ urlpatterns = patterns('',
     url(r'^get_keys/(?P<prog>\d+)/?$', 'key.views.keys_get', {
         'vtemplate': 'key_get_list.html'}),
     # license delete
-    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
+    url(r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
         'model': Key,
         'perm': 'key.delete_key'}),
     # get license list by program ID
     url(r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
     # get keys list by program ID
-    url(r'^keys/program/?$', 'key.views.keys_by_program', {
+    url(r'^keys/program/(?P<prog>\d+)/?$', 'key.views.keys_program', {
         'vtemplate': 'keys_by_program.html'}),
+
     # get keys by program ID, in range
     url(r'^keys/program_one/(?P<prog>\d+)/?$', 'key.views.keys_by_program_one', {
         'vtemplate': 'keys_by_program_one.html'}),
+    
     # key edit
-    (r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
+    url(r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
         'vtemplate': 'key_edit.html'}),
     # license add
-    (r'^key/add/?$', 'key.views.key_add', {
+    url(r'^key/add/?$', 'key.views.key_add', {
         'vtemplate': 'key_edit.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:

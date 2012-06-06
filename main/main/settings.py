@@ -12,6 +12,7 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
     ('ZoRRo', 'ya@thebestzorro.ru'),
 )
+DEFAULT_FROM_EMAIL = 'licdb@apingtu.edu.ru'
 
 MANAGERS = ADMINS
 

@@ -13,7 +13,7 @@ from django.contrib import auth
 from filetransfers.api import serve_file
 
 from django.contrib.auth.models import User
-from main.settings import LEN_SALT
+from main.settings import LEN_SALT, DEFAULT_FROM_EMAIL
 from key.models import *
 from key.forms import *
 
@@ -41,16 +41,13 @@ def login_required_ajax404(fn):
     return wrapper
 
 # --------- GENERAL FUNCTIONS -------------
-def objects_list(model, page_count=None, name=None):
+def pagination_oblist(obj_list, page=1, page_count=PAGE_COUNT):
     u"""
-    Получение объектов с возможным разбиение на страницы и/или фильтром по имени
+    Получение объектов с возможным разбиение на страницы
     """
-    obj_list = model.objects.all()
-    if name:
-        obj_list = obj_list.filter(name__icontains=name)
-    if page_count:
+    if page:
         # постраничный просмотр 
-        paginator = Paginator(obj_list, PAGE_COUNT)
+        paginator = Paginator(obj_list, page_count)
         try:
             obj = paginator.page(page)
         except PageNotAnInteger:
@@ -60,6 +57,7 @@ def objects_list(model, page_count=None, name=None):
             # If page is out of range (e.g. 9999), deliver last page of results.
             obj = paginator.page(paginator.num_pages)
     else:
+        obj = obj_list
         pagintor = None
     return obj, paginator
 
@@ -156,7 +154,7 @@ def user_edit(request, vtemplate):
                 user.save()
                 # email
                 subject = u'Изменение личных данных'
-                send_mail(subject, message, 'admin@apingtu.edu.ru', [user.email])
+                send_mail(subject, message, DEFAULT_FROM_EMAIL, [user.email])
                 return redirect('/')
     else:
         form = UserForm(initial={
@@ -247,7 +245,7 @@ def programs(request, vtemplate):
         if request.method == 'POST':
             searchtext = request.POST['progsearch']
             object_list = object_list.filter(name__icontains=searchtext)
-    except (ValueError, License.DoesNotExist):
+    except (IndexError, ValueError, License.DoesNotExist):
         pass
     return TemplateResponse(request, vtemplate, {
         'object_list': object_list,
@@ -288,14 +286,40 @@ def keys(request, vtemplate):
     Список всех ключей - главная страница
     """
     try:
-        if 'prog' in request.GET:
-            prog = int(request.GET['prog'])
-        else:
-            prog = 0
+        prog = int(request.GET['prog']) if 'prog' in request.GET else 0
     except (KeyError, ValueError) as err:
         prog = 0
     form = ProgSelForm(initial={'programma': prog})
+    program = Program.objects.all()
+    CHOICES=[ #(0, '--- все программы ---'),
+        (u"Для студенов", [(p.id, p.name) for p in program.filter(use_student=True).only('id', 'name')]),
+        (u"Только для ВУЗа", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')])]
+    form.fields['programma'].choices = CHOICES
     return TemplateResponse(request, vtemplate, {'form': form})
+
+@login_required_ajax404
+def keys_program(request, vtemplate, prog):
+    u"""
+    Получение среза ключей по программе и флагу использования
+    """
+    prog = get_object_or_404(Program, pk=int(prog))
+    keys = Key.objects.filter(program=prog)
+    try:
+        if 'free' in request.GET:
+            keys = keys.filter(use=int(request.GET['free']))
+        page = int(request.GET['page']) if 'page' in request.GET else 1
+    except ValueError:
+        page = 1
+    obj, paginator = pagination_oblist(keys, page)
+    if paginator is None:
+        return HttpResponseNotFound('Paginator error')
+    form = ProgrmaCount()
+    form.fields['plist'].choices = [(p, '%s-%s' % ((p-1)*10+1, p*10)) for p in paginator.page_range]
+    # form.fields['plist'].choices = [(p, ('%s - %s' % (p-1)*10, p*10)) for p in paginator.page_range]
+    return TemplateResponse(request, vtemplate, {'program': prog, 'form': form})
+
+
+
 
 # cool number list
 def key_count_range(a, c=PROG_LIMIT):

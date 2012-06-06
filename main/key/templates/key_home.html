@@ -6,65 +6,56 @@
 {% block addjscss %}
 <script type="text/javascript">
 $(document).ready(function() {
-    key_update_view();
-    $('#id_programma').change(key_update_view);
-    $('#id_onlyfree').change(key_update_view);
+  key_update_view();
+  $('#id_programma').change(key_update_view);
+  $('#id_onlyfree').change(key_update_view);
 })
 </script>
 {% endblock addjscss %}
 
 {% block content %}
-    <h1>
-        Ключи для программного обеспечения
-        {% if type %}
-            <span class="label">{{ type }}</span>
-        {% endif %}
-    </h1>
-    <div class="row-fluid">
-        <div class="span10">
-            <p>
-                <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.
-            </p>
-        </div>
+  <div class="row-fluid">
+    <div class="span10">
+      <h1>Ключи для программного обеспечения</h1>
+      <p>
+        <strong>Лицензионный (активационный) ключ</strong> &mdash; набор символов, необходимый для снятия функциональных ограничений с программы. Аналогичный образом используется активационный файл.
+      </p>
     </div>
-    {% comment %}
-        список программ (с возможностью выбора всех)
-        ключи к программам
-    {% endcomment %}
-    <div class="row-fluid">
-        <div class="span12">
-            <form class="form-inline">
-            {% csrf_token %}{{ form.management_form }}
-                <label for="id_programma">{{ form.programma.label }}</label>
-                {{ form.programma|add_class:"span3" }}
-                <label class="checkbox">
-                    {{ form.onlyfree }}
-                    {{ form.onlyfree.label }}
-                </label>
-            </form>
-        </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <form class="form-inline well">
+      {% csrf_token %}{{ form.management_form }}
+        <label for="id_programma">{{ form.programma.label }}</label>
+        {{ form.programma }}
+        <label class="checkbox">
+          {{ form.onlyfree }}
+          {{ form.onlyfree.label }}
+        </label>
+      </form>
     </div>
-    <div class="row-fluid">
-        <div class="span10">
-            <p>
-                <a class="btn btn-success" href="/key/add/" title="Добавление ключа">
-                    <i class="icon-plus icon-white"></i>
-                    Добавить
-                </a>
-                &nbsp;&nbsp;&nbsp;
-                <span class="badge">&nbsp;</span>&nbsp;&mdash; всего ключей / раб.станций
-                &nbsp;&nbsp;
-                <span class="badge badge-success">&nbsp;</span>&nbsp;&mdash; доступно лицензий
-                &nbsp;&nbsp;
-                <span class="badge badge-warning">&nbsp;</span>&nbsp;&mdash; доступно для рабочих станций.
-            </p>
-            <p>
-            </p>
-        </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <p>
+        <a class="btn btn-success" href="/key/add/" title="Добавление ключа">
+          <i class="icon-plus icon-white"></i>
+          Добавить
+        </a>
+        &nbsp;&nbsp;&nbsp;
+        <span class="badge">&nbsp;</span>&nbsp;&ndash; всего ключей / раб.станций
+        &nbsp;&nbsp;
+        <span class="badge badge-success">&nbsp;</span>&nbsp;&ndash; доступно лицензий
+        &nbsp;&nbsp;
+        <span class="badge badge-warning">&nbsp;</span>&nbsp;&ndash; доступно для рабочих станций.
+      </p>
+      <p>
+      </p>
     </div>
-    <div class="row">
-        <div class="span10" id='keycontent'>
-            <!-- content -->
-        </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12" id='keycontent'>123
+      <!-- content -->
     </div>
+  </div>
 {% endblock content %}

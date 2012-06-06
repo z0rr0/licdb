@@ -108,7 +108,7 @@ function key_update_view() {
     if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
     else onlyfree = 0;
     // send
-    key_update('/keys/program/', divid, program, onlyfree, 0);
+    key_update('/keys/program/' + program, divid, program, onlyfree, 0);
 }
 // search range keys
 // параметром может быть как объект списка так и номер программы
