@@ -43,18 +43,18 @@ urlpatterns = patterns('',
     # all program
     url(r'^programs/$', 'key.views.programs', {
         'vtemplate': 'program_home.html'}),
-    # license delete
+    # program delete
     url('^program/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
         'redirecturl': '/programs/',
         'model': Program,
         'perm': 'key.delete_program'}),
-    # license edit
+    # program edit
     url('^program/edit/(?P<id>\d+)/?$', 'key.views.program_edit', {
         'vtemplate': 'program_edit.html'}),
-    # license add
+    # program add
     url('^program/add/?$', 'key.views.program_add', {
         'vtemplate': 'program_edit.html'}),
-    # license view
+    # program view
     url(r'^program/(?P<id>\d+)/?$', 'key.views.obj_view', {
         'vtemplate': 'program_view.html',
         'model': Program}),

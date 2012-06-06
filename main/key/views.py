@@ -280,6 +280,82 @@ def program_add(request, vtemplate):
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
 # --------- KEY FUNTIONS -------------
+# used keys(request, vtemplate)
+def key_get_stat(keys):
+    u"""
+    Получение статистики по ключам:
+
+    - all - всего лицензий;
+    - net - количество сетевых лицензий;
+    - namyuse - максимальное количество рабочих станций;
+    - clients_all - общее количество пользователей;
+    - clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
+    - free - количество рабочих мест, на которых еще можно использовать данное ПО
+    """
+    try:
+        clients = Client.objects.filter(key__in=keys)
+        result = {'all': keys.count(), 
+            'net': keys.filter(net=True).count(),
+            'manyuse': NoneTo0(keys.aggregate(Sum('manyuse'))['manyuse__sum']),
+            'use': keys.filter(use=True).count(),
+            'clients_all': clients.count(),
+            'clients_manyuse': NoneTo0(clients.aggregate(Sum('manyuse'))['manyuse__sum'])
+            }
+        result['allfree'] = result['all'] - result['use']
+        result['free'] = result['manyuse'] - result['clients_manyuse']
+    except:
+        return False
+    return result
+
+def paginator_list_page(pages, page, prange):
+    u"""
+    Уменьшение числа страниц просмотра для более удобного вида
+    """
+    newpages = []
+    # есть страницы до диапазона
+    if page - prange > 1:
+        newpages.append(0)
+        start = page - prange - 1
+    else:
+        start = 0
+    # тут можно сделать по другому
+    newpages = newpages + pages[start:page+prange]
+    # есть страницы после диапазона
+    if page + prange < pages[-1]:
+        newpages.append(0)
+    return newpages
+
+@login_required_ajax404
+def keys_get(request, vtemplate, prog):
+    u"""
+    Получение списка ключей по номеру программы:
+
+    Авторизованные пользователи получают полный список ключей 
+    и данные по статистике хранения и использования ключей; 
+    """
+    program = get_object_or_404(Program, pk=int(prog))
+    # keys = Key.objects.filter(program=program)
+    keys = program.key_set.all()
+    try:
+        page = int(request.GET['page']) if 'page' in request.GET else 1
+    except ValueError:
+        page = 1
+    result = key_get_stat(keys)
+    if not result:
+        return HttpResponseNotFound('Get keys error')
+    obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)
+    if paginator is None:
+        return HttpResponseNotFound('Pagination error')
+    # keys = obj.object_list
+    return TemplateResponse(request, vtemplate, {
+        'keys': obj, 
+        'result': result, 
+        'num_pages': paginator.num_pages,
+        'srart': (obj.number - 1) *  PAGE_COUNT,
+        'page_range': paginator_list_page(paginator.page_range, obj.number, PAGE_COUNT//2),
+        'prog': program
+        })
+
 @login_required
 def keys(request, vtemplate):
     u"""
@@ -420,47 +496,7 @@ def key_add(request, vtemplate):
 def NoneTo0(value):
     return value if value else 0
 
-# get keys stats by program
-def key_get_stat(prog):
-    try:
-        keys = Key.objects.filter(program=int(prog))
-        clients = Client.objects.filter(key__in=keys)
-        result = {'all': keys.count(), 
-            'net': keys.filter(net=True).count(),
-            'manyuse': NoneTo0(keys.aggregate(Sum('manyuse'))['manyuse__sum']),
-            'use': keys.filter(use=True).count(),
-            'clients_all': clients.count(),
-            'clients_manyuse': NoneTo0(clients.aggregate(Sum('manyuse'))['manyuse__sum'])
-            }
-        result['allfree'] = result['all'] - result['use']
-        result['free'] = result['manyuse'] - result['clients_manyuse']
-    except:
-        return False
-    return result
 
-# get license list by program ID
-def keys_get(request, vtemplate, prog):
-    u"""
-    Получение списка ключей по номеру программы:
-
-    Авторизованные пользователи получают полный список ключей 
-    и данные по статистике хранения и использования ключей; 
-
-    Не авторизованные - только статистику. Аторизация фильтруется в шаблоне (**html**)
-
-    - all - всего лицензий;
-    - net - количество сетевых лицензий;
-    - namyuse - максимальное количество рабочих станций;
-    - clients_all - общее количество пользователей;
-    - clients_manyuse - количество рабочих станций, использующих лицензии данной программы;
-    - free - количество рабочих мест, на которых еще можно использовать данное ПО
-    """
-    result = key_get_stat(prog)
-    if not result:
-        return HttpResponseNotFound('Get keys error')
-    program = get_object_or_404(Program, pk=prog)
-    keys = program.key_set.all()
-    return TemplateResponse(request, vtemplate, {'keys': keys, 'result': result, 'prog': prog})
 
 # download key
 @login_required

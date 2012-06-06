@@ -41,16 +41,16 @@ function is_int(input) {
     return typeof(input)=='number' &&parseInt(input)==input;
   }
 // get list and statistics key's data
-function get_keys(prog, divid) {
+function get_keys(prog, page, divid) {
     vurl = "/get_keys/" + prog
     $.ajax({
         url: vurl,
         type: 'GET',
         dataType: 'html',
         context: document.body,
-        // data: {
-        //     progid: prog
-        // }
+        data: {
+            page: page
+        },
         success: function (data) {
             $(divid).html(data);
         },
@@ -61,10 +61,10 @@ function get_keys(prog, divid) {
     });
 }
 // delete key record
-function delkey(prog, keydiv, id) {
+function delkey(prog, keydiv, id, page) {
     if (confirm("Уверены, что хотите удалить данные?")) 
         $.get('/key/delete/' + id, function(data) {
-                get_keys(prog, keydiv)
+                get_keys(prog, page, keydiv)
             }).error(function() { 
                 error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
                 $(keydiv).html('<span class="well span10">' + error_msg + '</span>');
