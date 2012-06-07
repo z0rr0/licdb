@@ -74,17 +74,19 @@
                 {% endif %}
               </td>
               <td>
-                {% if user.is_authenticated %}
-                  <a class="btn btn-warning" href="/keys/?prog={{ prog.id }}" title="Список ключей">
-                    <i class="icon-lock icon-white"></i>
-                  </a>
-                  <a class="btn btn-primary" href="/program/edit/{{ prog.id }}" title="Правка">
-                    <i class="icon-pencil icon-white"></i>
-                  </a>
-                  <a class="btn btn-danger" href="/program/delete/{{ prog.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить программу?');">
-                    <i class="icon-trash icon-white"></i>
-                  </a>
-                {% endif %}
+                <nobr>
+                  {% if user.is_authenticated %}
+                    <a class="btn btn-warning" href="/keys/?prog={{ prog.id }}" title="Список ключей">
+                      <i class="icon-lock icon-white"></i>
+                    </a>
+                    <a class="btn btn-primary" href="/program/edit/{{ prog.id }}" title="Правка">
+                      <i class="icon-pencil icon-white"></i>
+                    </a>
+                    <a class="btn btn-danger" href="/program/delete/{{ prog.id }}" title="Удаление" onclick="return confirm('Вы действительно хотите удалить программу?');">
+                      <i class="icon-trash icon-white"></i>
+                    </a>
+                  {% endif %}
+                </nobr>
               </td>
             </tr>
           {% endfor %}

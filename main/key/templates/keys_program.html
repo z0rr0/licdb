@@ -1,0 +1,162 @@
+{% load keytags %}
+{% load widget_tweaks %}
+<div class="row-fluid">
+  <div class="span10">
+    <h3>{{ prog.name }}</h3>
+  </div>
+  <div class="span2">
+    <div class="btn-group dropup pull-right">
+      <button class="btn btn-mini">О программе</button>
+      <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right">
+        <li>
+          <a href="/program/{{ prog.id }}" title="информация о программе">
+            подробнее
+          </a>
+        </li>
+        <li>
+          <a href="{{ prog.url|default:'#' }}" 
+            title="{{ prog.url|default:'сайт не указан' }}">
+            домашняя страница
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="/license/{{ prog.license.id }}" title="лицензия ПО">
+            лицензия
+          </a>
+        </li>
+        <li>
+          <a href="/program/edit/{{ prog.id }}" title="изменить данные о программе">
+            правка
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span12">
+    <!-- статискика -->
+    <p>
+      <em>
+        Всего <strong>{{ result.all }}</strong> ключей на <strong>{{ result.manyuse }}</strong> компьютеров.
+        Всего доступно <strong>{{ result.allfree }}</strong> лицензий для <strong>{{ result.free }}</strong> машин.
+      </em>
+    </p>
+  </div>
+</div>
+<div class="row-fluid">
+  <!-- навигация -->
+  <div class="span12">
+    <div class="pagination pagination-centered">
+      <ul>
+        {% if keys.has_previous %}
+          <li>
+            <a href="javascript:key_update_view({{ keys.previous_page_number }})">&laquo;</a>
+          </li>
+        {% else %}
+          <li class="disabled"><a href="#">&laquo;</a>  </li>
+        {% endif %}
+        {% for p in page_range %}
+          {% if p %}
+            {% if p == keys.number %}
+              <li class="active">
+                <a href="#">{{ p }}</a>
+              </li>
+            {% else %}
+              <li>
+                <a href="javascript:key_update_view({{ p }})">{{ p }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="disabled"><a href="#">...</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if keys.has_next %}
+          <li>
+            <a href="javascript:key_update_view({{ keys.next_page_number }})">&raquo;</a>
+          </li>
+        {% else %}
+          <li class="disabled"><a href="#">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- вывод данных -->
+<div class="row-fluid">
+  <div class="span12">
+    {% if keys.object_list %}
+      {% for key in keys.object_list %}
+        <div class="row-fluid">
+          <div class="well span12">
+            <div class="row-fluid">
+              <div class="span4">
+                <strong>#{{ forloop.counter|add:srart }}</strong>
+                {% if key.use %}
+                  <span class="label label-warning">используется</span>
+                {% else %}
+                  <span class="label label-inverse">доступен</span>
+                {% endif %}
+              </div>
+              <div class="span8">
+                <span class="pull-right">
+                  <a class="btn btn-mini btn-primary" href="/key/edit/{{ key.id }}">
+                    <i class="icon-pencil icon-white"></i>
+                    правка
+                  </a>
+                  <a class="btn btn-mini btn-danger" 
+                    href="javascript:delkey_home({{ keys.number }}, {{ key.id }})">
+                    <i class="icon-trash icon-white"></i>
+                    удалить
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span4">
+                <strong>Ключ:</strong> {{ key.key|default:"нет" }}
+              </div>
+              <div class="span8">
+                <strong>Дата начала:</strong> {{ key.date_start }}
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span4">
+                <strong>Файл:</strong>
+                {% if key.attach %}
+                  <a href="/key/download/{{ key.id }}" title="{{ key.attach.name|keyname }}">
+                    {{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}
+                  </a>
+                {% else %}
+                  нет
+                {% endif %}
+              </div>
+              <div class="span8">
+                <strong>Дата окончания:</strong> {{ key.date_end|default:"нет" }}
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span4">
+                <strong>Сетевой:</strong> {{ key.net|yesno }}
+              </div>
+              <div class="span8">
+                <strong>Количество раб. станций:</strong> {{ key.manyuse|keyuse }}
+              </div>
+            </div>
+            <div class="row-fluid">
+              <div class="span12">
+                <p><em>{{ key.comment }}</em></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Для данного программного обеспечения ключи не найдены.</p>
+    {% endif %}
+  </div>
+</div>

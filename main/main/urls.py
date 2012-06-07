@@ -72,13 +72,9 @@ urlpatterns = patterns('',
     # get license list by program ID
     url(r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
     # get keys list by program ID
-    url(r'^keys/program/(?P<prog>\d+)/?$', 'key.views.keys_program', {
-        'vtemplate': 'keys_by_program.html'}),
-
-    # get keys by program ID, in range
-    url(r'^keys/program_one/(?P<prog>\d+)/?$', 'key.views.keys_by_program_one', {
-        'vtemplate': 'keys_by_program_one.html'}),
-    
+    url(r'^keys/program/(?P<prog>\d+)/?$', 'key.views.keys_get', {
+        'vtemplate': 'keys_program.html',
+        'obj_onpage': 7}),   
     # key edit
     url(r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
         'vtemplate': 'key_edit.html'}),

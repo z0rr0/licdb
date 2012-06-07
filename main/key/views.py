@@ -280,7 +280,10 @@ def program_add(request, vtemplate):
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
 # --------- KEY FUNTIONS -------------
-# used keys(request, vtemplate)
+# none to 0
+def NoneTo0(value):
+    return value if value else 0
+
 def key_get_stat(keys):
     u"""
     Получение статистики по ключам:
@@ -320,7 +323,7 @@ def paginator_list_page(pages, page, prange):
         start = page - prange - 1
     else:
         start = 0
-    # тут можно сделать по другому
+    # тут можно сделать по-другому
     newpages = newpages + pages[start:page+prange]
     # есть страницы после диапазона
     if page + prange < pages[-1]:
@@ -350,7 +353,7 @@ def paginator_list_page2(pages, page, median):
         return pages[page-median-1:page+median]
 
 @login_required_ajax404
-def keys_get(request, vtemplate, prog):
+def keys_get(request, vtemplate, prog, obj_onpage=5):
     u"""
     Получение списка ключей по номеру программы:
 
@@ -361,6 +364,10 @@ def keys_get(request, vtemplate, prog):
     # keys = Key.objects.filter(program=program)
     keys = program.key_set.all()
     try:
+        if 'free' in request.GET:
+            if int(request.GET['free']):
+                alredy_use = not int(request.GET['free'])
+                keys = keys.filter(use=alredy_use)
         page = int(request.GET['page']) if 'page' in request.GET else 1
     except ValueError:
         page = 1
@@ -376,7 +383,7 @@ def keys_get(request, vtemplate, prog):
         'result': result, 
         'num_pages': paginator.num_pages,
         'srart': (obj.number - 1) *  PAGE_COUNT,
-        'page_range': paginator_list_page2(paginator.page_range, obj.number, 5),
+        'page_range': paginator_list_page2(paginator.page_range, obj.number, obj_onpage),
         'prog': program
         })
 
@@ -396,93 +403,8 @@ def keys(request, vtemplate):
         (u"Для студенов", [(p.id, p.name) for p in program.filter(use_student=True).only('id', 'name')]),
         (u"Только для ВУЗа", [(p.id, p.name) for p in program.filter(use_student=False).only('id', 'name')])]
     form.fields['programma'].choices = CHOICES
-    return TemplateResponse(request, vtemplate, {'form': form})
+    return TemplateResponse(request, vtemplate, {'form': form })
 
-@login_required_ajax404
-def keys_program(request, vtemplate, prog):
-    u"""
-    Получение среза ключей по программе и флагу использования
-    """
-    prog = get_object_or_404(Program, pk=int(prog))
-    keys = Key.objects.filter(program=prog)
-    try:
-        if 'free' in request.GET:
-            keys = keys.filter(use=int(request.GET['free']))
-        page = int(request.GET['page']) if 'page' in request.GET else 1
-    except ValueError:
-        page = 1
-    obj, paginator = pagination_oblist(keys, page)
-    if paginator is None:
-        return HttpResponseNotFound('Paginator error')
-    form = ProgrmaCount()
-    form.fields['plist'].choices = [(p, '%s-%s' % ((p-1)*10+1, p*10)) for p in paginator.page_range]
-    # form.fields['plist'].choices = [(p, ('%s - %s' % (p-1)*10, p*10)) for p in paginator.page_range]
-    return TemplateResponse(request, vtemplate, {'program': prog, 'form': form})
-
-
-
-
-# cool number list
-def key_count_range(a, c=PROG_LIMIT):
-    k = a // c
-    b = [(i+1, '%s-%s' % (i*10+1, (i+1)*10)) for i in range(k)]
-    if a % c:
-        b.append((k+1, '%s-%s' % (k*10+1, a)))
-    return b
-
-# search keys by program in ajax
-@login_required_ajax404
-def keys_by_program(request, vtemplate):
-    u"""
-    поиск списка ключей по программе, Ajax
-    """
-    object_list = Program.objects.all()
-    try:
-        if 'prog' in request.GET:
-            prog = int(request.GET['prog'])
-            if prog:
-                object_list = object_list.filter(id=prog)
-        if 'free' in request.GET:
-            free = True if int(request.GET['free']) else False
-    except (KeyError, ValueError) as err:
-        pass
-    for obj in object_list:
-        obj.stat = key_get_stat(obj.id)
-        obj.filterkey = obj.key_set.all()
-        if free:
-            obj.filterkey = obj.filterkey.filter(use=False)
-        # form
-        form = ProgrmaCount()
-        form.fields['plist'].widget = forms.Select(attrs={'id': 'id_prog' + str(obj.id)})
-        form.fields['plist'].choices = key_count_range(obj.filterkey.count())
-        obj.form = form
-        obj.filterkey = obj.filterkey[:10]
-    return TemplateResponse(request, vtemplate, {'object_list': object_list})
-
-# search keys by program in ajax
-@login_required_ajax404
-def keys_by_program_one(request, vtemplate, prog):
-    u"""
-    Поиск ключей по программе.
-
-    Выбиратеся только интервал, по PROG_LIMIT (по-умолчанию 10) штук
-    """
-    keys = Key.objects.filter(program=int(prog))
-    try:
-        if 'free' in request.GET:
-            if int(request.GET['free']):
-                keys = keys.filter(use=False)
-        if 'limit' in request.GET:
-            limit = int(request.GET['limit']) if int(request.GET['limit']) else 1
-        else:
-            limit = 1
-    except (KeyError, ValueError) as err:
-        HttpResponseNotFound('Not foud program in GET')
-    limit = (limit - 1) * 10, limit * 10
-    keys = keys[limit[0]:limit[1]]
-    return TemplateResponse(request, vtemplate, {'filterkey': keys})
-
-# key edit
 @permission_required('key.change_key')
 def key_edit(request, id, vtemplate):
     u""" 
@@ -496,7 +418,6 @@ def key_edit(request, id, vtemplate):
         return redirect('/keys/?prog=' + str(key.program_id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
-# key edit
 @permission_required('key.add_key')
 def key_add(request, vtemplate):
     u""" 
@@ -517,13 +438,6 @@ def key_add(request, vtemplate):
         return redirect('/keys/?prog=' + str(key.program_id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Добавление'})
 
-# none to 0
-def NoneTo0(value):
-    return value if value else 0
-
-
-
-# download key
 @login_required
 def download_handler(request, id):
     u"""

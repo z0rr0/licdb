@@ -38,7 +38,7 @@ $(document).ajaxSend(function(event, xhr, settings) {
     }
 });
 function is_int(input) {
-    return typeof(input)=='number' &&parseInt(input)==input;
+    return typeof(input)=='number' && parseInt(input)==input;
   }
 // get list and statistics key's data
 function get_keys(prog, page, divid) {
@@ -71,59 +71,39 @@ function delkey(prog, keydiv, id, page) {
             });
 }
 // delete key record
-function delkey_home(prog, id) {
+function delkey_home(page, id) {
     $.get('/key/delete/' + id, function(data) {
-            key_update_range(prog, 0);
+            key_update_view(page);
         }).error(function() { 
-            error_msg = "Ошибка, возможно у Вас не хватает прав или нет соединения с сервером.";
-            alert(error_msg);
-            key_update_range(prog, 0);
+            error_msg = "Ошибка! Возможно у Вас не хватает прав или нет соединения с сервером.";
+            error_msg = '<span class="well span12">' + error_msg + '</span>';
+            $('#keycontent').html(error_msg);
         });
 }
-function key_update(urlstr, divid, program, free, limit) {
+
+// search keys by program
+function key_update_view(page) {
+    divid = '#keycontent';
+    program = $('#id_programma').val();
+    if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
+    else onlyfree = 0;
+    if (!is_int(page))  page=1;
     $.ajax({
-        url: urlstr,
+        url: '/keys/program/' + program,
         type: 'GET',
         dataType: 'html',
         context: document.body,
         data: {
-            prog: program,
             free: onlyfree,
-            limit: limit
+            page: page
         },
         success: function (data) {
             $(divid).html(data);
         },
         error: function () {
             error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
-            error_msg = '<span class="well span8">' + error_msg + '</span>';
+            error_msg = '<span class="well span12">' + error_msg + '</span>';
             $(divid).html(error_msg);
         },
     });
-}
-// search keys by program
-function key_update_view() {
-    divid = '#keycontent';
-    program = $('#id_programma').val();
-    if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
-    else onlyfree = 0;
-    // send
-    key_update('/keys/program/' + program, divid, program, onlyfree, 0);
-}
-// search range keys
-// параметром может быть как объект списка так и номер программы
-function key_update_range(arg, is_obj) {
-    if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
-    else onlyfree = 0;
-    idstr = 'id_prog';
-    if (is_obj) {
-        program_id = arg.id.substr(idstr.length);
-        limit = arg.value     
-    }
-    else {
-        program_id = arg;
-        limit = $('#' + idstr + program_id).val()
-    }
-    divid = '#pr' + program_id;
-    key_update('/keys/program_one/' + program_id, divid, program_id, onlyfree, limit);
 }

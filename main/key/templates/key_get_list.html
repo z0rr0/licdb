@@ -120,21 +120,23 @@
           <td>{{ key.date_start }}</td>
           <td>{{ key.date_end|default:'<i class="icon-minus"></i>' }}</td>
           <td>
-            <a class="btn btn-primary" href="/key/edit/{{ key.id }}" title="Правка">
-              <i class="icon-pencil icon-white"></i>
-            </a>
-            <a class="btn btn-danger" 
-              href="javascript:delkey({{ prog.id }}, '#keylist', {{ key.id }}, {{ keys.number }})" 
-              title="Удаление">
-              <i class="icon-trash icon-white"></i>
-            </a>
-            {% if key.attach %}
-              <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
-                title="{{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}">
-                <i class="icon-download-alt icon-white"></i>
+            <nobr>
+              <a class="btn btn-primary" href="/key/edit/{{ key.id }}" title="Правка">
+                <i class="icon-pencil icon-white"></i>
               </a>
-              {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}
-            {% endif %}
+              <a class="btn btn-danger" 
+                href="javascript:delkey({{ prog.id }}, '#keylist', {{ key.id }}, {{ keys.number }})" 
+                title="Удаление">
+                <i class="icon-trash icon-white"></i>
+              </a>
+              {% if key.attach %}
+                <a class="btn btn-inverse" href="/key/download/{{ key.id }}" target="_blank"
+                  title="{{ key.attach.name|keyname }}, {{ key.attach.size|filesizeformat }}">
+                  <i class="icon-download-alt icon-white"></i>
+                </a>
+                {# {{ key.attach.name|keyname:"keys/" }} {{ key.attach.size|filesizeformat }} #}
+              {% endif %}
+            </nobr>
           </td>
         </tr>
         {% endfor %}
