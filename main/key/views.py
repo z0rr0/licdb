@@ -310,6 +310,8 @@ def key_get_stat(keys):
 def paginator_list_page(pages, page, prange):
     u"""
     Уменьшение числа страниц просмотра для более удобного вида
+
+    отображаются page+-prange страниц
     """
     newpages = []
     # есть страницы до диапазона
@@ -325,19 +327,27 @@ def paginator_list_page(pages, page, prange):
         newpages.append(0)
     return newpages
 
-def paginator_list_page2(d, x, median):
-    p = median * 2
-    if len(d) <= p:
-        return d
-    if x - median < 1:
+def paginator_list_page2(pages, page, median):
+    u"""
+    Формирование списка страниц с отбрасыванием слишком дальних от текущей (page)
+
+    отображаются максимально (2*median+1) страниц, в возможным центрированием для ст.-page
+    """
+    median = int(median)
+    median2 = median * 2
+    pages_len = len(pages)
+    if pages_len <= median2:
+        # нужно вывести больше, чем есть страниц
+        return pages
+    if page - median < 1:
         # левая граница
-        return d[:p+1]
-    elif d[-1] - x <= median:
+        return pages[:median2+1]
+    elif pages[-1] - page <= median:
         # правая граница
-        al = len(d)
-        return d[al-p-1:]
+        return pages[pages_len-median2-1:]
     else:
-        return d[x-median-1:x+median]
+        # общий вид
+        return pages[page-median-1:page+median]
 
 @login_required_ajax404
 def keys_get(request, vtemplate, prog):
@@ -366,7 +376,7 @@ def keys_get(request, vtemplate, prog):
         'result': result, 
         'num_pages': paginator.num_pages,
         'srart': (obj.number - 1) *  PAGE_COUNT,
-        'page_range': paginator_list_page(paginator.page_range, obj.number, 5),
+        'page_range': paginator_list_page2(paginator.page_range, obj.number, 5),
         'prog': program
         })
 
