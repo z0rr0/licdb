@@ -18,7 +18,7 @@ from key.models import *
 from key.forms import *
 
 # import the logging library
-import logging
+import logging, urllib
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -330,7 +330,7 @@ def paginator_list_page(pages, page, prange):
         newpages.append(0)
     return newpages
 
-def paginator_list_page2(pages, page, median):
+def paginator_list_page2(pages, page, median=5):
     u"""
     Формирование списка страниц с отбрасыванием слишком дальних от текущей (page)
 
@@ -386,6 +386,48 @@ def keys_get(request, vtemplate, prog, obj_onpage=5):
         'page_range': paginator_list_page2(paginator.page_range, obj.number, obj_onpage),
         'prog': program
         })
+
+@login_required
+def keys_search(request, vtemplate):
+    u"""
+    Страница поиска ключей
+    """
+    # как статическая страница
+    return TemplateResponse(request, vtemplate)
+
+@login_required_ajax404
+def keys_search_ajax(request, vtemplate):
+    u"""
+    Поиск ключей по пользователю или ключу
+    """
+    keys = Key.objects.all()
+    page=1
+    if request.method == 'POST':
+        form_method = request.POST
+        text_templ = request.POST['search'] if 'search' in request.POST else False
+    else:
+        form_method = request.GET
+        if 'search' in request.GET:
+            text_templ = urllib.unquote(request.GET['search'].encode('utf8'))
+            # text_templ = text_templ.encode('latin1').decode('utf-8')
+            # возможно, что это лишнее
+            text_templ = text_templ.decode('utf-8')
+        else:
+            text_templ = False
+    page = int(form_method['page']) if 'page' in form_method else 1
+    if text_templ:
+        keys = keys.filter(Q(key__icontains=text_templ) | Q(client__name__icontains=text_templ))
+    obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)
+    if paginator is None:
+        return HttpResponseNotFound('Pagination error')
+    return TemplateResponse(request, vtemplate, {
+        'keys': obj, 
+        'num_pages': paginator.num_pages,
+        'obj_count': paginator.count,
+        'srart': (obj.number - 1) *  PAGE_COUNT,
+        'page_range': paginator_list_page2(paginator.page_range, obj.number),
+        })
+
 
 @login_required
 def keys(request, vtemplate):

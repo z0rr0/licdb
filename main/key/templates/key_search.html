@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load keytags %}
+
+{% block addjscss %}
+<script src="{{ MEDIA_URL }}bootstrap/js/bootstrap-popover.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#example24').popover('show');
+})
+</script>
+{% endblock addjscss %}
+
+{% block title %}Поиск ключей{% endblock %}
+
+{% block content %}
+  <h1>
+    Поиск ключей
+    {% if type %}
+      <span class="label">{{ type }}</span>
+    {% endif %}
+  </h1>
+  <div class="row-fluid">
+    <div class="span12">
+      <p>Данные о ключах можно скать по совпанению с частью ключа или данных пользователя.</p>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <form class="well form-search" action="javascript:keys_search()">
+        {% csrf_token %}{{ form.management_form }}
+        <input type="text" class="search-query" id="seachtemplate"
+        name="progsearch" placeholder="строка поиска..." value="{{ searchtext }}">
+        <button type="submit" class="btn">Найти</button>
+      </form>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12" id="searchkeys">
+      <p>Для получения резутат укажите сроку для поиска и нажмите кнопку &laquo;Найти&raquo;.</p>
+    </div>
+  </div>
+{% endblock content %}

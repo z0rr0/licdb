@@ -107,3 +107,29 @@ function key_update_view(page) {
         },
     });
 }
+// search keys by condition
+function keys_search(page) {
+    divid = '#searchkeys';
+    type_req = 'POST';
+    if (!is_int(page))  page=1;
+    template = $('#seachtemplate').val();
+    if (type_req=='GET') template = encodeURIComponent(template);
+    $.ajax({
+        url: '/key/search/ajax/',
+        type: type_req ,
+        dataType: 'html',
+        context: document.body,
+        data: {
+            page: page,
+            search: template
+        },
+        success: function (data) {
+            $(divid).html(data);
+        },
+        error: function () {
+            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+            error_msg = '<span class="well span12">' + error_msg + '</span>';
+            $(divid).html(error_msg);
+        },
+    });
+}
