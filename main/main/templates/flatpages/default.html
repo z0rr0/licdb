@@ -7,14 +7,10 @@
         <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="{{ MEDIA_URL }}bootstrap/css/bootstrap-responsive.min.css" />
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" />
-        <script src="{{ MEDIA_URL }}js/jquery-1.7.2.min.js"></script>
         <script src="{{ MEDIA_URL }}bootstrap/js/bootstrap.min.js"></script>
-        {% block addjscss %}{% endblock addjscss %}
-        <script src="{{ MEDIA_URL }}js/main.js"></script> 
-        <title>LicenseDB - {% block title %}{% endblock %}</title>
+        <title>LicenseDB - {{ flatpage.title }}</title>
     </head>
     <body>
-        {% block pagejs %}{% endblock pagejs %}
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container-fluid">
@@ -46,7 +42,6 @@
                 </ul>
                 <form class="navbar-search pull-left" method="POST" action="/programs/">
                     {% csrf_token %}{{ form.management_form }}
-                    <!-- <i class="icon-search icon-white"></i> -->
                     <input type="text" class="search-query" name="progsearch" placeholder="Поиск программ…">
                 </form>
                 {% if user.is_authenticated %}
@@ -81,7 +76,6 @@
               <div class="well sidebar-nav">
                 <ul class="nav nav-list">
                   <li class="nav-header">Лицензии</li>
-                  <!-- <li class="active"><a href="#">Link</a></li> -->
                   <li><a href="/licenses/">Все</a></li>
                   <li><a href="/licenses/?free=0">Коммерческие</a></li>
                   <li><a href="/licenses/?free=1">Свободные</a></li>
@@ -100,7 +94,7 @@
             </div>
             <div class="span9">
               <div class="container-fluid">
-                {% block content %}{% endblock %}
+                {{ flatpage.content|safe }}
               </div>
             </div>
           </div>     
