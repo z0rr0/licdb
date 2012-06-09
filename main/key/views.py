@@ -402,32 +402,30 @@ def keys_search_ajax(request, vtemplate):
     """
     keys = Key.objects.all()
     page=1
-    if request.method == 'POST':
-        form_method = request.POST
-        text_templ = request.POST['search'] if 'search' in request.POST else False
-    else:
-        form_method = request.GET
-        if 'search' in request.GET:
-            text_templ = urllib.unquote(request.GET['search'].encode('utf8'))
-            # text_templ = text_templ.encode('latin1').decode('utf-8')
-            # возможно, что это лишнее
-            text_templ = text_templ.decode('utf-8')
-        else:
-            text_templ = False
+    form_method = request.POST if request.method == 'POST' else request.GET
+    # for GET
+    # text_templ = urllib.unquote(request.GET['search'])
+    text_templ = form_method['search'] if 'search' in form_method else False
     page = int(form_method['page']) if 'page' in form_method else 1
     if text_templ:
-        keys = keys.filter(Q(key__icontains=text_templ) | Q(client__name__icontains=text_templ))
+        # keys = keys.filter(Q(key__icontains=text_templ) | Q(client__name__icontains=text_templ))
+        clients = Client.objects.filter(Q(key__key__icontains=text_templ) | Q(name__icontains=text_templ))
+        keys = keys.filter(id__in=clients.values('key'))
     obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)
     if paginator is None:
         return HttpResponseNotFound('Pagination error')
+    for key in obj.object_list:
+        client_count = key.client_set.all().only('name')
+        key.client_count = client_count.count()
+        key.clients = '<br />'.join([client.name for client in client_count])
     return TemplateResponse(request, vtemplate, {
         'keys': obj, 
         'num_pages': paginator.num_pages,
         'obj_count': paginator.count,
         'srart': (obj.number - 1) *  PAGE_COUNT,
         'page_range': paginator_list_page2(paginator.page_range, obj.number),
+        'search': text_templ
         })
-
 
 @login_required
 def keys(request, vtemplate):

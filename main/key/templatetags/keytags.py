@@ -40,4 +40,4 @@ def keyuse(value):
     u""" 
     Количество рабочих станций для ключа
     """
-    return value if value else "не ограничено"
+    return value if value else "&infin;"

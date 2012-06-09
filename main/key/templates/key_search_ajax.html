@@ -1,5 +1,7 @@
 {% load keytags %}
-
+{% comment %}
+  ищем - {{ search }}
+{% endcomment %}
 {% if num_pages > 1 %}
   <!-- навигация -->
   <div class="row-fluid">
@@ -43,12 +45,12 @@
 <!-- вывод данных -->
 <div class="row-fluid">
   <div class="span12">
-    <p>
-      По заданному критерию поиска найдено <b>{{ obj_count }}</b> совпадений.
-      Отображаются записи с <b>{{ keys.start_index }}</b> по <b>{{ keys.end_index }}</b>
-      на странице <b>{{ keys.number }}</b> из <b>{{ keys.paginator.num_pages }}</b>.
-    </p>
     {% if keys.object_list %}
+      <p>
+        По заданному критерию поиска найдено <b>{{ obj_count }}</b> ключа.
+        Отображаются записи с <b>{{ keys.start_index }}</b> по <b>{{ keys.end_index }}</b>
+        на странице <b>{{ keys.number }}</b> из <b>{{ keys.paginator.num_pages }}</b>.
+      </p>
       {% for key in keys.object_list %}
         <div class="row-fluid">
           <div class="well span12">
@@ -58,7 +60,7 @@
                 {% if key.use %}
                   <a class="btn btn-mini btn-inverse" href="#" rel="popover" 
                     data-original-title="Ключ используется"
-                    data-content="данный ключ уже спользуется">
+                    data-content="{{ key.clients }}">
                     используется
                   </a>
                 {% else %}
@@ -104,7 +106,9 @@
                 </tr>
                 <tr>
                   <td><strong>Сетевой:</strong> {{ key.net|yesno }}</td>
-                  <td><strong>Количество рабочих мест:</strong> {{ key.manyuse|keyuse }}</td>
+                  <td><strong>Количество рабочих мест:
+                  </strong> {{ key.client_count }} из {{ key.manyuse|keyuse|safe }}
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="2"><em>{{ key.comment }}</em></td>

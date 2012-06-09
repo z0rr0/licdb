@@ -110,10 +110,10 @@ function key_update_view(page) {
 // search keys by condition
 function keys_search(page) {
     divid = '#searchkeys';
-    type_req = 'POST';
+    type_req = 'GET';
     if (!is_int(page))  page=1;
     template = $('#seachtemplate').val();
-    if (type_req=='GET') template = encodeURIComponent(template);
+    // if (type_req=='GET') template = encodeURIComponent(template);
     $.ajax({
         url: '/key/search/ajax/',
         type: type_req ,
