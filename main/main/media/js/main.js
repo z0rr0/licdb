@@ -73,7 +73,7 @@ function delkey(prog, keydiv, id, page) {
 // delete key record
 function delkey_home(page, id, search) {
     $.get('/key/delete/' + id, function(data) {
-            if (search) keys_search(page);
+            if (search) obj_search(page, 'key');
             else key_update_view(page);
         }).error(function() { 
             error_msg = "Ошибка! Возможно у Вас не хватает прав или нет соединения с сервером.";
@@ -188,4 +188,15 @@ function save_client (id, page, add) {
             alert(error_msg);
         },
     });
+}
+// delete client record
+function del_client(page, id) {
+    $.get('/client/delete/' + id, function(data) {
+            if (data == 'OK') obj_search(page, 'client');
+            else alert('Ошибка!');
+        }).error(function() { 
+            error_msg = "Ошибка! Возможно у Вас не хватает прав или нет соединения с сервером.";
+            error_msg = '<span class="well span12">' + error_msg + '</span>';
+            $('#keycontent').html(error_msg);
+        });
 }

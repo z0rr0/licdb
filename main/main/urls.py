@@ -65,7 +65,7 @@ urlpatterns = patterns('',
     # get key list by program ID
     (r'^get_keys/(?P<prog>\d+)/?$', 'key.views.keys_get', {
         'vtemplate': 'key_get_list.html'}),
-    # license delete
+    # key delete
     (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
         'model': Key,
         'perm': 'key.delete_key'}),
@@ -99,7 +99,8 @@ urlpatterns = patterns('',
     (r'^client/search/ajax/?$', 'key.views.clients_search_ajax', {
         'vtemplate': 'clients_search_ajax.html'}),
     # client delete
-    (r'^client/delete/(?P<id>\d+)/?$', 'key.views.client_delete'),
+    (r'^client/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_client_ajax', {
+        'perm': 'key.delete_client'}),
     # key edit
     (r'^client/edit/(?P<id>\d+)/?$', 'key.views.client_edit', {
         'vtemplate': 'client_edit.html',

@@ -10,6 +10,7 @@ from django.db.models import Q, F, Sum
 from django.utils import simplejson
 from django.db import transaction
 from django.contrib import auth
+from django import forms
 
 from filetransfers.api import serve_file
 
@@ -527,21 +528,6 @@ def clients_search_ajax(request, vtemplate):
         'page_range': paginator_list_page2(paginator.page_range, obj.number)
         })
 
-@login_required
-@permission_required('key.delete_client')
-def client_delete(request, id):
-    u""" 
-    Удалении данных о клиенте
-    """
-    client = get_object_or_404(Client, pk=int(id))
-    with transaction.commit_on_success():
-        key_id = client.key_id
-        key = Key.objects.filter(id=key_id).update(use=F('use')-1)
-        client.delete()
-    to_url = '/key/' + str(key_id)
-    return HttpResponseRedirect(to_url)
-
-
 @login_required_ajax404
 def client_edit(request, vtemplate, id, perm):
     if request.user.has_perm(perm):
@@ -561,6 +547,9 @@ def client_edit(request, vtemplate, id, perm):
             page = 1
         if saved:
             return HttpResponse('saved')
+        # else:
+        #     form.fields['manyuse'] = forms.IntegerField(min_value=1, 
+        #         label=form.fields['manyuse'].label, help_text=form.fields['manyuse'].help_text)
         return TemplateResponse(request, vtemplate, {
             'form': form, 
             'action': action,
@@ -569,6 +558,25 @@ def client_edit(request, vtemplate, id, perm):
             })
     else:
         return HttpResponseNotFound('Auth perm error')
+
+@login_required_ajax404
+def obj_delete_client_ajax(request, id, perm):
+    u""" 
+    Удалении данных об объекте в Ajax запросе
+    """
+    status = 'ERROR'
+    if request.user.has_perm(perm):
+        try:
+            with transaction.commit_on_success():
+                client = get_object_or_404(Client, pk=int(id))
+                key = Key.objects.filter(id=client.key_id).update(use=F('use')-client.manyuse)
+                client.delete()
+            status = 'OK'
+        except:
+            status = 'ERROR'
+    else:
+        return HttpResponseNotFound('Error delete Key')
+    return HttpResponse(status)
 
 @login_required_ajax404
 def client_autocomplete(request):

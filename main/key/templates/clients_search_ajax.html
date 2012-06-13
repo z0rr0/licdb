@@ -87,7 +87,7 @@
             <td>{{ client.date_start|date:"d.m.Y" }}</td>
             <td>{{ client.comment }}</td>
             <td>
-              <a class="btn btn-danger" href="#" title="Удаление">
+              <a class="btn btn-danger" href="javascript:del_client({{ clients.number }}, {{ client.id }})" title="Удаление">
               <i class="icon-trash icon-white"></i>
               </a>
             </td>
