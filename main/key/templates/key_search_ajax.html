@@ -10,7 +10,7 @@
         <ul>
           {% if keys.has_previous %}
             <li>
-              <a href="javascript:keys_search({{ keys.previous_page_number }})">&laquo;</a>
+              <a href="javascript:obj_search({{ keys.previous_page_number }}, 'key')">&laquo;</a>
             </li>
           {% else %}
             <li class="disabled"><a href="#">&laquo;</a>  </li>
@@ -23,7 +23,7 @@
                 </li>
               {% else %}
                 <li>
-                  <a href="javascript:keys_search({{ p }})">{{ p }}</a>
+                  <a href="javascript:obj_search({{ p }}, 'key')">{{ p }}</a>
                 </li>
               {% endif %}
             {% else %}
@@ -32,7 +32,7 @@
           {% endfor %}
           {% if keys.has_next %}
             <li>
-              <a href="javascript:keys_search({{ keys.next_page_number }})">&raquo;</a>
+              <a href="javascript:obj_search({{ keys.next_page_number }}, 'key')">&raquo;</a>
             </li>
           {% else %}
             <li class="disabled"><a href="#">&raquo;</a></li>
@@ -58,13 +58,13 @@
               <div class="span8">
                 <strong>#{{ forloop.counter|add:srart }}</strong>
                 {% if key.use %}
-                  <a class="btn btn-mini btn-inverse" href="/" rel="popover" 
+                  <a class="btn btn-mini btn-inverse" href="/key/{{ key.id }}" rel="popover" 
                     data-original-title="Ключ используется ({{ key.use }})"
                     data-content="{{ key.clients }}">
                     используется
                   </a>
                 {% else %}
-                  <a class="btn btn-mini btn-warning" href="#" rel="popover" 
+                  <a class="btn btn-mini btn-warning" href="/key/{{ key.id }}" rel="popover" 
                     data-original-title="Ключ доступен" data-content="ключ доступен для использования.">
                     доступен
                   </a>

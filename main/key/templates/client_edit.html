@@ -1,0 +1,56 @@
+{% load widget_tweaks %}
+{% load keytags %}
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>{{ action }} данных о пользователе</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" method="POST" action="javascript:save_client({{ id }}, {{ page }});">
+    {% csrf_token %}{{ form.management_form }}
+    <div class="control-group{{ form.name.errors|errorcss }}">
+      <label class="control-label" for="id_name">{{ form.name.label }}</label>
+      <div class="controls">
+        {{ form.name|add_class:"input-xlarge"}}
+        <span class="help-inline">{{ form.name.errors|lower }}</span>
+        <p class="help-block">{{ form.name.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.date_start.errors|errorcss }}">
+      <label class="control-label" for="id_date_start">{{ form.date_start.label }}</label>
+      <div class="controls">
+        {{ form.date_start|add_class:"input-small"}}
+        <span class="help-inline">{{ form.date_start.errors|lower }}</span>
+        <p class="help-block">{{ form.date_start.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group{{ form.manyuse.errors|errorcss }}">
+      <label class="control-label" for="id_manyuse">{{ form.manyuse.label }}</label>
+      <div class="controls">
+        {{ form.manyuse|add_class:"input-small"}}<span class="help-inline">{{ form.manyuse.errors|lower }}</span>
+        <p class="help-block">{{ form.manyuse.help_text }}</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="id_net">{{ form.student.label }}</label>
+      <div class="controls">
+        <label class="checkbox">
+          {{ form.student}}
+          {{ form.student.help_text }}
+        </label>
+      </div>
+    </div>
+    <div class="control-group{{ form.comment.errors|errorcss }}">
+      <label class="control-label" for="id_comment">{{ form.comment.label }}</label>
+      <div class="controls">
+        {{ form.comment|attr:"rows:2"}}
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
+  <a href="javascript:save_client({{ id }}, {{ page }});" class="btn btn-primary">Сохранить</a>
+</div>
+<script type="text/javascript">
+  $('#id_date_start').datepicker();
+</script>

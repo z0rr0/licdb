@@ -90,7 +90,7 @@ class Client (models.Model):
     key = models.ForeignKey(Key, verbose_name = u'ключ')
     name = models.CharField(max_length = 512, verbose_name = u'имя', help_text = u'даные пользователя, получившего лицензию', db_index=True)
     student = models.BooleanField(verbose_name = u'студент', default = False, help_text = u'используется студентом', db_index=True)
-    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество мест', default = 1, help_text = u'количество рабочих мест', db_index=True)
+    manyuse = models.PositiveSmallIntegerField(verbose_name = u'количество', default = 1, help_text = u'количество рабочих мест', db_index=True)
     date_start = models.DateField(verbose_name = u'дата выдачи', db_index=True)
     comment = models.TextField(verbose_name = u'комментарий', blank = True, null = True)
     # даты изменения и создания, заполняются автоматически

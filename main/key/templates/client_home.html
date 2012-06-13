@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% load keytags %}
+{% block addjscss %}
+  <script src="{{ MEDIA_URL }}bootstrap/js/bootstrap-modal.js"></script>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}ui/css/smoothness/jquery-ui-1.8.18.custom.css" type="text/css" />
+  <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery-ui-1.8.18.custom.min.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}ui/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    obj_search(1, 'client');
+})
+</script>
+{% endblock addjscss %}
 {% block title %}Пользователи{% endblock %}
 
 {% block content %}
@@ -11,139 +22,13 @@
 </div>
 <div class="row-fluid">
   <div class="span12">
-    <form class="well form-search" action="" method="GET">
-      {% comment %}
-        {% csrf_token %}{{ form.management_form }}
-      {% endcomment %}
+    <form class="well form-search" action="javascript:obj_search(1, 'client');">
+      {% csrf_token %}{{ form.management_form }}
       <input type="text" class="search-query" id="seachtemplate"
-      name="search" placeholder="строка поиска..." value="{{ search }}">
+      name="search" placeholder="строка поиска...">
       <button type="submit" class="btn">Найти</button>
     </form>
   </div>
 </div>
-<div class="row-fluid">
-  <div class="span12">
-    {% if num_pages > 1 %}
-    <!-- навигация -->
-    <div class="row-fluid">
-      <div class="span12">
-        <div class="pagination pagination-centered">
-          <ul>
-            {% if clients.has_previous %}
-              <li>
-                <a href="/clients/?p={{ clients.previous_page_number }}{{ urlsearch }}">&laquo;</a>
-              </li>
-            {% else %}
-              <li class="disabled"><a href="#">&laquo;</a>  </li>
-            {% endif %}
-            {% for p in page_range %}
-              {% if p %}
-                {% if p == clients.number %}
-                  <li class="active">
-                    <a href="#">{{ p }}</a>
-                  </li>
-                {% else %}
-                  <li>
-                    <a href="/clients/?p={{ p }}{{ urlsearch }}">{{ p }}</a>
-                  </li>
-                {% endif %}
-              {% else %}
-                <li class="disabled"><a href="#">...</a></li>
-              {% endif %}
-            {% endfor %}
-            {% if clients.has_next %}
-              <li>
-                <a href="/clients/?p={{ clients.next_page_number }}{{ urlsearch }}">&raquo;</a>
-              </li>
-            {% else %}
-              <li class="disabled"><a href="#">&raquo;</a></li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-  </div>
-</div>
-<!-- вывод данных -->
-<div class="row-fluid">
-  <div class="span12">
-    {% if clients.object_list %}
-      <p>
-        Найдено <b>{{ obj_count }}</b> клиента.
-        Записи <b>{{ clients.start_index }} &ndash; {{ clients.end_index }}</b>
-        на странице <b>{{ clients.number }}</b> из <b>{{ clients.paginator.num_pages }}</b>.
-      </p>
-      <div class="row-fluid">
-        <div class="span12">
-        <table class="table table-striped">
-          <tr>
-            <th>№</th>
-            <th>Имя</th>
-            <th>Студент</th>
-            <th>Программа</th>
-            <th>Количество ключей</th>
-            <th width="110px">Дата выдачи</th>
-            <th width="105px"></th>
-          </tr>
-        {% for client in clients.object_list %}
-          <tr>
-            <td>{{ forloop.counter|add:srart }}</td>
-            <td>{{ client.name }}</td>
-            <td>
-              {% if client.student %}
-                <i class="icon-ok"></i>
-              {% else %}
-                <i class="icon-minus"></i>
-              {% endif %}
-            </td>
-            <td>{{ client.key.program.name }}</td>
-            <td>{{ client.manyuse }}</td>
-            <td>{{ client.date_start }}</td>
-            <td>
-              <div class="btn-group">
-                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-list-alt icon-white"></i>
-                    действие
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a href="/client/edit/{{ client.id }}/" title="Правка">
-                            <i class="icon-pencil"></i>
-                            правка
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/client/delete/{{ client.id }}/?p={{ clients.number }}{{ urlsearch }}" title="Удаление">
-                            <i class="icon-trash"></i>
-                            Удаление
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="/key/{{ client.key_id }}" title="">
-                            <i class="icon-info-sign"></i>
-                            О ключе
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/program/{{ client.key.program_id }}" title="Информация о программе">
-                            <i class="icon-info-sign"></i>
-                            О программе
-                        </a>
-                    </li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-        </table>
-        </div>
-      </div>
-    {% else %}
-      <p>По заданному  критерию поиска пользователи не найдены.</p>
-    {% endif %}
-  </div>
-</div>
+<div class="row-fluid" id="result"></div>
 {% endblock content %}

@@ -84,6 +84,7 @@ urlpatterns = patterns('',
     # key search
     (r'^key/search/?$', 'key.views.keys_search', {
         'vtemplate': 'key_search.html'}),
+    # search in ajax
     (r'^key/search/ajax/?$', 'key.views.keys_search_ajax', {
         'vtemplate': 'key_search_ajax.html'}),
     # key view
@@ -92,10 +93,16 @@ urlpatterns = patterns('',
         'model': Key}),
 
     # clients
-    (r'^clients/?$', 'key.views.client_home', {
+    (r'^clients/?$', 'key.views.keys_search', {
         'vtemplate': 'client_home.html'}),
+    # search in ajax
+    (r'^client/search/ajax/?$', 'key.views.clients_search_ajax', {
+        'vtemplate': 'clients_search_ajax.html'}),
     # client delete
     (r'^client/delete/(?P<id>\d+)/?$', 'key.views.client_delete'),
+    # key edit
+    (r'^client/edit/(?P<id>\d+)/?$', 'key.views.client_edit', {
+        'vtemplate': 'client_edit.html'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

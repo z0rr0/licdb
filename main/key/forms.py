@@ -69,4 +69,10 @@ class ProgrmaCount(forms.Form):
     Список количества ключей
     """
     plist = forms.ChoiceField(label='', widget=forms.Select())
-        
+
+class ClientForm(forms.ModelForm):
+    # pass
+    class Meta:
+        model = Client
+        fields = ('name', 'student', 'manyuse', 'date_start', 'comment')
+

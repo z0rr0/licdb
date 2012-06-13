@@ -75,20 +75,6 @@ def obj_delete(request, id, redirecturl, model, perm):
         to_url = '/accounts/login/?next=%s' % request.path
     return HttpResponseRedirect(to_url)
 
-@login_required
-@permission_required('key.delete_client')
-def client_delete(request, id):
-    u""" 
-    Удалении данных о клиенте
-    """
-    client = get_object_or_404(Client, pk=int(id))
-    with transaction.commit_on_success():
-        key_id = client.key_id
-        key = Key.objects.filter(id=key_id).update(use=F('use')-1)
-        client.delete()
-    to_url = '/key/' + str(key_id)
-    return HttpResponseRedirect(to_url)
-
 @login_required_ajax404
 @transaction.autocommit
 def obj_delete_ajax(request, id, model, perm):
@@ -416,7 +402,7 @@ def keys_get(request, vtemplate, prog, obj_onpage=5):
 @login_required
 def keys_search(request, vtemplate):
     u"""
-    Страница поиска ключей
+    Страница поиска ключей или клиентов
     """
     # как статическая страница
     return TemplateResponse(request, vtemplate)
@@ -514,8 +500,8 @@ def download_handler(request, id):
     return serve_file(request, upload.attach, None, filename)
 
 # --------- CLIENTS FUNTIONS -------------
-@login_required
-def client_home(request, vtemplate):
+@login_required_ajax404
+def clients_search_ajax(request, vtemplate):
     u"""Страница со списком пользователей, с возможостями:
              
     - поиск пользователя по его данным или номеру ключа
@@ -523,29 +509,59 @@ def client_home(request, vtemplate):
     - удаление пользователя
     """ 
     clients = Client.objects.all()
-    page = int(request.GET['p']) if 'p' in request.GET else 1
+    page = int(request.GET['page']) if 'page' in request.GET else 1
     search = request.GET['search'] if 'search' in request.GET else ''
     urlsearch = ""
     if search:
         clients = clients.filter(Q(name__icontains=search) | Q(key__key__icontains=search) | Q(key__program__name__icontains=search))
-        urlsearch = '&search=' + search
     obj, paginator = pagination_oblist(clients, page, PAGE_COUNT)
     if paginator is None:
-        raise Http404
+        raise HttpResponseNotFound('Pagination error')
     return TemplateResponse(request, vtemplate, {
         'clients': obj, 
         'num_pages': paginator.num_pages,
         'obj_count': paginator.count,
         'srart': (obj.number - 1) *  PAGE_COUNT,
-        'page_range': paginator_list_page2(paginator.page_range, obj.number),
-        'search': search,
-        'urlsearch': urlsearch
+        'page_range': paginator_list_page2(paginator.page_range, obj.number)
         })
-    
+
+@login_required
+@permission_required('key.delete_client')
+def client_delete(request, id):
+    u""" 
+    Удалении данных о клиенте
+    """
+    client = get_object_or_404(Client, pk=int(id))
+    with transaction.commit_on_success():
+        key_id = client.key_id
+        key = Key.objects.filter(id=key_id).update(use=F('use')-1)
+        client.delete()
+    to_url = '/key/' + str(key_id)
+    return HttpResponseRedirect(to_url)
+
+@login_required_ajax404
+def client_edit(request, vtemplate, id):
+    c = {}
+    c.update(csrf(request))
+    client = get_object_or_404(Client, pk=int(id))
+    form, client, saved = get_obj_form(request, client, ClientForm)
+    try:
+        page = int(request.GET['page']) if 'page' in request.GET else 1
+    except:
+        page = 1
+    if saved:
+        return HttpResponse('saved')
+    return TemplateResponse(request, vtemplate, {
+        'form': form, 
+        'action': u'Редактирование',
+        'id': id,
+        'page': page
+        })
+
 @login_required_ajax404
 def client_autocomplete():
     u"""
-    автоподстановка даннх пользователей: из уже существующих и студентов
+    автоподстановка данных пользователей: из уже существующих и студентов
     """
     clients = []
     students = []

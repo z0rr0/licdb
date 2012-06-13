@@ -108,16 +108,14 @@ function key_update_view(page) {
         },
     });
 }
-// search keys by condition
-function keys_search(page) {
-    divid = '#searchkeys';
-    type_req = 'POST';
-    if (!is_int(page))  page=1;
+// search  by condition
+function obj_search(page, objname) {
+    divid = '#result';
+    if (!is_int(page)) page=1;
     template = $('#seachtemplate').val();
-    // if (type_req=='GET') template = encodeURIComponent(template);
     $.ajax({
-        url: '/key/search/ajax/',
-        type: type_req ,
+        url: '/' + objname + '/search/ajax/',
+        type: 'GET',
         dataType: 'html',
         context: document.body,
         data: {
@@ -131,6 +129,56 @@ function keys_search(page) {
             error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
             error_msg = '<span class="well span12">' + error_msg + '</span>';
             $(divid).html(error_msg);
+        },
+    });
+}
+// add, edit Client form 
+function change_client (id, page) {
+    if (!is_int(page)) page=1;
+    if (!is_int(id)) id=0;
+    $.ajax({
+        url: '/client/edit/' + id + '?page=' + page,
+        type: 'GET' ,
+        dataType: 'html',
+        context: document.body,
+        success: function (data) {
+            $('#winmodal').html(data);
+            $('#winmodal').modal();
+        },
+        error: function () {
+            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+            alert(error_msg);
+        },
+    });
+}
+function save_client (id, page) {
+    if (!is_int(page)) page=1;
+    if ($('#id_student').is(':checked')) student = 1;
+    else student = 0;
+    $.ajax({
+        url: '/client/edit/' + id,
+        type: 'POST' ,
+        dataType: 'html',
+        context: document.body,
+        data: {
+            name: $('#id_name').val(),
+            student: student,
+            date_start: $('#id_date_start').val(),
+            manyuse: $('#id_manyuse').val(),
+            comment: $('#id_comment').val(),
+        },
+        success: function (data) {
+            if (data == 'saved') {
+                obj_search(page, 'client') ;
+                $('#winmodal').modal('hide');
+            }
+            else $('#winmodal').html(data);
+            // $('#winmodal').modal('hide');
+        },
+        error: function () {
+            $('#winmodal').modal('hide');
+            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
+            alert(error_msg);
         },
     });
 }
