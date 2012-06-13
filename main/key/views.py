@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.core.context_processors import csrf
 from django.core.mail import send_mail
 from django.db.models import Q, F, Sum
+from django.utils import simplejson
 from django.db import transaction
 from django.contrib import auth
 
@@ -15,6 +16,7 @@ from filetransfers.api import serve_file
 from django.contrib.auth.models import User
 from main.settings import LEN_SALT, DEFAULT_FROM_EMAIL
 from key.models import *
+from eis.models import *
 from key.forms import *
 
 # import the logging library
@@ -539,31 +541,53 @@ def client_delete(request, id):
     to_url = '/key/' + str(key_id)
     return HttpResponseRedirect(to_url)
 
-@login_required_ajax404
-def client_edit(request, vtemplate, id):
-    c = {}
-    c.update(csrf(request))
-    client = get_object_or_404(Client, pk=int(id))
-    form, client, saved = get_obj_form(request, client, ClientForm)
-    try:
-        page = int(request.GET['page']) if 'page' in request.GET else 1
-    except:
-        page = 1
-    if saved:
-        return HttpResponse('saved')
-    return TemplateResponse(request, vtemplate, {
-        'form': form, 
-        'action': u'Редактирование',
-        'id': id,
-        'page': page
-        })
 
 @login_required_ajax404
-def client_autocomplete():
+def client_edit(request, vtemplate, id, perm):
+    if request.user.has_perm(perm):
+        c = {}
+        c.update(csrf(request))
+        id = int(id)
+        if id:
+            action = u'Редактирование'
+            client = get_object_or_404(Client, pk=id)
+        else:
+            action = u'Добавление'
+            client = None
+        form, client, saved = get_obj_form(request, client, ClientForm)
+        try:
+            page = int(request.GET['page']) if 'page' in request.GET else 1
+        except:
+            page = 1
+        if saved:
+            return HttpResponse('saved')
+        return TemplateResponse(request, vtemplate, {
+            'form': form, 
+            'action': action,
+            'id': id,
+            'page': page
+            })
+    else:
+        return HttpResponseNotFound('Auth perm error')
+
+@login_required_ajax404
+def client_autocomplete(request):
     u"""
-    автоподстановка данных пользователей: из уже существующих и студентов
+    автоподстановка данных пользователей: из уже существующих пользователей и студентов
     """
-    clients = []
-    students = []
-    all_list = list(set(clients+students))[:AUTOCOMPLETE_LIMIT]
-    all_list.sort()
+    result = []
+    if request.method == 'POST':
+        try:
+            val = request.POST['val']
+            # student
+            students = Student.objects.filter(who__contains=val)
+            students = list(students.values_list('who', flat=True)[:AUTOCOMPLETE_LIMIT])
+            # clients
+            clients = Client.objects.filter(name__contains=val)
+            clients = list(clients.values_list('name', flat=True)[:AUTOCOMPLETE_LIMIT])
+            # result
+            result = list(set(clients+students))[:AUTOCOMPLETE_LIMIT]
+            result.sort()
+        except IndexError:
+            pass
+    return HttpResponse(simplejson.dumps(result), mimetype='application/json')

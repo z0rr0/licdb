@@ -63,12 +63,12 @@
             <th>Кол-во</th>
             <th width="110px">Дата выдачи</th>
             <th>Примечание</th>
-            <th width="105px"></th>
+            <th></th>
           </tr>
         {% for client in clients.object_list %}
           <tr>
             <td>{{ forloop.counter|add:srart }}</td>
-            <td>{{ client.name }}</td>
+            <td><a href="javascript:change_client({{ client.id }}, {{ clients.number }});" title="изменить данные пользователя">{{ client.name }}</a></td>
             <td>
               {% if client.student %}
                 <i class="icon-ok"></i>
@@ -76,39 +76,20 @@
                 <i class="icon-minus"></i>
               {% endif %}
             </td>
-            <td><a href="/program/{{ client.key.program_id }}">{{ client.key.program.name }}</a></td>
-            <td>{{ client.manyuse }}</td>
+            <td>
+              <a href="/program/{{ client.key.program_id }}" title="о программе">
+                {{ client.key.program.name }}
+              </a>
+            </td>
+            <td>
+              <a href="/key/{{ client.key_id }}" title="о ключе">{{ client.manyuse }}</a>
+            </td>
             <td>{{ client.date_start|date:"d.m.Y" }}</td>
             <td>{{ client.comment }}</td>
             <td>
-              <div class="btn-group">
-                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-list-alt icon-white"></i>
-                    действие
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a href="javascript:change_client({{ client.id }}, {{ clients.number }})" title="Правка">
-                            <i class="icon-pencil"></i>
-                            правка
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/client/delete/{{ client.id }}/?p={{ clients.number }}{{ urlsearch }}" title="Удаление">
-                            <i class="icon-trash"></i>
-                            Удаление
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="/key/{{ client.key_id }}" title="">
-                            <i class="icon-info-sign"></i>
-                            О ключе
-                        </a>
-                    </li>
-                </ul>
-              </div>
+              <a class="btn btn-danger" href="#" title="Удаление">
+              <i class="icon-trash icon-white"></i>
+              </a>
             </td>
           </tr>
         {% endfor %}

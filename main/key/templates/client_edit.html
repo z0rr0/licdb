@@ -53,4 +53,16 @@
 </div>
 <script type="text/javascript">
   $('#id_date_start').datepicker();
+    $("#id_name").autocomplete({
+        minLength: 2,
+        source: function (request, response) {
+            $.ajax({
+                url: "/client/complete/",
+                dataType: "json",
+                data: { val: request.term },
+                type: 'POST',
+                success: response
+            })
+        },
+    });
 </script>

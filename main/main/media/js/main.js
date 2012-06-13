@@ -136,8 +136,16 @@ function obj_search(page, objname) {
 function change_client (id, page) {
     if (!is_int(page)) page=1;
     if (!is_int(id)) id=0;
+    varurl = '/client/edit/' + id + '?page=' + page;
+    client_edit_add (varurl);
+}
+function add_client () {
+    varurl = '/client/add/';
+    client_edit_add (varurl);
+}
+function client_edit_add (varurl) {
     $.ajax({
-        url: '/client/edit/' + id + '?page=' + page,
+        url: varurl,
         type: 'GET' ,
         dataType: 'html',
         context: document.body,
@@ -151,8 +159,7 @@ function change_client (id, page) {
         },
     });
 }
-function save_client (id, page) {
-    if (!is_int(page)) page=1;
+function save_client (id, page, add) {
     if ($('#id_student').is(':checked')) student = 1;
     else student = 0;
     $.ajax({

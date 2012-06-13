@@ -102,7 +102,15 @@ urlpatterns = patterns('',
     (r'^client/delete/(?P<id>\d+)/?$', 'key.views.client_delete'),
     # key edit
     (r'^client/edit/(?P<id>\d+)/?$', 'key.views.client_edit', {
-        'vtemplate': 'client_edit.html'}),
+        'vtemplate': 'client_edit.html',
+        'perm': 'key.edit_client'}),
+    # key add
+    (r'^client/add/?$', 'key.views.client_edit', {
+        'id': 0,
+        'vtemplate': 'client_edit.html',
+        'perm': 'key.add_client'}),
+    # autocomplete
+    (r'^client/complete/?$', 'key.views.client_autocomplete'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
