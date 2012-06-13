@@ -547,9 +547,6 @@ def client_edit(request, vtemplate, id, perm):
             page = 1
         if saved:
             return HttpResponse('saved')
-        # else:
-        #     form.fields['manyuse'] = forms.IntegerField(min_value=1, 
-        #         label=form.fields['manyuse'].label, help_text=form.fields['manyuse'].help_text)
         return TemplateResponse(request, vtemplate, {
             'form': form, 
             'action': action,
