@@ -48,7 +48,7 @@
     {% if keys.object_list %}
       <p>
         По заданному критерию поиска найдено <b>{{ obj_count }}</b> ключа.
-        Отображаются записи с <b>{{ keys.start_index }}</b> по <b>{{ keys.end_index }}</b>
+        Записи <b>{{ keys.start_index }} &ndash; {{ keys.end_index }}</b>
         на странице <b>{{ keys.number }}</b> из <b>{{ keys.paginator.num_pages }}</b>.
       </p>
       {% for key in keys.object_list %}
@@ -58,8 +58,8 @@
               <div class="span8">
                 <strong>#{{ forloop.counter|add:srart }}</strong>
                 {% if key.use %}
-                  <a class="btn btn-mini btn-inverse" href="#" rel="popover" 
-                    data-original-title="Ключ используется"
+                  <a class="btn btn-mini btn-inverse" href="/" rel="popover" 
+                    data-original-title="Ключ используется ({{ key.use }})"
                     data-content="{{ key.clients }}">
                     используется
                   </a>
@@ -78,7 +78,7 @@
                     правка
                   </a>
                   <a class="btn btn-mini btn-danger" 
-                    href="javascript:delkey_home({{ keys.number }}, {{ key.id }})" title="удалить ключ">
+                    href="javascript:delkey_home({{ keys.number }}, {{ key.id }}, 1)" title="удалить ключ">
                     <i class="icon-trash icon-white"></i>
                     удалить
                   </a>

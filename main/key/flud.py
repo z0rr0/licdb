@@ -77,21 +77,22 @@ def client_generations(program=None, client_count=50, studbool=True):
 			slen = len(studs)
 			cl_count = client_count if client_count <= klen else klen
 			for i in range(cl_count):
-				key = keys[i]
-				student = studs[random.randint(0, slen-1)]
-				client = Client(
-					key=key,
-					name=student.who,
-					student=studbool,
-					manyuse=1,
-					date_start=datetime.now().date(),
-					comment='Test genarations field'
-				)
-				# Если ключ еще не испльзовался то сделаем его таковым
-				key.use = True
-				key.save()
-				client.save()
-				print client
+				with transaction.commit_on_success():
+					key = keys[i]
+					student = studs[random.randint(0, slen-1)]
+					client = Client(
+						key=key,
+						name=student.who,
+						student=studbool,
+						manyuse=1,
+						date_start=datetime.now().date(),
+						comment='Test genarations field'
+					)
+					# Если ключ еще не испльзовался то сделаем его таковым
+					key.use = F('use') + 1
+					key.save()
+					client.save()
+					print client
 		except Client.DoesNotExist as err:
 			print err
 			return False

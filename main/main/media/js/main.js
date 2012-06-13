@@ -71,9 +71,10 @@ function delkey(prog, keydiv, id, page) {
             });
 }
 // delete key record
-function delkey_home(page, id) {
+function delkey_home(page, id, search) {
     $.get('/key/delete/' + id, function(data) {
-            key_update_view(page);
+            if (search) keys_search(page);
+            else key_update_view(page);
         }).error(function() { 
             error_msg = "Ошибка! Возможно у Вас не хватает прав или нет соединения с сервером.";
             error_msg = '<span class="well span12">' + error_msg + '</span>';
@@ -110,7 +111,7 @@ function key_update_view(page) {
 // search keys by condition
 function keys_search(page) {
     divid = '#searchkeys';
-    type_req = 'GET';
+    type_req = 'POST';
     if (!is_int(page))  page=1;
     template = $('#seachtemplate').val();
     // if (type_req=='GET') template = encodeURIComponent(template);

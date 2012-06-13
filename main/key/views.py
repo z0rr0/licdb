@@ -22,7 +22,7 @@ import logging, urllib
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-PROG_LIMIT = 10
+AUTOCOMPLETE_LIMIT = 10
 PAGE_COUNT = 10
 EMAIL_MESSAGE = u"""Здравствуйте.
 Ваши личные дынные для license.apingtu.edu.ru были изменены:
@@ -75,6 +75,20 @@ def obj_delete(request, id, redirecturl, model, perm):
         to_url = '/accounts/login/?next=%s' % request.path
     return HttpResponseRedirect(to_url)
 
+@login_required
+@permission_required('key.delete_client')
+def client_delete(request, id):
+    u""" 
+    Удалении данных о клиенте
+    """
+    client = get_object_or_404(Client, pk=int(id))
+    with transaction.commit_on_success():
+        key_id = client.key_id
+        key = Key.objects.filter(id=key_id).update(use=F('use')-1)
+        client.delete()
+    to_url = '/key/' + str(key_id)
+    return HttpResponseRedirect(to_url)
+
 @login_required_ajax404
 @transaction.autocommit
 def obj_delete_ajax(request, id, model, perm):
@@ -96,6 +110,11 @@ def obj_view(request, id, vtemplate, model):
     """
     obj = get_object_or_404(model, pk=int(id))
     return TemplateResponse(request, vtemplate, {'result': obj})
+
+@login_required
+def obj_view_private(request, id, vtemplate, model):
+    u"""Просмотр данных об объекте о защищенном объекте"""
+    return obj_view(request, id, vtemplate, model)
 
 def get_obj_form(request, setobrj, SetForm):
     u"""
@@ -284,6 +303,13 @@ def program_add(request, vtemplate):
 def NoneTo0(value):
     return value if value else 0
 
+def key_map(key):
+    u"""
+    Сколько клиентов используют ключ и кто они
+    """
+    client_count = key.client_set.all().only('name', 'student')
+    return client_count.count(), [client.name for client in client_count]
+
 def key_get_stat(keys):
     u"""
     Получение статистики по ключам:
@@ -300,7 +326,7 @@ def key_get_stat(keys):
         result = {'all': keys.count(), 
             'net': keys.filter(net=True).count(),
             'manyuse': NoneTo0(keys.aggregate(Sum('manyuse'))['manyuse__sum']),
-            'use': keys.filter(use=True).count(),
+            'use': keys.filter(use__gt=0).count(),
             'clients_all': clients.count(),
             'clients_manyuse': NoneTo0(clients.aggregate(Sum('manyuse'))['manyuse__sum'])
             }
@@ -408,16 +434,13 @@ def keys_search_ajax(request, vtemplate):
     text_templ = form_method['search'] if 'search' in form_method else False
     page = int(form_method['page']) if 'page' in form_method else 1
     if text_templ:
-        # keys = keys.filter(Q(key__icontains=text_templ) | Q(client__name__icontains=text_templ))
-        clients = Client.objects.filter(Q(key__key__icontains=text_templ) | Q(name__icontains=text_templ))
-        keys = keys.filter(id__in=clients.values('key'))
+        keys = keys.filter(Q(key__icontains=text_templ) | Q(program__name__icontains=text_templ))
     obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)
     if paginator is None:
         return HttpResponseNotFound('Pagination error')
     for key in obj.object_list:
-        client_count = key.client_set.all().only('name')
-        key.client_count = client_count.count()
-        key.clients = '<br />'.join([client.name for client in client_count])
+        key.client_count, key.clients = key_map(key)
+        key.clients = '<br />'.join(key.clients)
     return TemplateResponse(request, vtemplate, {
         'keys': obj, 
         'num_pages': paginator.num_pages,
@@ -428,7 +451,7 @@ def keys_search_ajax(request, vtemplate):
         })
 
 @login_required
-def keys(request, vtemplate):
+def key_home(request, vtemplate):
     u"""
     Список всех ключей - главная страница
     """
@@ -489,3 +512,42 @@ def download_handler(request, id):
     # get upload name
     filename = filename[LEN_SALT:]
     return serve_file(request, upload.attach, None, filename)
+
+# --------- CLIENTS FUNTIONS -------------
+@login_required
+def client_home(request, vtemplate):
+    u"""Страница со списком пользователей, с возможостями:
+             
+    - поиск пользователя по его данным или номеру ключа
+    - правка данных пользователя
+    - удаление пользователя
+    """ 
+    clients = Client.objects.all()
+    page = int(request.GET['p']) if 'p' in request.GET else 1
+    search = request.GET['search'] if 'search' in request.GET else ''
+    urlsearch = ""
+    if search:
+        clients = clients.filter(Q(name__icontains=search) | Q(key__key__icontains=search) | Q(key__program__name__icontains=search))
+        urlsearch = '&search=' + search
+    obj, paginator = pagination_oblist(clients, page, PAGE_COUNT)
+    if paginator is None:
+        raise Http404
+    return TemplateResponse(request, vtemplate, {
+        'clients': obj, 
+        'num_pages': paginator.num_pages,
+        'obj_count': paginator.count,
+        'srart': (obj.number - 1) *  PAGE_COUNT,
+        'page_range': paginator_list_page2(paginator.page_range, obj.number),
+        'search': search,
+        'urlsearch': urlsearch
+        })
+    
+@login_required_ajax404
+def client_autocomplete():
+    u"""
+    автоподстановка даннх пользователей: из уже существующих и студентов
+    """
+    clients = []
+    students = []
+    all_list = list(set(clients+students))[:AUTOCOMPLETE_LIMIT]
+    all_list.sort()

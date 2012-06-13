@@ -52,7 +52,7 @@ class KeyForm(forms.ModelForm):
     """
     class Meta:
         model = Key
-        fields = ('program', 'key', 'attach', 'use', 'manyuse', 'net', 'date_start', 'date_end', 'comment')
+        fields = ('program', 'key', 'attach', 'manyuse', 'net', 'date_start', 'date_end', 'comment')
         widgets = {
             'attach': ShortNameClarableFileInputHidden,
         }
