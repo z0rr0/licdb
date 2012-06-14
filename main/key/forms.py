@@ -74,7 +74,7 @@ class ClientForm(forms.ModelForm):
     u"""
     Изменение данных пользователя
     """
-    manyuse = forms.IntegerField(min_value=1, label=u'Количество', help_text=u'количество рабочих мест')
+    use = forms.IntegerField(min_value=1, label=u'Количество', help_text=u'количество рабочих мест')
     class Meta:
         model = Client
         fields = ('name', 'student', 'manyuse', 'date_start', 'comment')

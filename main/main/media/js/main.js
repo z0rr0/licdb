@@ -82,21 +82,22 @@ function delkey_home(page, id, search) {
         });
 }
 
-// search keys by program
+// search keys by program (keys_home)
 function key_update_view(page) {
-    divid = '#keycontent';
+    divid = '#result';
     program = $('#id_programma').val();
     if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
     else onlyfree = 0;
     if (!is_int(page))  page=1;
     $.ajax({
-        url: '/keys/program/' + program,
+        url: '/key/search/ajax/',
         type: 'GET',
         dataType: 'html',
         context: document.body,
         data: {
             free: onlyfree,
-            page: page
+            page: page,
+            prog: program
         },
         success: function (data) {
             $(divid).html(data);

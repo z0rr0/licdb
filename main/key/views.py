@@ -420,8 +420,19 @@ def keys_search_ajax(request, vtemplate):
     form_method = request.POST if request.method == 'POST' else request.GET
     # for GET
     # text_templ = urllib.unquote(request.GET['search'])
-    text_templ = form_method['search'] if 'search' in form_method else False
-    page = int(form_method['page']) if 'page' in form_method else 1
+    try:
+        page = int(form_method['page']) if 'page' in form_method else 1
+        text_templ = form_method['search'] if 'search' in form_method else False
+        free = int(form_method['free']) if 'free' in form_method else False
+        prog = int(form_method['prog']) if 'prog' in form_method else False
+    except ValueError:
+        page = 1
+        text_templ = free = prog = False
+    if prog:
+        keys = keys.filter(program=prog)
+    if free:
+        alredy_use = not free
+        keys = keys.filter(use=alredy_use)
     if text_templ:
         keys = keys.filter(Q(key__icontains=text_templ) | Q(program__name__icontains=text_templ))
     obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)
