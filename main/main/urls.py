@@ -66,7 +66,12 @@ urlpatterns = patterns('',
     (r'^get_keys/(?P<prog>\d+)/?$', 'key.views.keys_get', {
         'vtemplate': 'key_get_list.html'}),
     # key delete
-    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
+    (r'^key/del/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
+        'model': Key,
+        'perm': 'key.delete_key'}),
+    # key delete
+    (r'^key/delete/(?P<id>\d+)/?$', 'key.views.obj_delete', {
+        'redirecturl': '/keys/',
         'model': Key,
         'perm': 'key.delete_key'}),
     # download key
@@ -99,7 +104,7 @@ urlpatterns = patterns('',
     (r'^client/search/ajax/?$', 'key.views.clients_search_ajax', {
         'vtemplate': 'clients_search_ajax.html'}),
     # client delete
-    (r'^client/delete/(?P<id>\d+)/?$', 'key.views.obj_delete_client_ajax', {
+    (r'^client/del/(?P<id>\d+)/?$', 'key.views.obj_delete_client_ajax', {
         'perm': 'key.delete_client'}),
     # key edit
     (r'^client/edit/(?P<id>\d+)/?$', 'key.views.client_edit', {

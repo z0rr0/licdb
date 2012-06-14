@@ -3,8 +3,21 @@
 
 {% block content %}
 <div class="row-fluid">
-  <div class="span12">
+  <div class="span8">
     <h1>Информация о ключе</h1>
+  </div>
+  <div class="span4">
+    <span class="pull-right">
+      <a class="btn btn-mini btn-primary" href="/key/edit/{{ result.id }}">
+        <i class="icon-pencil icon-white"></i>
+        правка
+      </a>
+      <a class="btn btn-mini btn-danger" 
+        href="/key/delete/{{ result.id }}">
+        <i class="icon-trash icon-white"></i>
+        удалить
+      </a>
+    </span>
   </div>
 </div>
 <div class="row-fluid">
@@ -34,7 +47,7 @@
     <strong>Сетевой:</strong>{{ result.net|yesno }}
   </div>
   <div class="span8">
-    <strong>Количество рабочих мест:</strong> {{ result.manyuse|keyuse|safe }}
+    <strong>Количество рабочих мест:</strong> {{ result.manyuse|keyuse|safe }} (использовано {{ result.use }})
   </div>
 </div>
 <div class="row-fluid">
@@ -50,10 +63,10 @@
 <div class="row-fluid">
   <div class="span12"><em>{{ result.comment }}</em></div>
 </div>
-{% if result.client_set.all.count %}
+{% if result.use %}
   <div class="row-fluid">
     <div class="span12">
-      <h3>Пользователи ({{ result.use }})</h3>
+      <h3>Пользователи ({{ result.client_set.all.count }})</h3>
       <table class="table table-striped">
         <tr>
           <th>№</th>

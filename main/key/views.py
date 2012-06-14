@@ -467,7 +467,7 @@ def key_edit(request, id, vtemplate):
     key = get_object_or_404(Key, id=int(id))
     form, key, saved = get_obj_form(request, key, KeyForm)
     if saved:
-        return redirect('/keys/?prog=' + str(key.program_id))
+        return redirect('/key/' + str(key.id))
     return TemplateResponse(request, vtemplate, {'form': form, 'action': u'Редактирование'})
 
 @permission_required('key.add_key')

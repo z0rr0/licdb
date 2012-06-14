@@ -56,7 +56,7 @@
                 <strong>#{{ forloop.counter|add:srart }}</strong>
                 {% if key.use %}
                   <a class="btn btn-mini btn-inverse" href="/key/{{ key.id }}" rel="popover" 
-                    data-original-title="Ключ используется ({{ key.use }})"
+                    data-original-title="Ключ используется ({{ key.client_count }})"
                     data-content="{{ key.clients }}">
                     используется
                   </a>
@@ -104,7 +104,7 @@
                 <tr>
                   <td><strong>Сетевой:</strong> {{ key.net|yesno }}</td>
                   <td><strong>Количество рабочих мест:
-                  </strong> {{ key.client_count }} из {{ key.manyuse|keyuse|safe }}
+                  </strong> использовано {{ key.use }} из {{ key.manyuse|keyuse|safe }}
                   </td>
                 </tr>
                 <tr>

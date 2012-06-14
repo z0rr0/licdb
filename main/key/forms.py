@@ -71,7 +71,9 @@ class ProgrmaCount(forms.Form):
     plist = forms.ChoiceField(label='', widget=forms.Select())
 
 class ClientForm(forms.ModelForm):
-    # pass
+    u"""
+    Изменение данных пользователя
+    """
     manyuse = forms.IntegerField(min_value=1, label=u'Количество', help_text=u'количество рабочих мест')
     class Meta:
         model = Client

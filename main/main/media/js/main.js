@@ -63,7 +63,7 @@ function get_keys(prog, page, divid) {
 // delete key record
 function delkey(prog, keydiv, id, page) {
     if (confirm("Уверены, что хотите удалить данные?")) 
-        $.get('/key/delete/' + id, function(data) {
+        $.get('/key/del/' + id, function(data) {
                 get_keys(prog, page, keydiv)
             }).error(function() { 
                 error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
@@ -72,7 +72,7 @@ function delkey(prog, keydiv, id, page) {
 }
 // delete key record
 function delkey_home(page, id, search) {
-    $.get('/key/delete/' + id, function(data) {
+    $.get('/key/del/' + id, function(data) {
             if (search) obj_search(page, 'key');
             else key_update_view(page);
         }).error(function() { 
@@ -191,7 +191,7 @@ function save_client (id, page, add) {
 }
 // delete client record
 function del_client(page, id) {
-    $.get('/client/delete/' + id, function(data) {
+    $.get('/client/del/' + id, function(data) {
             if (data == 'OK') obj_search(page, 'client');
             else alert('Ошибка!');
         }).error(function() { 
