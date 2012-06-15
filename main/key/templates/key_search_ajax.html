@@ -70,6 +70,10 @@
               </div>
               <div class="span4">
                 <span class="pull-right">
+                  <a class="btn btn-mini btn-success" href="javascript:add_client({{ key.id }}, {{ keys.number }}, {{ revers }});" title="Добавление пользователя">
+                    <i class="icon-plus icon-white"></i>
+                    добавление
+                  </a>
                   <a class="btn btn-mini btn-primary" href="/key/edit/{{ key.id }}" title="отредактировать ключ">
                     <i class="icon-pencil icon-white"></i>
                     правка
@@ -77,7 +81,7 @@
                   <a class="btn btn-mini btn-danger" 
                     href="javascript:delkey_home({{ keys.number }}, {{ key.id }}, 1)" title="удалить ключ">
                     <i class="icon-trash icon-white"></i>
-                    удалить
+                    удаление
                   </a>
                 </span>
               </div>
@@ -108,7 +112,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2"><em>{{ key.comment }}</em></td>
+                  <td colspan="2"><em>{{ key.comment|safe }}</em></td>
                 </tr>
               </table>
             </div>
@@ -120,6 +124,7 @@
     {% endif %}
   </div>
 </div>
+<div class="modal fade hide" id="winmodal"></div>
 <script>
   $("a[rel=popover]").popover();
 </script>

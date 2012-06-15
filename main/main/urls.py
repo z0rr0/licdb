@@ -109,11 +109,12 @@ urlpatterns = patterns('',
     # key edit
     (r'^client/edit/(?P<id>\d+)/?$', 'key.views.client_edit', {
         'vtemplate': 'client_edit.html',
+        'add': False,
         'perm': 'key.edit_client'}),
     # key add
-    (r'^client/add/?$', 'key.views.client_edit', {
-        'id': 0,
+    (r'^client/add/(?P<id>\d+)/?$', 'key.views.client_edit', {
         'vtemplate': 'client_edit.html',
+        'add': True,
         'perm': 'key.add_client'}),
     # autocomplete
     (r'^client/complete/?$', 'key.views.client_autocomplete'),

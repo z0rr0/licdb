@@ -68,7 +68,7 @@
         {% for client in clients.object_list %}
           <tr>
             <td>{{ forloop.counter|add:srart }}</td>
-            <td><a href="javascript:change_client({{ client.id }}, {{ clients.number }});" title="изменить данные пользователя">{{ client.name }}</a></td>
+            <td><a href="javascript:change_client({{ client.id }}, {{ clients.number }}, {{ revers }});" title="изменить данные пользователя">{{ client.name }}</a></td>
             <td>
               {% if client.student %}
                 <i class="icon-ok"></i>

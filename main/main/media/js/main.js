@@ -88,7 +88,8 @@ function key_update_view(page) {
         data: {
             free: onlyfree,
             page: page,
-            prog: program
+            prog: program,
+            revers: 1
         },
         success: function (data) {
             $(divid).html(data);
@@ -125,22 +126,24 @@ function obj_search(page, objname) {
     });
 }
 // add, edit Client form 
-function change_client (id, page) {
+function change_client (id, page, revers) {
     if (!is_int(page)) page=1;
     if (!is_int(id)) id=0;
     varurl = '/client/edit/' + id + '?page=' + page;
-    client_edit_add (varurl);
+    client_edit_add (varurl, revers);
 }
-function add_client () {
-    varurl = '/client/add/';
-    client_edit_add (varurl);
+function add_client (key, page, revers) {
+    if (!is_int(page)) page=1;
+    varurl = '/client/add/' + key + '/?page=' + page;
+    client_edit_add (varurl, revers);
 }
-function client_edit_add (varurl) {
+function client_edit_add (varurl, revers) {
     $.ajax({
         url: varurl,
         type: 'GET' ,
         dataType: 'html',
         context: document.body,
+        data: { 'revers': revers },
         success: function (data) {
             $('#winmodal').html(data);
             $('#winmodal').modal();
@@ -151,11 +154,13 @@ function client_edit_add (varurl) {
         },
     });
 }
-function save_client (id, page, add) {
+function save_client (id, page, revers, add) {
+    if (!is_int(add)) varurl = '/client/edit/' + id;
+    else varurl = '/client/add/' + id + '/?revers=' + revers;
     if ($('#id_student').is(':checked')) student = 1;
     else student = 0;
     $.ajax({
-        url: '/client/edit/' + id,
+        url: varurl,
         type: 'POST' ,
         dataType: 'html',
         context: document.body,
@@ -168,7 +173,8 @@ function save_client (id, page, add) {
         },
         success: function (data) {
             if (data == 'saved') {
-                obj_search(page, 'client') ;
+                if (revers) key_update_view(page);
+                else obj_search(page, 'client') ;
                 $('#winmodal').modal('hide');
             }
             else $('#winmodal').html(data);

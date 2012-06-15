@@ -443,9 +443,11 @@ def keys_search_ajax(request, vtemplate):
         page = int(form_method['page']) if 'page' in form_method else 1
         text_templ = form_method['search'] if 'search' in form_method else False
         free = int(form_method['free']) if 'free' in form_method else False
+        revers = 1 if 'revers' in form_method else 0
     except ValueError:
         page = 1
         text_templ = free = prog = False
+        revers = 0
     if prog:
         keys = keys.filter(program=prog)
     if free:
@@ -464,7 +466,8 @@ def keys_search_ajax(request, vtemplate):
         'obj_count': paginator.count,
         'srart': (obj.number - 1) *  PAGE_COUNT,
         'page_range': paginator_list_page2(paginator.page_range, obj.number),
-        'search': text_templ
+        'search': text_templ,
+        'revers': revers
         })
 
 @login_required
@@ -557,20 +560,22 @@ def clients_search_ajax(request, vtemplate):
         })
 
 @login_required_ajax404
-def client_edit(request, vtemplate, id, perm):
+def client_edit(request, vtemplate, id, perm, add):
     if request.user.has_perm(perm):
         c = {}
         c.update(csrf(request))
         id = int(id)
-        if id:
+        if add:
+            action = u'Добавление'
+            key = get_object_or_404(Key, pk=id)
+            client = Client(key=key, use=0)
+        else:
             action = u'Редактирование'
             client = get_object_or_404(Client, pk=id)
-        else:
-            action = u'Добавление'
-            client = None
         form, client, saved = get_obj_form(request, client, ClientForm)
         try:
             page = int(request.GET['page']) if 'page' in request.GET else 1
+            revers = 1 if 'revers' in request.GET else 0
         except:
             page = 1
         if saved:
@@ -578,8 +583,7 @@ def client_edit(request, vtemplate, id, perm):
         return TemplateResponse(request, vtemplate, {
             'form': form, 
             'action': action,
-            'id': id,
-            'page': page
+            'id': id, 'page': page, 'revers': revers, 'add': int(add)
             })
     else:
         return HttpResponseNotFound('Auth perm error')

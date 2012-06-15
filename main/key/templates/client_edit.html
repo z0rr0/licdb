@@ -6,6 +6,7 @@
 </div>
 <div class="modal-body">
   <form class="form-horizontal" method="POST" action="javascript:save_client({{ id }}, {{ page }});">
+    {{ form.errors }}
     {% csrf_token %}{{ form.management_form }}
     <div class="control-group{{ form.name.errors|errorcss }}">
       <label class="control-label" for="id_name">{{ form.name.label }}</label>
@@ -49,12 +50,12 @@
 </div>
 <div class="modal-footer">
   <a href="#" class="btn" data-dismiss="modal">Закрыть</a>
-  <a href="javascript:save_client({{ id }}, {{ page }});" class="btn btn-primary">Сохранить</a>
+  <a href="javascript:save_client({{ id }}, {{ page }}, {{ revers }}, {{ add }});" class="btn btn-primary">Сохранить</a>
 </div>
 <script type="text/javascript">
   $('#id_date_start').datepicker();
     $("#id_name").autocomplete({
-        minLength: 2,
+        minLength: 1,
         source: function (request, response) {
             $.ajax({
                 url: "/client/complete/",
