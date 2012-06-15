@@ -1,0 +1,44 @@
+{% load keytags %}
+<div class="row-fluid">
+  <div class="span10">
+    <p>
+      Всего ключей <em>{{ result.all }}</em>,&ensp;
+      сетевые <em>{{ result.net }}</em>,&ensp;
+      используются <em>{{ result.use }}</em>,&ensp;
+      раб.мест <em>{{ result.manyuse }}</em>,&ensp;
+      пользователей&nbsp;/&nbsp;раб.мест <em>{{ result.clients_all }}/{{ result.clients_manyuse }}</em>.
+    </p>
+  </div>
+  <div class="span2">
+<div class="btn-group dropup pull-right">
+      <button class="btn btn-mini">О программе</button>
+      <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right">
+        <li>
+          <a href="/program/{{ prog.id }}" title="информация о программе">
+            подробнее
+          </a>
+        </li>
+        <li>
+          <a href="{{ prog.url|default:'#' }}" 
+            title="{{ prog.url|default:'сайт не указан' }}">
+            домашняя страница
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="/license/{{ prog.license.id }}" title="лицензия ПО">
+            лицензия
+          </a>
+        </li>
+        <li>
+          <a href="/program/edit/{{ prog.id }}" title="изменить данные о программе">
+            правка
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

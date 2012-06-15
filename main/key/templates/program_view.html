@@ -26,7 +26,7 @@
   {% if user.is_authenticated %}
     <div class="row-fluid">
       <div class="span6">
-        <a class="btn btn-warning" href="javascript:get_keys({{ result.id }}, 1, '#keylist')" title="Список ключей">
+        <a class="btn btn-warning" href="/keys/?prog={{ result.id }}" title="Список ключей">
           <i class="icon-lock icon-white"></i>
           Ключи ({{ result.key_set.all.count }})
         </a>

@@ -40,36 +40,6 @@ $(document).ajaxSend(function(event, xhr, settings) {
 function is_int(input) {
     return typeof(input)=='number' && parseInt(input)==input;
   }
-// get list and statistics key's data
-function get_keys(prog, page, divid) {
-    vurl = "/get_keys/" + prog
-    $.ajax({
-        url: vurl,
-        type: 'GET',
-        dataType: 'html',
-        context: document.body,
-        data: {
-            page: page
-        },
-        success: function (data) {
-            $(divid).html(data);
-        },
-        error: function () {
-            error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
-            $(divid).html('<span class="well span10">' + error_msg + '</span>');
-        },
-    });
-}
-// delete key record
-function delkey(prog, keydiv, id, page) {
-    if (confirm("Уверены, что хотите удалить данные?")) 
-        $.get('/key/del/' + id, function(data) {
-                get_keys(prog, page, keydiv)
-            }).error(function() { 
-                error_msg = "Ошибка получения данных. Возможно у Вас не хватает прав или нет соединения с сервером.";
-                $(keydiv).html('<span class="well span10">' + error_msg + '</span>');
-            });
-}
 // delete key record
 function delkey_home(page, id, search) {
     $.get('/key/del/' + id, function(data) {
@@ -81,14 +51,35 @@ function delkey_home(page, id, search) {
             $('#keycontent').html(error_msg);
         });
 }
-
+function key_statistics (prog, divid, onlyfree) {
+    $.ajax({
+        url: '/key/statistics/' + prog,
+        type: 'GET',
+        dataType: 'html',
+        context: document.body,
+        data: {
+            free: onlyfree,
+        },
+        success: function (data) {
+            $(divid).html(data);
+        },
+        error: function () {
+            error_msg = "Ошибка получения данных.";
+            $(divid).html(error_msg);
+        },
+    });
+}
 // search keys by program (keys_home)
 function key_update_view(page) {
     divid = '#result';
     program = $('#id_programma').val();
     if ($('#id_onlyfree').is(':checked')) onlyfree = 1;
     else onlyfree = 0;
+    // statistics
+    key_statistics(program, '#statistics', onlyfree);
+    // page
     if (!is_int(page))  page=1;
+    // view keys
     $.ajax({
         url: '/key/search/ajax/',
         type: 'GET',

@@ -402,6 +402,24 @@ def keys_get(request, vtemplate, prog, obj_onpage=5):
         'prog': program
         })
 
+@login_required_ajax404
+def key_statistics(request, prog, vtemplate):
+    u"""
+    Статистика использования ключей для выбранной программы
+    """
+    prog = get_object_or_404(Program, pk=int(prog))
+    keys = prog.key_set.all()
+    try:
+        free = int(request.GET['free']) if 'free' in request.GET else False
+        if free:
+            keys = keys.filter(use=0)
+    except:
+        free = False
+    result = key_get_stat(keys)
+    if not result:
+        return HttpResponseNotFound('Get keys error')
+    return TemplateResponse(request, vtemplate, {'result': result, 'prog': prog})
+
 @login_required
 def keys_search(request, vtemplate):
     u"""
@@ -421,18 +439,17 @@ def keys_search_ajax(request, vtemplate):
     # for GET
     # text_templ = urllib.unquote(request.GET['search'])
     try:
+        prog = int(form_method['prog']) if 'prog' in form_method else False
         page = int(form_method['page']) if 'page' in form_method else 1
         text_templ = form_method['search'] if 'search' in form_method else False
         free = int(form_method['free']) if 'free' in form_method else False
-        prog = int(form_method['prog']) if 'prog' in form_method else False
     except ValueError:
         page = 1
         text_templ = free = prog = False
     if prog:
         keys = keys.filter(program=prog)
     if free:
-        alredy_use = not free
-        keys = keys.filter(use=alredy_use)
+        keys = keys.filter(use=0)
     if text_templ:
         keys = keys.filter(Q(key__icontains=text_templ) | Q(program__name__icontains=text_templ))
     obj, paginator = pagination_oblist(keys, page, PAGE_COUNT)

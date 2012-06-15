@@ -63,8 +63,8 @@ urlpatterns = patterns('',
     (r'^keys/?$', 'key.views.key_home', {
         'vtemplate': 'key_home.html'}),
     # get key list by program ID
-    (r'^get_keys/(?P<prog>\d+)/?$', 'key.views.keys_get', {
-        'vtemplate': 'key_get_list.html'}),
+    (r'^key/statistics/(?P<prog>\d+)/?$', 'key.views.key_statistics', {
+        'vtemplate': 'key_statistics.html'}),
     # key delete
     (r'^key/del/(?P<id>\d+)/?$', 'key.views.obj_delete_ajax', {
         'model': Key,
@@ -77,9 +77,9 @@ urlpatterns = patterns('',
     # download key
     (r'^key/download/(?P<id>\d+)/?$', 'key.views.download_handler',),
     # get keys list by program ID
-    (r'^keys/program/(?P<prog>\d+)/?$', 'key.views.keys_get', {
-        'vtemplate': 'keys_program.html',
-        'obj_onpage': 7}),   
+    # (r'^keys/program/(?P<prog>\d+)/?$', 'key.views.keys_get', {
+    #     'vtemplate': 'keys_program.html',
+    #     'obj_onpage': 7}),   
     # key edit
     (r'^key/edit/(?P<id>\d+)/?$', 'key.views.key_edit', {
         'vtemplate': 'key_edit.html'}),
